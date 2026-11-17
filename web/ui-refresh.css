@@ -1,0 +1,86 @@
+/* 按原型逐页调整布局（design/prototype/ui-audit-20261109.html）。只用 tokens.css 里的令牌。 */
+
+/* —— 记忆卡片：两行紧凑行，一屏 10 张以上 —— */
+html[data-theme] #cardsView .card-table-row td { height: auto; padding-block: 8px; }
+html[data-theme] #cardsView .card-content-cell { max-width: 0; }
+html[data-theme] #cardsView .card-content-cell > strong.card-row-question {
+  display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+  font-size: var(--fs-md); line-height: 1.5; -webkit-line-clamp: unset;
+}
+html[data-theme] #cardsView .card-row-sub {
+  display: flex; gap: 8px; min-width: 0; margin-top: 2px; overflow: hidden; white-space: nowrap;
+  font-size: var(--fs-sm); line-height: 1.5; color: var(--text-secondary);
+}
+html[data-theme] #cardsView .card-row-sub > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: block; -webkit-line-clamp: unset; margin: 0; font-size: inherit; line-height: inherit; }
+html[data-theme] #cardsView .card-row-sub .card-row-answer { flex: 0 1 auto; }
+html[data-theme] #cardsView .card-row-sub .card-row-source { flex: 0 0 auto; max-width: 40%; }
+html[data-theme] #cardsView .card-row-sub .card-row-source::before { content: "· "; }
+html[data-theme] #cardsView .card-row-inline-tags { display: none !important; flex: 0 100 auto; }
+
+/* 状态：彩色圆点 + 文字 */
+html[data-theme] #cardsView .card-stage-badge { display: inline-flex; align-items: center; gap: 6px; padding: 0; background: transparent; font-size: var(--fs-xs); font-weight: 600; }
+html[data-theme] #cardsView .card-stage-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; flex: none; }
+html[data-theme] #cardsView .card-stage-badge.new { color: var(--accent); }
+html[data-theme] #cardsView .card-stage-badge.due { color: var(--warning); }
+html[data-theme] #cardsView .card-stage-badge.learning { color: var(--text-secondary); }
+html[data-theme] #cardsView .card-stage-badge.mastered { color: var(--success); }
+html[data-theme] #cardsView .card-stage-badge.paused { color: var(--text-secondary); font-weight: 500; }
+
+/* 窄窗口：标签列隐藏时，标签并到第二行，不会无声消失。 */
+@media (max-width: 1000px) {
+  html[data-theme] #cardsView .card-row-inline-tags { display: block !important; }
+  html[data-theme] #cardsView .card-row-inline-tags::before { content: "· "; }
+}
+
+/* —— 笔记编辑 —— */
+/* 标题折叠箭头：悬停在标题上才显示；已折叠的、键盘聚焦的始终显示。 */
+html[data-theme] .note-heading-toggle[aria-expanded="true"] { opacity: 0; transition: opacity var(--motion) ease; }
+html[data-theme] .note-heading-toggle[aria-expanded="true"]:is(.is-hover, :hover, :focus-visible) { opacity: 1; }
+/* 独立文件预览的保存状态；笔记编辑的状态只显示在标签上。 */
+html[data-theme] #noteSaveStatus { display: inline-flex; align-items: center; gap: 6px; color: var(--text-secondary); }
+html[data-theme] #noteSaveStatus::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--success); }
+html[data-theme] #noteSaveStatus.is-dirty::before { background: var(--warning); }
+
+/* —— 去掉右下角浮动的快捷键按钮：入口在侧栏「…」菜单里 —— */
+html[data-theme] #shortcutEntry { display: none; }
+
+/* 阅读模式「…」按钮：不再和正文抢视线，悬停或聚焦时才清楚显示。 */
+html[data-theme] .clean-note-editor .card-editor-immersive-toggle { border-color: transparent; background: transparent; opacity: .55; transition: opacity var(--motion) ease, background-color var(--motion) ease; }
+html[data-theme] .clean-note-editor .card-editor-immersive-toggle:is(:hover, :focus-visible, [aria-expanded="true"]) { opacity: 1; background: var(--hover, var(--selected)); }
+
+/* —— 复习：弹窗高度跟着内容走，评分按钮紧跟在答案后面；答案很长时正文区滚动、评分栏固定在底部 —— */
+html[data-theme] #reviewDialog.rv2 .review-box { height: auto; min-height: min(440px, 86vh); max-height: 88vh; }
+html[data-theme] #reviewDialog.rv2 .review-card-stage { flex: 0 1 auto; padding-bottom: 20px; }
+html[data-theme] #reviewDialog.rv2 .rv-from > span:last-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+html[data-theme] #reviewDialog.rv2 .rv-rates .rating-option small { font-size: var(--fs-xs); color: var(--text-secondary); }
+
+/* —— 统计：「数据 / 成长」两个标签页，侧栏只留一个入口 —— */
+html[data-theme] .view > nav.stats-tabs { display: flex; flex-direction: row; flex-wrap: nowrap; grid-template-columns: none; gap: 4px; width: max-content; margin: 0 0 16px; padding: 3px; border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--sidebar, var(--canvas)); }
+html[data-theme] .stats-tabs button { min-height: 30px; padding: 0 14px; border: 0; border-radius: var(--radius-sm); background: transparent; color: var(--text-secondary); font-size: var(--fs-sm); font-weight: 500; box-shadow: none; }
+html[data-theme] .stats-tabs button[aria-current="true"] { background: var(--canvas); color: var(--ink); font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+html[data-theme] #growthView > .stats-tabs { margin: 0 0 16px; }
+
+/* —— 笔记列表：多级缩进、更清楚的圆点、项目之间留点空 —— */
+html[data-theme] #noteRichEditor .ql-editor :is(ol, ul) { margin: 4px 0 10px; padding-left: 0.2em; }
+html[data-theme] #noteRichEditor .ql-editor li { padding-left: 1.6em; line-height: 1.8; }
+html[data-theme] #noteRichEditor .ql-editor li + li { margin-top: 4px; }
+html[data-theme] #noteRichEditor .ql-editor li.ql-indent-1 { padding-left: calc(1.6em + 1 * 1.75em); }
+html[data-theme] #noteRichEditor .ql-editor li.ql-indent-2 { padding-left: calc(1.6em + 2 * 1.75em); }
+html[data-theme] #noteRichEditor .ql-editor li.ql-indent-3 { padding-left: calc(1.6em + 3 * 1.75em); }
+html[data-theme] #noteRichEditor .ql-editor li.ql-indent-4 { padding-left: calc(1.6em + 4 * 1.75em); }
+html[data-theme] #noteRichEditor .ql-editor li.ql-indent-5 { padding-left: calc(1.6em + 5 * 1.75em); }
+html[data-theme] #noteRichEditor .ql-editor li.ql-indent-6 { padding-left: calc(1.6em + 6 * 1.75em); }
+html[data-theme] #noteRichEditor .ql-editor li.ql-indent-7 { padding-left: calc(1.6em + 7 * 1.75em); }
+html[data-theme] #noteRichEditor .ql-editor li.ql-indent-8 { padding-left: calc(1.6em + 8 * 1.75em); }
+html[data-theme] #noteRichEditor .ql-editor li > .ql-ui::before { width: 1.1em; margin-left: -1.45em; margin-right: 0.35em; }
+/* 无序列表的标记用画出来的圆点（第 1 级实心圆、第 2 级空心圆、第 3 级小方块，再往下循环），比「•」字符大、居中。 */
+html[data-theme] #noteRichEditor .ql-editor li[data-list="bullet"] > .ql-ui::before { content: ""; height: 1.8em; vertical-align: top; color: color-mix(in srgb, var(--ink) 78%, var(--canvas)); }
+html[data-theme] #noteRichEditor .ql-editor li[data-list="bullet"] > .ql-ui::before { background: radial-gradient(circle, currentColor 0 2.5px, transparent 2.9px) center / 100% 100% no-repeat; }
+html[data-theme] #noteRichEditor .ql-editor li[data-list="bullet"].ql-indent-1 > .ql-ui::before { background: radial-gradient(circle, transparent 0 1.9px, currentColor 2.2px 3.1px, transparent 3.5px) center / 100% 100% no-repeat; }
+html[data-theme] #noteRichEditor .ql-editor li[data-list="bullet"].ql-indent-2 > .ql-ui::before { background: linear-gradient(currentColor, currentColor) center / 5px 5px no-repeat; }
+html[data-theme] #noteRichEditor .ql-editor li[data-list="bullet"].ql-indent-3 > .ql-ui::before { background: radial-gradient(circle, currentColor 0 2.5px, transparent 2.9px) center / 100% 100% no-repeat; }
+html[data-theme] #noteRichEditor .ql-editor li[data-list="bullet"].ql-indent-4 > .ql-ui::before { background: radial-gradient(circle, transparent 0 1.9px, currentColor 2.2px 3.1px, transparent 3.5px) center / 100% 100% no-repeat; }
+html[data-theme] #noteRichEditor .ql-editor li[data-list="bullet"].ql-indent-5 > .ql-ui::before { background: linear-gradient(currentColor, currentColor) center / 5px 5px no-repeat; }
+html[data-theme] #noteRichEditor .ql-editor li[data-list="bullet"].ql-indent-6 > .ql-ui::before { background: radial-gradient(circle, currentColor 0 2.5px, transparent 2.9px) center / 100% 100% no-repeat; }
+html[data-theme] #noteRichEditor .ql-editor li[data-list="bullet"].ql-indent-7 > .ql-ui::before { background: radial-gradient(circle, transparent 0 1.9px, currentColor 2.2px 3.1px, transparent 3.5px) center / 100% 100% no-repeat; }
+html[data-theme] #noteRichEditor .ql-editor li[data-list="bullet"].ql-indent-8 > .ql-ui::before { background: linear-gradient(currentColor, currentColor) center / 5px 5px no-repeat; }

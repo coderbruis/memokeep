@@ -1,0 +1,151 @@
+.file-drop-overlay[hidden] { display: none; }
+.file-drop-overlay { position: fixed; inset: 12px; z-index: 10000; display: grid; place-items: center; border: 2px dashed #2f8df5; border-radius: 16px; background: rgba(236, 246, 255, .94); pointer-events: none; }
+.file-drop-overlay div { display: grid; gap: 12px; text-align: center; padding: 24px; }
+.file-drop-overlay strong { font-size: 24px; color: #2574c7; }
+.file-drop-overlay span { color: #657587; }
+.file-preview-dialog { width: min(560px, 94vw); max-height: 92vh; border-radius: 18px; }
+.file-preview-dialog .file-preview-form { width: 100%; max-height: 92vh; display: flex; flex-direction: column; gap: 16px; padding: 30px; box-sizing: border-box; }
+.file-preview-form h2 { margin: 0; }
+.file-preview-form .hint { margin: 0; overflow-wrap: anywhere; }
+.file-preview-content { flex: 1; min-height: 100px; height: auto; overflow: auto; padding: 20px 24px; border: 1px solid #e2e6eb; border-radius: 10px; background: #fafbfc; overflow-wrap: anywhere; }
+.file-preview-editor { flex: 1; min-height: 100px; width: 100%; resize: none; overflow: auto; padding: 20px 24px; border: 1px solid #9fcaf5; border-radius: 10px; background: #fff; color: #29313a; font: 14px/1.7 ui-monospace, SFMono-Regular, Menlo, monospace; outline: none; box-shadow: 0 0 0 3px rgba(47,141,245,.12); }
+.file-preview-body { position: relative; flex: 1; min-height: 0; display: flex; }
+.file-preview-body > .file-preview-content, .file-preview-body > .file-preview-editor { width: 100%; }
+.file-preview-outline { position: absolute; right: 22px; top: 22px; display: flex; flex-direction: column; width: 34px; max-width: calc(100% - 44px); max-height: calc(100% - 44px); min-height: 42px; padding: 0; border: 1px solid #e2e7ed; border-radius: 10px; background: rgba(255,255,255,.96); box-shadow: 0 8px 24px rgba(31,40,51,.14); opacity: .9; transform: translateX(0); transition: width .16s ease, opacity .16s ease; pointer-events: auto; overflow: hidden; }
+.file-preview-outline::before { display: none; }
+.file-preview-outline:is(:hover, :focus-within, .pinned) { width: 190px; padding: 42px 12px 12px; opacity: 1; }
+.file-preview-outline:focus-visible { outline: 2px solid #86b8f1; outline-offset: 2px; }
+.file-preview-outline-icon { position: absolute; left: 8px; top: 12px; display: grid; place-items: center; width: 18px; height: 18px; color: #6e7884; }
+.file-preview-outline-icon svg,
+.file-preview-outline-pin svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; pointer-events: none; }
+.file-preview-outline > .file-preview-outline-pin { position: absolute; right: 9px; top: 9px; display: none; place-items: center; width: 24px; height: 24px; padding: 0; border: 0; border-radius: 5px; background: transparent; color: #7b8590; cursor: pointer; }
+.file-preview-outline:is(:hover, :focus-within, .pinned) .file-preview-outline-pin { display: grid; }
+.file-preview-outline-pin:hover { background: #eef5fc; color: #277bd0; }
+.file-preview-outline > .file-preview-outline-pin[aria-pressed="true"] { background: #e5f1ff; color: #277bd0; }
+.file-preview-outline-pin:focus-visible { outline: 2px solid #86b8f1; outline-offset: 2px; }
+/* Keep the collapsed trigger free of the outline's own scrollbar. */
+.file-preview-outline nav { display: none; gap: 2px; min-height: 0; max-height: 280px; overflow: auto; overflow-wrap: anywhere; }
+.file-preview-outline:is(:hover, :focus-within, .pinned) nav { display: grid; }
+.file-preview-outline button { border: 0; border-radius: 5px; padding: 5px 7px; background: transparent; color: #626b76; text-align: left; font-size: 10px; line-height: 1.35; cursor: pointer; }
+.file-preview-outline button:hover { background: #eef5fc; color: #277bd0; }
+.file-preview-outline .level-1 { font-weight: 650; }
+.file-preview-outline .level-2 { padding-left: 14px; }
+.file-preview-outline .level-3, .file-preview-outline .level-4 { padding-left: 24px; color: #8a929c; }
+.file-preview-content img { max-width: 100%; height: auto; }
+.markdown-diagram { margin: 18px 0; padding: 0; border: 1px solid var(--line, #e3e6ec); border-radius: 12px; background: var(--canvas, #fff); overflow: hidden; }
+.markdown-diagram > .hint, .markdown-diagram > .markdown-diagram-error, .markdown-diagram > details { margin: 0; padding: 12px 16px; }
+.markdown-diagram-image { display: block; margin: 0 auto; max-width: 100%; height: auto; }
+.markdown-diagram summary { cursor: pointer; color: var(--muted, #737984); font-size: 12px; }
+.markdown-diagram pre { white-space: pre; overflow: auto; }
+.markdown-diagram-error { color: #b84e49; white-space: pre-wrap; overflow-wrap: anywhere; }
+.file-preview-plain { white-space: pre-wrap; }
+.file-preview-plain p { margin: 0; }
+.file-preview-content table { border-collapse: collapse; width: 100%; }
+.file-preview-content td, .file-preview-content th { border: 1px solid #dfe3e8; padding: 8px; }
+.file-preview-fields { display: grid; grid-template-columns: 1fr; align-items: end; gap: 12px; }
+.file-preview-fields label { margin: 0; min-width: 0; }
+.file-preview-fields input, .file-preview-fields select { width: 100%; min-width: 0; }
+.file-preview-form .dialog-actions { margin: 0; }
+.file-preview-destination { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 0; padding: 0; border: 0; }
+.file-preview-destination legend { grid-column: 1 / -1; margin: 0 0 2px; font-size: 13px; font-weight: 650; }
+.file-preview-destination label { display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 12px; border: 1px solid #e3e6eb; border-radius: 9px; background: #fafbfc; color: #4f5660; font-size: 12px; font-weight: 550; line-height: 1.3; cursor: pointer; }
+.file-preview-destination label:has(input:checked) { border-color: #9fcaf5; background: #eff7ff; color: #277bd0; }
+.file-preview-destination input { width: 15px; height: 15px; margin: 0; accent-color: #2f8df5; }
+.file-preview-fields > label { font-size: 13px; font-weight: 650; }
+.file-preview-fields > label input, .file-preview-fields > label select { margin-top: 6px; }
+@media (max-width: 680px) { .file-preview-fields { grid-template-columns: 1fr; } .file-preview-dialog .file-preview-form { padding: 16px; } }
+
+.file-preview-view { display: flex; flex-direction: column; height: 100%; min-height: 0; padding: 28px 36px; gap: 20px; overflow: hidden; }
+.file-preview-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-shrink: 0; }
+.file-preview-toolbar > div:first-child { min-width: 0; }
+.file-preview-toolbar h2 { margin: 0 0 6px; font-size: 20px; overflow-wrap: anywhere; }
+.file-preview-toolbar .hint { margin: 0; }
+.file-preview-actions { display: flex; gap: 8px; flex-shrink: 0; }
+.file-preview-actions button { min-height: 38px; padding: 0 14px; border-radius: 9px; font-size: 12px; white-space: nowrap; }
+.file-preview-actions #filePreviewEdit { background: transparent; color: #5f6873; border: 1px solid #e1e5ea; }
+.file-preview-actions #filePreviewEdit:hover { background: #f5f7f9; }
+.file-preview-actions #filePreviewSkip { background: #eef0f3; color: #59616b; border: 1px solid #e5e7eb; }
+.file-preview-actions #filePreviewSkip:hover { background: #e3e6ea; color: #3f4750; }
+.file-preview-save-wrap { position: relative; }
+.file-preview-save-menu { position: absolute; z-index: 20; right: 0; top: calc(100% + 7px); width: 190px; padding: 5px; border: 1px solid #e0e4e9; border-radius: 9px; background: #fff; box-shadow: 0 10px 24px rgba(31,40,51,.16); }
+.file-preview-save-menu button { display: block; width: 100%; min-height: 34px; padding: 0 10px; border: 0; border-radius: 6px; background: transparent; color: #4d5660; text-align: left; font-size: 11px; }
+.file-preview-save-menu button:hover { background: #f1f6fb; color: #277bd0; }
+.file-preview-view .file-preview-content { min-height: 0; background: #fff; padding: 28px 36px; }
+@media (max-width: 680px) { .file-preview-view { height: calc(100dvh - 60px); padding: 18px; } .file-preview-toolbar { align-items: flex-start; flex-direction: column; gap: 12px; } .file-preview-view .file-preview-content { padding: 18px; } }
+
+.note-diagram-toggle-layer { position: absolute; inset: 0; z-index: 7; pointer-events: none; }
+.note-diagram-toggle-host { position: absolute; pointer-events: none; }
+/* design/prototype/diagram-viewer-20261109.md: light header controls while previewing. */
+.note-diagram-toggle, .note-diagram-insert-before, .note-diagram-edit { position: absolute; top: 8px; right: 54px; pointer-events: auto; border: 1px solid rgba(255,255,255,.25); border-radius: 7px; display: inline-flex; align-items: center; justify-content: center; gap: 5px; height: 30px; padding: 0 9px; line-height: 1; background: #353b43; color: #fff; font-size: 12px; cursor: pointer; }
+.note-diagram-toggle:hover, .note-diagram-toggle:focus-visible, .note-diagram-insert-before:hover { background: #475563; }
+.note-diagram-insert-before { width: 30px; padding: 0; }
+.note-diagram-insert-before svg, .note-diagram-edit svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.note-diagram-insert-before:focus-visible, .note-diagram-edit:focus-visible { outline: 2px solid var(--blue, #3659d9); outline-offset: 2px; }
+.note-diagram-insert-before:disabled { opacity: .5; cursor: default; }
+.note-diagram-inline-preview { position: absolute; inset: 0; padding: 46px 0 0; overflow: hidden; pointer-events: auto; border: 1px solid var(--line, #e3e6ec); border-radius: 10px; background: var(--canvas, #fff); }
+.note-diagram-inline-preview[hidden] { display: none; }
+.note-diagram-inline-preview .markdown-diagram { margin: 0; border: 0; border-radius: 0; padding: 0; background: transparent; }
+.note-diagram-inline-preview details { display: none; }
+.note-diagram-inline-preview .markdown-diagram:has(.markdown-diagram-error) details { display: block; }
+.note-diagram-toggle-layer .note-diagram-toggle-host.is-preview :is(.note-diagram-toggle, .note-diagram-insert-before, .note-diagram-edit) { border-color: transparent; background: transparent; color: var(--muted, #626b79); font-weight: 500; }
+.note-diagram-toggle-layer .note-diagram-toggle-host.is-preview :is(.note-diagram-toggle, .note-diagram-insert-before, .note-diagram-edit):hover { background: var(--hover, #f1f3f7); color: var(--ink, #20232b); }
+.note-diagram-toggle-layer .note-diagram-toggle-host.is-preview .note-diagram-toggle { border-color: var(--line, #e3e6ec); background: var(--canvas, #fff); color: var(--ink, #20232b); }
+
+/* Light header surface under the code toolbar while previewing; it hides the dark code bar. */
+.note-diagram-toggle-layer .note-diagram-toggle-host.is-preview::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 37px; box-sizing: border-box; border: 1px solid var(--line, #e3e6ec); border-bottom: 0; border-radius: 10px 10px 0 0; background: var(--canvas, #fff); pointer-events: none; }
+
+/* Canvas with a floating zoom bar; the diagram itself gets all the space. */
+.diagram-viewer { position: relative; display: flex; flex-direction: column; min-height: 0; }
+.diagram-button-tooltip { max-width: calc(100vw - 16px); white-space: normal; overflow-wrap: anywhere; }
+.diagram-viewport { position: relative; height: clamp(220px, 55vh, 560px); overflow: hidden; border-top: 1px solid var(--line, #e3e6ec); background-color: color-mix(in srgb, var(--hover, #f1f3f7) 45%, var(--canvas, #fff)); background-image: radial-gradient(color-mix(in srgb, var(--ink, #20232b) 9%, transparent) 1px, transparent 1.2px); background-size: 16px 16px; cursor: grab; touch-action: none; user-select: none; }
+.markdown-diagram > .diagram-viewer > .diagram-viewport { border-top: 0; }
+.diagram-viewport.is-dragging { cursor: grabbing; }
+.diagram-viewport:focus-visible { outline: 2px solid var(--blue, #3659d9); outline-offset: -2px; }
+.diagram-viewport .markdown-diagram-image { position: absolute; left: 0; top: 0; max-width: none; margin: 0; transform-origin: 0 0; pointer-events: none; }
+.diagram-viewport-fade { position: absolute; left: 0; right: 0; bottom: 0; height: 56px; background: linear-gradient(transparent, color-mix(in srgb, var(--hover, #f1f3f7) 45%, var(--canvas, #fff))); pointer-events: none; }
+.diagram-viewport-fade[hidden], .diagram-minimap[hidden] { display: none; }
+.note-diagram-inline-preview > .markdown-diagram { box-sizing: border-box; height: 100%; }
+.note-diagram-inline-preview .diagram-viewer { height: 100%; }
+.note-diagram-inline-preview .diagram-viewport { flex: 1; height: auto; min-height: 80px; }
+
+.diagram-viewer-toolbar { position: absolute; right: 12px; bottom: 12px; z-index: 1; display: flex; align-items: center; gap: 2px; padding: 3px; border-radius: 10px; background: color-mix(in srgb, var(--canvas, #fff) 96%, transparent); box-shadow: 0 0 0 1px color-mix(in srgb, var(--ink, #20232b) 9%, transparent), 0 4px 14px rgb(20 24 32 / 12%); opacity: .92; transition: opacity .15s ease; }
+.diagram-viewer:hover .diagram-viewer-toolbar, .diagram-viewer:focus-within .diagram-viewer-toolbar { opacity: 1; }
+.diagram-icon-button,
+.diagram-viewer-toolbar button { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; min-width: 30px; height: 30px; padding: 0 6px; border: 0; border-radius: 7px; background: transparent; color: var(--muted, #626b79); font: inherit; font-size: 12.5px; cursor: pointer; transition: background-color .15s ease, color .15s ease; }
+.diagram-icon-button { width: 30px; padding: 0; }
+.diagram-icon-button svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; pointer-events: none; }
+.diagram-icon-button:hover, .diagram-viewer-toolbar button:hover { background: var(--hover, #f1f3f7); color: var(--ink, #20232b); }
+.diagram-viewer-toolbar button:active { background: color-mix(in srgb, var(--ink, #20232b) 10%, transparent); }
+.diagram-icon-button:focus-visible,
+.diagram-viewer-toolbar button:focus-visible { outline: 2px solid var(--blue, #3659d9); outline-offset: 1px; }
+.diagram-viewer-toolbar .diagram-zoom-percent { min-width: 50px; color: var(--ink, #20232b); font-weight: 500; font-variant-numeric: tabular-nums; }
+.diagram-toolbar-separator { width: 1px; height: 16px; margin: 0 2px; background: var(--line, #e3e6ec); }
+.diagram-minimap { position: absolute; left: 12px; bottom: 12px; z-index: 1; padding: 6px; border-radius: 10px; background: color-mix(in srgb, var(--canvas, #fff) 96%, transparent); box-shadow: 0 0 0 1px color-mix(in srgb, var(--ink, #20232b) 9%, transparent), 0 4px 14px rgb(20 24 32 / 12%); cursor: pointer; touch-action: none; }
+.diagram-minimap-image { display: block; max-width: none; border-radius: 4px; opacity: .8; pointer-events: none; }
+.diagram-minimap-frame { position: absolute; margin: 6px; border: 1.5px solid var(--blue, #3659d9); border-radius: 3px; background: color-mix(in srgb, var(--blue, #3659d9) 10%, transparent); pointer-events: none; box-sizing: border-box; }
+@media (max-width: 560px) { .diagram-minimap { display: none; } }
+
+html:has(.diagram-fullscreen-dialog[open]) { overflow: hidden; }
+.diagram-fullscreen-dialog { position: fixed; inset: 0; box-sizing: border-box; width: 100vw; max-width: none; height: 100dvh; max-height: none; margin: 0; padding: 0; border: 0; border-radius: 0; background: var(--canvas, #fff); color: var(--ink, #20232b); overflow: hidden; }
+.diagram-fullscreen-dialog[open] { display: flex; flex-direction: column; }
+.diagram-fullscreen-dialog::backdrop { background: var(--canvas, #fff); backdrop-filter: none; }
+.diagram-fullscreen-header { display: flex; flex-shrink: 0; align-items: center; gap: 10px; min-height: 52px; padding: 0 12px 0 100px; -webkit-app-region: drag; }
+.diagram-fullscreen-header h2 { margin: 0; font-size: 14px; font-weight: 600; white-space: nowrap; }
+.diagram-fullscreen-crumb { min-width: 0; overflow: hidden; color: var(--muted, #8a92a0); font-size: 12.5px; text-overflow: ellipsis; white-space: nowrap; }
+.diagram-fullscreen-crumb[hidden] { display: none; }
+.diagram-fullscreen-export { display: inline-flex; align-items: center; gap: 5px; height: 30px; margin-left: auto; padding: 0 9px; border: 0; border-radius: 7px; background: transparent; color: var(--muted, #626b79); font: inherit; font-size: 12.5px; cursor: pointer; white-space: nowrap; -webkit-app-region: no-drag; }
+.diagram-fullscreen-export:hover { background: var(--hover, #f1f3f7); color: var(--ink, #20232b); }
+.diagram-fullscreen-export:focus-visible { outline: 2px solid var(--blue, #3659d9); outline-offset: 2px; }
+.diagram-fullscreen-export svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.diagram-fullscreen-exit-hint { padding: 3px 6px; border-radius: 5px; box-shadow: inset 0 0 0 1px var(--line, #e3e6ec); color: var(--muted, #626b79); font: 11.5px/1 -apple-system, BlinkMacSystemFont, system-ui, sans-serif; }
+.diagram-fullscreen-close { -webkit-app-region: no-drag; }
+.diagram-fullscreen-dialog > .diagram-viewer { flex: 1; min-height: 0; }
+.diagram-fullscreen-dialog .diagram-viewport { flex: 1; height: auto; min-height: 0; overscroll-behavior: contain; }
+.diagram-fullscreen-dialog .diagram-viewer-toolbar { right: auto; left: 50%; bottom: 16px; transform: translateX(-50%); }
+.diagram-fullscreen-dialog .diagram-minimap { bottom: 16px; left: 16px; }
+@media (max-width: 680px) {
+  .diagram-fullscreen-header { gap: 6px; }
+  .diagram-fullscreen-crumb, .diagram-fullscreen-export span { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .diagram-viewer-toolbar, .diagram-viewer-toolbar button { transition: none; } }
+}

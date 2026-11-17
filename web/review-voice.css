@@ -1,0 +1,110 @@
+/* 复习：语音作答（design/prototype/voice-review-20261111.md），在 review-v2.css 之后加载。 */
+html #reviewDialog.rv2 { --rv-rec: #d93a2f; --rv-hit: #e3f3e9; --rv-hit-ink: #1f7a47; --rv-miss: #fff3dd; --rv-miss-ink: #9a5b00; }
+html[data-appearance="dark"] #reviewDialog.rv2 { --rv-rec: #ff8f84; --rv-hit: #1c3327; --rv-hit-ink: #7fd8a4; --rv-miss: #3a3120; --rv-miss-ink: #f2c46b; }
+
+/* 题目面：「语音作答」与「显示答案」并排 */
+html #reviewDialog.rv2 .rv-reveal { gap: 10px; }
+html #reviewDialog.rv2 :is(#reviewVoiceBtn, #reviewVoiceRedo, #reviewVoiceDone) { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 44px; min-height: 44px; margin: 8px 0 14px; padding: 0 20px; border: 0; border-radius: 10px; font-size: 14.5px; font-weight: 600; transform: none; }
+html #reviewDialog.rv2 :is(#reviewVoiceBtn, #reviewVoiceRedo, #reviewVoiceDone).hidden,
+html #reviewDialog.rv2 #revealBtn.rv-voice-away { display: none; }
+html #reviewDialog.rv2 :is(#reviewVoiceBtn, #reviewVoiceRedo) { background: var(--canvas); box-shadow: inset 0 0 0 1px var(--line); color: var(--ink); }
+html #reviewDialog.rv2 :is(#reviewVoiceBtn, #reviewVoiceRedo):hover { background: var(--hover); }
+html #reviewDialog.rv2 #reviewVoiceBtn svg { color: var(--blue); }
+html #reviewDialog.rv2 #reviewVoiceRedo { height: 38px; min-height: 38px; padding: 0 14px; font-size: 13px; font-weight: 500; }
+html #reviewDialog.rv2 :is(#reviewVoiceBtn, #reviewVoiceRedo) svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+html #reviewDialog.rv2 #reviewVoiceDone { min-width: 200px; background: var(--rv-rec); color: #fff; }
+html[data-appearance="dark"] #reviewDialog.rv2 #reviewVoiceDone { color: #2a0e0c; }
+html #reviewDialog.rv2 #reviewVoiceDone:hover { background: color-mix(in srgb, var(--rv-rec) 88%, #000); }
+html #reviewDialog.rv2 :is(#reviewVoiceBtn, #reviewVoiceRedo, #reviewVoiceDone) kbd { margin: 0; opacity: .6; }
+
+/* 你的回答 */
+html #reviewDialog.rv2 .rv-voice { margin: 20px 0 0; padding: 12px 16px 12px; border-radius: 12px; background: var(--hover); text-align: left; }
+html #reviewDialog.rv2 .rv-voice.hidden { display: none; }
+html #reviewDialog.rv2 .rv-voice.is-live { background: color-mix(in srgb, var(--rv-rec) 8%, var(--canvas)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--rv-rec) 32%, transparent); }
+html #reviewDialog.rv2 .rv-voice.is-error { padding: 0; background: none; }
+html #reviewDialog.rv2 .rv-voice.is-editing { background: none; padding: 0; }
+html #reviewDialog.rv2 .rv-voice-head { display: flex; align-items: center; gap: 8px; margin: 0 0 6px; color: var(--muted); font-size: 12px; font-weight: 600; }
+html #reviewDialog.rv2 .rv-voice-head svg { width: 14px; height: 14px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+html #reviewDialog.rv2 .rv-voice-head button { display: inline-flex; align-items: center; gap: 4px; height: 24px; min-height: 0; margin: 0; padding: 0 6px; border: 0; border-radius: 6px; background: none; box-shadow: none; color: var(--muted); font-size: 12px; font-weight: 500; transform: none; }
+html #reviewDialog.rv2 .rv-voice-head button:hover { background: color-mix(in srgb, var(--ink) 7%, transparent); color: var(--ink); }
+html #reviewDialog.rv2 .rv-voice-head button svg { width: 13px; height: 13px; }
+html #reviewDialog.rv2 .rv-grow { flex: 1; }
+html #reviewDialog.rv2 .rv-voice-hint { color: var(--muted); font-weight: 400; opacity: .8; }
+html #reviewDialog.rv2 .rv-voice-time { color: var(--rv-rec); font-variant-numeric: tabular-nums; }
+html #reviewDialog.rv2 .rv-voice-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--rv-rec); animation: rv-voice-pulse 1.2s ease-in-out infinite; }
+html #reviewDialog.rv2 .rv-voice-level { display: inline-flex; align-items: center; gap: 2px; height: 14px; }
+html #reviewDialog.rv2 .rv-voice-level i { width: 2.5px; height: 14px; border-radius: 2px; background: var(--rv-rec); transform: scaleY(.18); transition: transform 90ms linear; }
+html #reviewDialog.rv2 .rv-voice-text { margin: 0; color: var(--ink); font-size: 15px; line-height: 1.75; white-space: pre-wrap; overflow-wrap: anywhere; }
+html #reviewDialog.rv2 .rv-voice-partial, html #reviewDialog.rv2 .rv-voice-placeholder { color: var(--muted); opacity: .85; }
+html #reviewDialog.rv2 .rv-voice-caret { display: inline-block; width: 2px; height: 1.05em; margin-left: 1px; vertical-align: -2px; background: var(--rv-rec); animation: rv-voice-blink 1s steps(1) infinite; }
+html #reviewDialog.rv2 .rv-voice mark { padding: 0 2px; border-radius: 3px; background: var(--rv-hit); color: var(--rv-hit-ink); }
+@keyframes rv-voice-pulse { 50% { opacity: .35; } }
+@keyframes rv-voice-blink { 50% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { html #reviewDialog.rv2 :is(.rv-voice-dot, .rv-voice-caret) { animation: none; } html #reviewDialog.rv2 .rv-voice-level i { transition: none; } }
+
+/* 异常提示 / 打字作答 */
+html #reviewDialog.rv2 .rv-voice-alert { display: flex; align-items: center; gap: 8px; margin: 0; padding: 10px 12px; border-radius: 10px; background: var(--hover); color: var(--ink); font-size: 13px; }
+html #reviewDialog.rv2 .rv-voice-alert.is-warn { background: var(--rv-miss); color: var(--rv-miss-ink); }
+html #reviewDialog.rv2 .rv-voice-alert svg { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+html #reviewDialog.rv2 .rv-voice-alert > span { flex: 1; min-width: 0; }
+html #reviewDialog.rv2 .rv-voice-alert button { height: 26px; min-height: 0; margin: 0; padding: 0 8px; border: 0; border-radius: 6px; background: none; box-shadow: none; color: var(--blue); font-size: 12.5px; font-weight: 600; white-space: nowrap; transform: none; }
+html #reviewDialog.rv2 .rv-voice-alert button.rv-voice-type { color: var(--muted); font-weight: 500; }
+html #reviewDialog.rv2 .rv-voice-alert button:hover { background: color-mix(in srgb, var(--ink) 7%, transparent); }
+html #reviewDialog.rv2 .rv-voice-input { display: block; width: 100%; min-height: 76px; margin: 0; padding: 10px 12px; border: 0; border-radius: 10px; background: var(--canvas); box-shadow: inset 0 0 0 1.5px var(--blue); color: var(--ink); font: inherit; font-size: 14.5px; line-height: 1.7; resize: vertical; outline: none; }
+
+/* 对照：参考答案按要点打勾 */
+html #reviewDialog.rv2 .rv-voice-compare { margin: 0 0 12px; }
+html #reviewDialog.rv2 .rv-voice-compare.hidden { display: none; }
+html #reviewDialog.rv2 .rv-voice-compare-head { display: flex; align-items: center; gap: 10px; margin: 0 0 8px; }
+html #reviewDialog.rv2 .rv-voice-compare-head strong { color: var(--muted); font-size: 12px; font-weight: 600; }
+html #reviewDialog.rv2 .rv-voice-score { display: inline-flex; align-items: center; height: 24px; padding: 0 10px; border-radius: 12px; background: var(--rv-miss); color: var(--rv-miss-ink); font-size: 12px; font-weight: 600; }
+html #reviewDialog.rv2 .rv-voice-score.is-all { background: var(--rv-hit); color: var(--rv-hit-ink); }
+html #reviewDialog.rv2 .rv-voice-points { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+html #reviewDialog.rv2 .rv-voice-points li { display: grid; grid-template-columns: 18px auto; justify-content: start; gap: 8px; align-items: start; color: var(--ink); font-size: 15px; line-height: 1.7; }
+html #reviewDialog.rv2 .rv-voice-points li svg { width: 16px; height: 16px; margin-top: 5px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+html #reviewDialog.rv2 .rv-voice-points li.is-hit svg { color: var(--rv-hit-ink); }
+html #reviewDialog.rv2 .rv-voice-points li.is-miss svg { color: var(--rv-miss-ink); }
+html #reviewDialog.rv2 .rv-voice-points li.is-miss > span:not(.rv-sr) { background: linear-gradient(transparent 62%, var(--rv-miss) 62%); }
+html #reviewDialog.rv2 #reviewAnswer.rv-voice-replaced { display: none; }
+
+/* 建议评分：只标记，不自动评分 */
+html #reviewDialog.rv2 .rv-rates .rating-option { position: relative; }
+html #reviewDialog.rv2 .rv-rates .rating-option.is-suggested { box-shadow: inset 0 0 0 1.5px var(--rv-suggest, var(--rv-hard)); }
+html #reviewDialog.rv2 .rv-rates .rating-option.is-suggested::after { content: "建议"; position: absolute; top: -9px; right: 8px; padding: 0 6px; border-radius: 6px; background: var(--rv-suggest, var(--rv-hard)); color: var(--canvas); font-size: 10.5px; font-weight: 700; line-height: 17px; }
+html #reviewDialog.rv2 .rv-rates .again.is-suggested { --rv-suggest: var(--rv-again); background: color-mix(in srgb, var(--rv-again) 8%, var(--canvas)); }
+html #reviewDialog.rv2 .rv-rates .hard.is-suggested { --rv-suggest: var(--rv-hard); background: color-mix(in srgb, var(--rv-hard) 8%, var(--canvas)); }
+html #reviewDialog.rv2 .rv-rates .good.is-suggested { --rv-suggest: var(--rv-good); background: color-mix(in srgb, var(--rv-good) 8%, var(--canvas)); }
+
+/* 停顿倒计时：停顿 6 秒后出现，12 秒自动结束 */
+html #reviewDialog.rv2 .rv-voice-hint.is-countdown { color: var(--rv-rec); font-weight: 600; opacity: 1; }
+
+/* 术语纠正（design/prototype/voice-terms-20261111.md）：纠正过的词淡紫底 + 虚线，悬停看原识别，点一下改回 */
+html #reviewDialog.rv2 { --rv-fix: #ede7fb; --rv-fix-ink: #5b3cc4; }
+html[data-appearance="dark"] #reviewDialog.rv2 { --rv-fix: #2c2546; --rv-fix-ink: #c3b2ff; }
+html #reviewDialog.rv2 .rv-voice-fix { padding: 0 2px; border-radius: 3px; background: var(--rv-fix); color: var(--rv-fix-ink); border-bottom: 1px dashed currentColor; }
+html #reviewDialog.rv2 mark.rv-voice-fix { background: var(--rv-hit); color: var(--rv-hit-ink); }
+html #reviewDialog.rv2 .rv-voice-fix[role="button"] { cursor: pointer; }
+html #reviewDialog.rv2 .rv-voice-fix[role="button"]:focus-visible { outline: 2px solid var(--blue); outline-offset: 1px; }
+html #reviewDialog.rv2 .rv-voice-learn { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 10px 0 0; padding: 8px 10px 8px 12px; border-radius: 10px; background: var(--ink); color: var(--canvas); font-size: 13px; }
+html #reviewDialog.rv2 .rv-voice-learn > span { flex: 1; min-width: 180px; }
+html #reviewDialog.rv2 .rv-voice-learn button { height: 26px; min-height: 0; margin: 0; padding: 0 10px; border: 0; border-radius: 6px; background: color-mix(in srgb, var(--canvas) 18%, transparent); box-shadow: none; color: inherit; font-size: 12.5px; font-weight: 600; transform: none; }
+html #reviewDialog.rv2 .rv-voice-learn button.ghost { background: none; opacity: .75; font-weight: 500; }
+html #reviewDialog.rv2 .rv-voice-learned { margin: 8px 0 0; color: var(--muted); font-size: 12px; }
+
+/* 语音设置入口（齿轮 / 链接），design/prototype/voice-settings-20261111.md */
+html #reviewDialog.rv2 .rv-voice-head .rv-voice-gear { width: 24px; padding: 0; justify-content: center; }
+html #reviewDialog.rv2 .rv-voice-head .rv-voice-gear svg { width: 14px; height: 14px; }
+html #reviewDialog.rv2 .rv-voice-link { height: auto; min-height: 0; margin: 0; padding: 0; border: 0; background: none; box-shadow: none; color: var(--blue); font-size: 12px; transform: none; }
+
+/* 复习时快速切换词库（design/prototype/voice-term-packs-20261111.md） */
+html #reviewDialog.rv2 .rv-voice { position: relative; }
+html #reviewDialog.rv2 .rv-voice-head .rv-voice-packs { gap: 4px; height: 22px; padding: 0 8px; border-radius: 11px; background: color-mix(in srgb, var(--canvas) 70%, transparent); box-shadow: inset 0 0 0 1px var(--line); color: var(--ink); font-size: 11.5px; font-weight: 500; }
+html #reviewDialog.rv2 .rv-voice-head .rv-voice-packs svg { width: 12px; height: 12px; }
+html #reviewDialog.rv2 .rv-voice-head .rv-voice-packs span { max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+html #reviewDialog.rv2 .rv-voice-pack-pop { position: fixed; z-index: 20; width: 220px; padding: 6px; border-radius: 10px; background: var(--canvas); box-shadow: 0 0 0 1px var(--line), 0 12px 32px rgb(20 24 32 / 18%); }
+html #reviewDialog.rv2 .rv-voice-pack-pop label { display: flex; align-items: center; gap: 8px; height: 30px; margin: 0; padding: 0 8px; border-radius: 7px; color: var(--ink); font-size: 13px; cursor: pointer; }
+html #reviewDialog.rv2 .rv-voice-pack-pop label:hover { background: var(--hover); }
+html #reviewDialog.rv2 .rv-voice-pack-pop input { width: 14px; height: 14px; margin: 0; accent-color: var(--blue); }
+html #reviewDialog.rv2 .rv-voice-pack-pop span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+html #reviewDialog.rv2 .rv-voice-pack-pop small { color: var(--muted); font-size: 11.5px; }
+html #reviewDialog.rv2 .rv-voice-pack-manage { display: block; width: 100%; height: 30px; min-height: 0; margin: 4px 0 0; padding: 0 8px; border: 0; border-top: 1px solid var(--line); border-radius: 0 0 6px 6px; background: none; box-shadow: none; color: var(--blue); font-size: 12.5px; text-align: left; transform: none; }

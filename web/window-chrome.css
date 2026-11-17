@@ -1,0 +1,198 @@
+/* One native title row, with a fixed control area and a curved content surface. */
+.window-toolbar { display: none; }
+
+@media (min-width: 681px) {
+  html:not(.note-window) .shell:not(:has(.card-editor-immersive:not(.hidden))) {
+    --window-toolbar-height: 48px;
+    --window-controls-width: 152px;
+    --workspace-content-radius: 8px;
+    grid-template-rows: var(--window-toolbar-height) minmax(0, 1fr);
+    height: 100dvh;
+    background: var(--sidebar);
+  }
+
+  html:not(.note-window) .shell:not(:has(.card-editor-immersive:not(.hidden)))::before {
+    display: none;
+  }
+
+  .shell > .window-toolbar {
+    --sidebar-toggle-background: transparent;
+    --sidebar-toggle-border: transparent;
+    --sidebar-toggle-ink: var(--muted);
+    --sidebar-toggle-rail: color-mix(in srgb, var(--muted) 35%, var(--sidebar));
+    --sidebar-toggle-hover-background: var(--selected);
+    --sidebar-toggle-hover-border: color-mix(in srgb, var(--blue) 25%, var(--line));
+    --sidebar-toggle-hover-ink: var(--blue);
+    --sidebar-toggle-hover-rail: color-mix(in srgb, var(--blue) 40%, var(--sidebar));
+    --sidebar-toggle-collapsed-rail: var(--line);
+  }
+
+  html:not(.note-window) .shell:not(:has(.card-editor-immersive:not(.hidden))) > .window-toolbar {
+    display: flex;
+    position: relative;
+    align-items: center;
+    grid-column: 1 / -1;
+    grid-row: 1;
+    min-width: 0;
+    padding: 0;
+    background: var(--sidebar);
+    color: var(--muted);
+    -webkit-app-region: drag;
+    user-select: none;
+    z-index: 151;
+  }
+
+  .shell > .window-toolbar .sidebar-collapse-button {
+    position: absolute;
+    inset: 6px auto auto 92px;
+    z-index: auto;
+    flex: 0 0 36px;
+    width: 36px;
+    height: 36px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 6px;
+    background: var(--sidebar-toggle-background);
+    color: var(--sidebar-toggle-ink);
+    transform: none;
+    transition: none;
+    -webkit-app-region: no-drag;
+  }
+  .shell > .window-toolbar .sidebar-collapse-button::before { content: none; }
+  .shell > .window-toolbar .sidebar-collapse-button svg {
+    width: 18px;
+    height: 18px;
+    stroke-width: 1.75;
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .shell > .window-toolbar .sidebar-collapse-rail { fill: var(--sidebar-toggle-rail); stroke: none; }
+  .shell > .window-toolbar .sidebar-collapse-button[aria-expanded="false"] .sidebar-collapse-rail { fill: var(--sidebar-toggle-collapsed-rail); }
+  .shell > .window-toolbar .sidebar-collapse-button[aria-expanded="false"] .sidebar-collapse-chevron { transform: rotate(180deg); transform-box: fill-box; transform-origin: center; }
+  .shell > .window-toolbar .sidebar-collapse-button:is(:hover, :focus-visible) { background: var(--sidebar-toggle-hover-background); border-color: var(--sidebar-toggle-hover-border); color: var(--sidebar-toggle-hover-ink); }
+  .shell > .window-toolbar .sidebar-collapse-button:is(:hover, :focus-visible) .sidebar-collapse-rail { fill: var(--sidebar-toggle-hover-rail); }
+  .shell > .window-toolbar .sidebar-collapse-button:focus-visible { outline: 2px solid var(--blue); outline-offset: -3px; }
+
+  .sidebar-collapse-tooltip {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 50%;
+    z-index: 100;
+    width: max-content;
+    padding: 7px 10px;
+    border-radius: 7px;
+    background: #293747;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.4;
+    white-space: nowrap;
+    transform: translateX(-50%);
+    pointer-events: none;
+    visibility: hidden;
+    box-shadow: 0 3px 10px #243a531a;
+  }
+  .sidebar-collapse-tooltip::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    border: 5px solid transparent;
+    border-bottom-color: #293747;
+    transform: translateX(-50%);
+  }
+  .sidebar-collapse-button:hover .sidebar-collapse-tooltip,
+  .sidebar-collapse-button:focus-visible .sidebar-collapse-tooltip { visibility: visible; }
+
+  html:not(.note-window) .shell:not(:has(.card-editor-immersive:not(.hidden))) > header {
+    grid-row: 2;
+    height: 100%;
+    min-height: 0;
+    padding-top: 12px;
+    background: var(--sidebar);
+    border-right: 0;
+  }
+  html:not(.note-window) .shell.sidebar-collapsed > header::after { content: none; }
+  html:not(.note-window) .shell:not(:has(.card-editor-immersive:not(.hidden))) > .view {
+    grid-row: 2;
+    min-height: 0;
+    border: 1px solid var(--line);
+    border-right: 0;
+    border-bottom: 0;
+    border-radius: var(--workspace-content-radius) 0 0 0;
+  }
+  /* Notes use the native title row for tabs rather than a separate blank band. */
+  html:not(.note-window) .shell:has(#librariesView.has-note-tabs:not(.hidden)):not(:has(.card-editor-immersive:not(.hidden))) > .window-toolbar {
+    width: var(--window-controls-width);
+    border: 0;
+  }
+  html:not(.note-window) .shell:not(:has(.card-editor-immersive:not(.hidden))) > #librariesView.has-note-tabs {
+    grid-row: 2;
+    scroll-padding-top: 56px;
+  }
+  html:not(.note-window) .shell:not(:has(.card-editor-immersive:not(.hidden))) #librariesView.has-note-tabs .note-tabs-bar {
+    --note-tabs-height: var(--window-toolbar-height);
+    position: fixed;
+    inset: 0 0 auto var(--window-controls-width);
+    height: var(--window-toolbar-height);
+    padding: 0 12px 0 0;
+    background: var(--sidebar);
+    box-shadow: none;
+  }
+  /* 列表往下多伸 1px，让当前标签盖住编辑区顶上那条线。 */
+  html:not(.note-window) .shell:not(:has(.card-editor-immersive:not(.hidden))) #noteTabsBar .note-tab-list {
+    min-width: 116px;
+    margin-bottom: -1px;
+    padding-top: 10px;
+  }
+  html:not(.note-window) .shell:not(:has(.card-editor-immersive:not(.hidden))) #librariesView.has-note-tabs :is(#noteRichToolbar, .clean-note-editor[data-editor-mode="card"] > .note-editor-toolbar, .note-text-editor > .note-editor-toolbar) {
+    top: 0;
+    background: var(--canvas);
+    border-top-left-radius: calc(var(--workspace-content-radius) - 1px);
+  }
+  html:not(.note-window) .shell:not(.sidebar-collapsed) > header .sidebar-topbar .brand {
+    justify-content: flex-start;
+    padding: 0 14px 14px;
+    font-size: 22px;
+    line-height: 32px;
+    text-align: left;
+  }
+  html:not(.note-window) .shell:not(.sidebar-collapsed) > header .sidebar-quick-tools {
+    margin: 0 0 20px;
+    padding-inline: 10px;
+  }
+  html:not(.note-window) .shell > header .sidebar-action-bar {
+    justify-content: flex-start;
+    gap: 12px;
+  }
+  html:not(.note-window) .shell > header .sidebar-action-bar button {
+    flex: 0 0 32px;
+    width: 32px;
+    height: 32px;
+    padding: 7px;
+    color: var(--muted);
+  }
+  html:not(.note-window) .shell > header .sidebar-action-bar button:is(:hover, [aria-expanded="true"]) {
+    background: var(--hover);
+    color: var(--ink);
+  }
+  #librariesView.has-note-tabs .note-rich-toolbar.ql-toolbar.ql-snow {
+    min-height: 40px;
+    padding-block: 4px;
+  }
+  .shell.sidebar-collapsed .sidebar-topbar .brand {
+    width: 32px;
+    flex-basis: 32px;
+    padding: 0 0 22px;
+  }
+  .shell.sidebar-collapsed .brand-compact {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    box-shadow: none;
+  }
+}
+
+.note-window .shell > .window-toolbar { display: none; }

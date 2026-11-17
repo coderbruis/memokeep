@@ -1,0 +1,8 @@
+.pet {
+  left: 31px;
+  bottom: 2px;
+  width: 208px;
+  height: 139px;
+}
+
+.pet img { object-fit: contain; }

@@ -1,0 +1,371 @@
+[
+  {
+    "fn": "comparableName",
+    "args": [
+      ""
+    ],
+    "expected": ""
+  },
+  {
+    "fn": "comparableName",
+    "args": [
+      " ＡＢＣ "
+    ],
+    "expected": "abc"
+  },
+  {
+    "fn": "comparableName",
+    "args": [
+      "笔记（1）"
+    ],
+    "expected": "笔记(1)"
+  },
+  {
+    "fn": "comparableName",
+    "args": [
+      "İ"
+    ],
+    "expected": "i̇"
+  },
+  {
+    "fn": "nextAvailableName",
+    "args": [
+      "笔记",
+      [
+        "笔记",
+        "笔记（1）"
+      ],
+      100
+    ],
+    "expected": "笔记（2）"
+  },
+  {
+    "fn": "nextAvailableName",
+    "args": [
+      "Ａ",
+      [
+        "a"
+      ],
+      50
+    ],
+    "expected": "Ａ（1）"
+  },
+  {
+    "fn": "nextAvailableName",
+    "args": [
+      "abcdef",
+      [
+        "abcdef"
+      ],
+      6
+    ],
+    "expected": "abc（1）"
+  },
+  {
+    "fn": "nextAvailableName",
+    "args": [
+      "笔记（2）",
+      [
+        "笔记（2）",
+        "笔记（1）"
+      ],
+      100
+    ],
+    "expected": "笔记（3）"
+  },
+  {
+    "fn": "parseInlineCardLine",
+    "args": [
+      ""
+    ],
+    "expected": null
+  },
+  {
+    "fn": "normalizeInlineCardLineSpacing",
+    "args": [
+      ""
+    ],
+    "expected": ""
+  },
+  {
+    "fn": "parseInlineCardLine",
+    "args": [
+      "- 问题==答案"
+    ],
+    "expected": {
+      "question": "问题",
+      "answer": "答案",
+      "separator": "==",
+      "separatorIndex": 4
+    }
+  },
+  {
+    "fn": "normalizeInlineCardLineSpacing",
+    "args": [
+      "- 问题==答案"
+    ],
+    "expected": "- 问题 == 答案"
+  },
+  {
+    "fn": "parseInlineCardLine",
+    "args": [
+      "a -> b → c"
+    ],
+    "expected": {
+      "question": "a",
+      "answer": "b → c",
+      "separator": "->",
+      "separatorIndex": 2
+    }
+  },
+  {
+    "fn": "normalizeInlineCardLineSpacing",
+    "args": [
+      "a -> b → c"
+    ],
+    "expected": "a -> b → c"
+  },
+  {
+    "fn": "parseInlineCardLine",
+    "args": [
+      "a→b"
+    ],
+    "expected": {
+      "question": "a",
+      "answer": "b",
+      "separator": "→",
+      "separatorIndex": 1
+    }
+  },
+  {
+    "fn": "normalizeInlineCardLineSpacing",
+    "args": [
+      "a→b"
+    ],
+    "expected": "a → b"
+  },
+  {
+    "fn": "parseInlineCardLine",
+    "args": [
+      "a == ​"
+    ],
+    "expected": null
+  },
+  {
+    "fn": "normalizeInlineCardLineSpacing",
+    "args": [
+      "a == ​"
+    ],
+    "expected": "a == ​"
+  },
+  {
+    "fn": "parseInlineCardLine",
+    "args": [
+      "==answer"
+    ],
+    "expected": null
+  },
+  {
+    "fn": "normalizeInlineCardLineSpacing",
+    "args": [
+      "==answer"
+    ],
+    "expected": "==answer"
+  },
+  {
+    "fn": "parseInlineCards",
+    "args": [
+      "a==b\r\na==b\r\n```\r\nx==y\r\n```\r\nc→d"
+    ],
+    "expected": [
+      {
+        "question": "a",
+        "answer": "b",
+        "line": 1,
+        "key": "a\u0000b"
+      },
+      {
+        "question": "c",
+        "answer": "d",
+        "line": 6,
+        "key": "c\u0000d"
+      }
+    ]
+  },
+  {
+    "fn": "parseInlineCards",
+    "args": [
+      "a==b\r\na==b\r\n```\r\nx==y\r\n```\r\nc→d",
+      {
+        "keepDuplicates": true
+      }
+    ],
+    "expected": [
+      {
+        "question": "a",
+        "answer": "b",
+        "line": 1,
+        "key": "a\u0000b"
+      },
+      {
+        "question": "a",
+        "answer": "b",
+        "line": 2,
+        "key": "a\u0000b"
+      },
+      {
+        "question": "c",
+        "answer": "d",
+        "line": 6,
+        "key": "c\u0000d"
+      }
+    ]
+  },
+  {
+    "fn": "parseInlineCards",
+    "args": [
+      "- 题 == 答\n题 == 其他"
+    ],
+    "expected": [
+      {
+        "question": "题",
+        "answer": "答",
+        "line": 1,
+        "key": "题\u0000答"
+      },
+      {
+        "question": "题",
+        "answer": "其他",
+        "line": 2,
+        "key": "题\u0000其他"
+      }
+    ]
+  },
+  {
+    "fn": "parseInlineCards",
+    "args": [
+      "- 题 == 答\n题 == 其他",
+      {
+        "keepDuplicates": true
+      }
+    ],
+    "expected": [
+      {
+        "question": "题",
+        "answer": "答",
+        "line": 1,
+        "key": "题\u0000答"
+      },
+      {
+        "question": "题",
+        "answer": "其他",
+        "line": 2,
+        "key": "题\u0000其他"
+      }
+    ]
+  },
+  {
+    "fn": "parseInlineCards",
+    "args": [
+      "~~~\na==b\n~~~"
+    ],
+    "expected": [
+      {
+        "question": "a",
+        "answer": "b",
+        "line": 2,
+        "key": "a\u0000b"
+      }
+    ]
+  },
+  {
+    "fn": "parseInlineCards",
+    "args": [
+      "~~~\na==b\n~~~",
+      {
+        "keepDuplicates": true
+      }
+    ],
+    "expected": [
+      {
+        "question": "a",
+        "answer": "b",
+        "line": 2,
+        "key": "a\u0000b"
+      }
+    ]
+  },
+  {
+    "fn": "duplicateCardQuestion",
+    "args": [
+      [
+        {
+          "question": " a "
+        },
+        {
+          "question": "a",
+          "line": 2
+        }
+      ]
+    ],
+    "expected": {
+      "question": "a",
+      "line": 2
+    }
+  },
+  {
+    "fn": "duplicateCardQuestion",
+    "args": [
+      [
+        {
+          "question": ""
+        },
+        {
+          "question": ""
+        }
+      ]
+    ],
+    "expected": null
+  },
+  {
+    "fn": "noteImageIdsFromContent",
+    "args": [
+      "memokeep-image://12345678-1234-4234-8234-123456789ABC memokeep-image://12345678-1234-4234-8234-123456789ABC"
+    ],
+    "expected": [
+      "12345678-1234-4234-8234-123456789abc",
+      "12345678-1234-4234-8234-123456789abc"
+    ]
+  },
+  {
+    "fn": "trashEntryImageIds",
+    "args": [
+      {
+        "document": {
+          "content": "memokeep-image://12345678-1234-4234-8234-123456789ABC",
+          "metadata": {
+            "versions": [
+              {
+                "noteContent": "memokeep-image://12345678-1234-4234-8234-123456789ABC"
+              }
+            ]
+          }
+        },
+        "cards": [
+          {
+            "question": "memokeep-image://12345678-1234-4234-8234-123456789ABC"
+          }
+        ],
+        "card": {
+          "answer": "memokeep-image://12345678-1234-4234-8234-123456789ABC"
+        }
+      }
+    ],
+    "expected": [
+      "12345678-1234-4234-8234-123456789abc",
+      "12345678-1234-4234-8234-123456789abc",
+      "12345678-1234-4234-8234-123456789abc",
+      "12345678-1234-4234-8234-123456789abc"
+    ]
+  }
+]

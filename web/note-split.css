@@ -1,0 +1,46 @@
+.note-workspace-controls{display:flex;align-items:center;gap:4px;margin-left:8px;flex-shrink:0}.note-workspace-button{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:32px;padding:6px 9px;border:0;border-radius:6px;background:transparent;color:var(--muted,#747e78);font:inherit;font-size:12px;cursor:pointer;white-space:nowrap}.note-workspace-button>svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}.note-workspace-button:hover{background:var(--hover,#f3f6f3);color:var(--ink,#26352c)}.note-workspace-button:disabled{opacity:.45;cursor:default}.note-workspace-button[aria-pressed=true]{background:var(--selected,#eaf3ed);color:var(--blue,#24745b)}.note-workspace-button[aria-pressed=true] use[href='#icon-star']{fill:currentColor;fill-opacity:.16}.note-workspace-button:focus-visible{outline:2px solid var(--blue,#24745b);outline-offset:2px}@media(max-width:1000px){.note-workspace-controls{gap:0;margin-left:4px}.note-workspace-controls .note-workspace-button{padding:5px 6px}}@media(max-width:760px){.note-workspace-controls .note-workspace-button{min-height:40px}.note-workspace-controls .note-workspace-button>span{display:none}}
+
+/* 收藏页：版式和「备忘录」页一致（design/prototype/favorites-page-20261113.md）。 */
+#favoritesView { --favorites-width: 1080px; padding: 44px clamp(24px, 5vw, 76px); }
+#favoritesView [hidden] { display: none !important; }
+#favoritesView :is(.favorites-head, .favorites-controls, .favorites-count, .favorites-list) { width: 100%; max-width: var(--favorites-width); margin-left: auto; margin-right: auto; box-sizing: border-box; }
+#favoritesView .favorites-head { margin-bottom: 24px; }
+html #favoritesView .favorites-head h1 { margin: 0; color: var(--ink); font-size: 28px; font-weight: 600; line-height: 1.35; letter-spacing: -.025em; }
+#favoritesView .favorites-controls { display: flex; align-items: center; gap: 18px; border-bottom: 1px solid var(--line); }
+#favoritesView .favorites-tabs { display: flex; flex-shrink: 0; gap: 22px; margin-right: auto; }
+html #favoritesView .favorites-tabs button { display: inline-flex; align-items: center; gap: 5px; min-height: 44px; margin: 0; padding: 0 0 10px; border: 0; border-bottom: 2px solid transparent; border-radius: 0; background: transparent; box-shadow: none; color: var(--muted); font-size: 13px; font-weight: 400; transform: none; }
+html #favoritesView .favorites-tabs button:hover { color: var(--ink); }
+html #favoritesView .favorites-tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--ink); }
+#favoritesView .favorites-tabs button span { font-size: 12px; font-variant-numeric: tabular-nums; }
+html #favoritesView .favorites-kind { width: auto; min-width: 0; height: 36px; min-height: 0; margin: 0 0 10px; padding: 0 28px 0 10px; border: 1px solid var(--line); border-radius: 6px; background-color: var(--canvas); color: var(--ink); font: inherit; font-size: 12px; }
+#favoritesView .favorites-search { display: flex; align-items: center; gap: 7px; width: min(260px, 38%); min-height: 36px; margin: 0 0 10px; padding: 0 9px; border: 1px solid var(--line); border-radius: 6px; background: var(--canvas); box-sizing: border-box; }
+#favoritesView .favorites-search:focus-within { border-color: var(--muted); }
+#favoritesView .favorites-search svg { flex: none; width: 14px; height: 14px; fill: none; stroke: var(--muted); stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+html #favoritesView .favorites-search input { width: 100%; min-width: 0; min-height: 0; margin: 0; padding: 0; border: 0; border-radius: 0; outline: 0; background: transparent; box-shadow: none; color: var(--ink); font-size: 12px; }
+#favoritesView .favorites-search input::-webkit-search-cancel-button { display: none; }
+#favoritesView .favorites-count { margin-top: 16px; margin-bottom: -6px; color: var(--muted); font-size: 12px; }
+/* 卡片网格：一屏能扫到多篇，每张卡片带位置、标题、正文开头和日期。 */
+#favoritesView .favorites-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; padding-top: 20px; }
+#favoritesView .favorites-card { position: relative; display: flex; min-width: 0; border: 1px solid var(--line); border-radius: 10px; background: var(--canvas); transition: border-color .15s ease; }
+#favoritesView .favorites-card:is(:hover, :focus-within) { border-color: color-mix(in srgb, var(--blue) 45%, var(--line)); }
+html #favoritesView .favorites-open { display: flex; flex-direction: column; align-items: stretch; flex: 1; gap: 0; min-width: 0; min-height: 158px; margin: 0; padding: 16px; border: 0; border-radius: 10px; background: transparent; box-shadow: none; color: var(--ink); font: inherit; text-align: left; cursor: pointer; transform: none; }
+#favoritesView .favorites-card-top { display: flex; align-items: center; gap: 10px; min-width: 0; margin-bottom: 12px; padding-right: 30px; }
+#favoritesView .favorites-icon { display: grid; place-items: center; flex: none; width: 30px; height: 30px; border-radius: 8px; background: var(--selected); color: var(--blue); }
+#favoritesView :is(.favorites-icon, .favorites-remove) svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+#favoritesView .favorites-path { min-width: 0; overflow: hidden; color: var(--muted); font-size: 12px; line-height: 18px; text-overflow: ellipsis; white-space: nowrap; }
+#favoritesView :is(.favorites-open strong, .favorites-excerpt) { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; overflow-wrap: anywhere; }
+#favoritesView .favorites-open strong { font-size: 15px; font-weight: 600; line-height: 1.5; }
+#favoritesView .favorites-excerpt { margin-top: 6px; color: var(--text-secondary, var(--muted)); font-size: 12.5px; line-height: 1.7; }
+#favoritesView .favorites-foot { display: flex; align-items: center; margin-top: auto; padding-top: 14px; color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+html #favoritesView .favorites-remove { position: absolute; top: 15px; right: 12px; display: grid; place-items: center; width: 32px; height: 32px; min-height: 0; margin: 0; padding: 0; border: 0; border-radius: 7px; background: transparent; box-shadow: none; color: var(--blue); cursor: pointer; transform: none; }
+#favoritesView .favorites-remove svg { fill: currentColor; }
+#favoritesView .favorites-remove:hover { background: var(--hover); color: var(--muted); }
+#favoritesView .favorites-remove:hover svg { fill: none; }
+#favoritesView .favorites-remove:disabled { opacity: .5; cursor: default; }
+#favoritesView :is(.favorites-open, .favorites-remove, .favorites-tabs button):focus-visible { outline: 2px solid var(--blue); outline-offset: -2px; }
+#favoritesView .favorites-empty { grid-column: 1 / -1; padding: 72px 24px; text-align: center; color: var(--muted); }
+#favoritesView .favorites-empty svg { width: 28px; height: 28px; fill: none; stroke: currentColor; stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
+#favoritesView .favorites-empty h2 { margin: 14px 0 6px; color: var(--ink); font-size: 15px; font-weight: 600; }
+#favoritesView .favorites-empty p { margin: 0; font-size: 12.5px; line-height: 1.7; }
+@media (max-width: 760px) { #favoritesView { padding: 28px 20px; } #favoritesView .favorites-controls { flex-wrap: wrap; gap: 6px 18px; } #favoritesView .favorites-search { width: 200px; } }
+@media (max-width: 520px) { #favoritesView .favorites-search { width: 100%; } #favoritesView .favorites-list { grid-template-columns: minmax(0, 1fr); gap: 12px; } }

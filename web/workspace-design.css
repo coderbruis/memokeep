@@ -1,0 +1,332 @@
+/* Workspace chrome; document formatting and application state stay with their owners. */
+:root {
+  --workspace-surface: color-mix(in srgb, var(--canvas) 97%, var(--ink));
+  --workspace-tint: var(--hover);
+  --workspace-radius: 10px;
+  --workspace-nav: var(--sidebar);
+  --workspace-nav-ink: var(--ink);
+  --workspace-nav-muted: var(--muted);
+  --workspace-nav-line: var(--line);
+  --workspace-nav-active: var(--selected);
+  --workspace-nav-accent: var(--blue);
+  --workspace-sidebar-width: 208px;
+  --workspace-icon-button-size: 36px;
+  --workspace-control-icon-size: 18px;
+}
+html[data-appearance="dark"] { --workspace-surface: color-mix(in srgb, var(--canvas) 96%, white); }
+html :is(button, a, summary) { -webkit-tap-highlight-color: transparent; }
+html :is(button, a, summary):focus-visible { outline-color: var(--blue); }
+html .primary { border-radius: 6px; }
+html .secondary { border: 1px solid var(--line); border-radius: 6px; }
+html:not(.note-window) .shell > header {
+  padding-inline: 12px;
+}
+html .shell > header .brand { font-size: 18px; }
+html:not(.note-window) .shell:not(.sidebar-collapsed) > header .sidebar-topbar .brand { padding-inline: 5px; }
+.brand-full { white-space: nowrap; }
+.workspace-brand-mark { display: inline-grid; place-items: center; width: 29px; height: 29px; margin-right: 9px; border: 1px solid var(--line); border-radius: 6px; background: var(--canvas); color: var(--blue); vertical-align: middle; }
+.brand-compact.workspace-brand-mark { display: none; }
+.workspace-brand-mark svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+html[data-theme] .shell > .window-toolbar {
+  background: var(--workspace-nav);
+  --sidebar-toggle-background: transparent;
+  --sidebar-toggle-border: transparent;
+  --sidebar-toggle-ink: var(--workspace-nav-muted);
+  --sidebar-toggle-rail: transparent;
+  --sidebar-toggle-hover-background: var(--workspace-nav-active);
+  --sidebar-toggle-hover-border: transparent;
+  --sidebar-toggle-hover-ink: var(--workspace-nav-ink);
+  --sidebar-toggle-hover-rail: transparent;
+  --sidebar-toggle-collapsed-rail: transparent;
+}
+html .shell-search-button { min-height: 37px; margin: 5px 0 14px; border-radius: 6px; background: var(--canvas); font-size: 12px; }
+html .shell > header > nav { gap: 5px; padding: 0; }
+html .shell > header :is(.nav, .note-tag-nav, .sidebar-more-button) { min-height: 39px; border-radius: 6px; }
+html .shell > header .nav.active { color: var(--workspace-nav-ink); background: var(--workspace-nav-active); box-shadow: none; }
+html .shell > header .nav.active .nav-ui-icon { color: var(--workspace-nav-accent); }
+html .sidebar-quick-tools { margin-bottom: 16px; }
+html .sidebar-action-bar { justify-content: space-between; }
+.sidebar-collapsed .workspace-brand-mark { display: none; }
+html .shell > .view:not(#librariesView):not(#settingsView):not(#filePreviewView) { padding: 36px clamp(24px, 4vw, 60px) 56px; }
+.workspace-eyebrow { display: block; color: var(--muted); font-size: 11px; font-weight: 500; letter-spacing: .02em; }
+html .home-page-heading { align-items: center; padding-bottom: 25px; }
+html .home-page-heading h1 { margin: 6px 0; font-size: 34px; letter-spacing: -.04em; }
+html .home-page-heading time { display: block; color: var(--muted); font-size: 12px; }
+html .home-page-heading > button { border: 1px solid var(--line); border-radius: 6px; background: var(--canvas); }
+html[data-theme] #homeView > .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; margin: 0 auto 30px; padding: 0 0 24px; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: transparent; }
+html #homeView > .stats article { min-width: 0; min-height: 74px; padding: 1px 24px; border: 0; border-right: 1px solid var(--line); border-radius: 0; background: transparent; box-shadow: none; }
+html #homeView > .stats article:first-child { padding-left: 0; }
+html #homeView > .stats article:last-child { border-right: 0; }
+html #homeView > .stats article > div { display: flex; flex-direction: column-reverse; gap: 9px; }
+html #homeView > .stats strong { font-size: 30px; font-weight: 600; letter-spacing: -.04em; line-height: 1.2; font-variant-numeric: tabular-nums; }
+html #homeView > .stats small { font-size: 11px; color: var(--muted); }
+html .home-workspace { grid-template-columns: minmax(0, 1fr) 250px; gap: 38px; }
+html .home-review-panel { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "heading heading" "count actions" "detail actions" "budget budget"; gap: 4px 20px; padding: 23px 25px 20px; border: 1px solid var(--line); border-radius: var(--workspace-radius); background: var(--canvas); }
+html .home-review-panel > .panel-head { grid-area: heading; margin-bottom: 10px; }
+html #homePlanHeading { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; }
+#homePlanHeading svg { width: 17px; height: 17px; fill: none; stroke: var(--blue); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+html #homePlanEstimate { font-size: 11px; }
+html .home-plan-summary { grid-area: count; margin: 0; gap: 9px; }
+html .home-plan-summary strong { font-size: 56px; line-height: 1.1; letter-spacing: -.055em; }
+html .home-plan-summary > span { font-size: 12px; }
+html #homePlanDetail { grid-area: detail; font-size: 11px; margin: 6px 0 0; }
+html .home-budget-options { grid-area: budget; display: flex; align-items: center; gap: 4px; padding-top: 15px; margin-top: 15px; border-top: 1px solid var(--line); }
+html .home-budget-options button { min-height: 30px; padding: 5px 10px; border-radius: 5px; font-size: 11px; }
+html .home-budget-options button[aria-pressed=true] { color: var(--ink); background: var(--hover); }
+html .home-plan-actions { grid-area: actions; display: flex; flex-direction: column; align-items: stretch; align-self: center; gap: 6px; margin: 0; }
+html #homeView .home-start-review { min-height: 42px; margin: 0; border-radius: 6px; padding: 10px 20px; font-size: 12px; }
+html .home-plan-actions > .text-btn { min-height: 30px; padding: 3px; font-size: 11px; }
+html #homeView .home-followup-list { padding: 0; border: 0; margin-top: 28px; }
+html .home-followup-list > * { padding: 0; border: 0; }
+html #homeView .panel-head { min-width: 0; margin-bottom: 10px; }
+html #homeView .panel-head h2 { font-weight: 600; font-size: 14px; }
+html .home-followup-list .panel-head button { font-size: 11px; }
+html #homeView .card-row { padding: 14px 8px; border-radius: 4px; }
+html #homeView .card-row:hover { background: var(--hover); }
+html #homeView .home-recent-notes { padding-top: 2px; }
+html .home-recent-notes .panel-head > button { padding-inline: 0; font-size: 11px; }
+html .home-recent-note { min-height: 65px; padding: 12px 8px; border-radius: 4px; }
+html .home-recent-note:hover { background: var(--hover); }
+html .home-recent-note > svg { color: var(--muted); }
+html .home-week-panel { padding: 2px 0 24px; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: transparent; margin: 0 0 24px; }
+.home-week-panel .panel-head > button { display: grid; place-items: center; width: 26px; min-height: 26px; padding: 0; }
+.home-week-panel .panel-head > button svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+html .home-week-chart { gap: 8px; min-height: 125px; margin: 20px 0 16px; }
+html .home-week-chart i { width: 18px; border-radius: 3px 3px 0 0; }
+html #homeWeekSummary { margin: 0; font-size: 11px; }
+html .home-pet-panel { gap: 13px; padding: 0 0 24px; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: transparent; margin: 0 0 24px; }
+html .home-pet-panel > img { width: 66px; height: 40px; object-fit: cover; object-position: center 54%; }
+html .home-pet-panel p { margin: 0; }
+html .home-library-health { padding: 0; }
+html .home-library-health h2 { color: var(--muted); font-size: 11px; }
+html .home-library-health button { display: inline-flex; align-items: center; width: 100%; justify-content: space-between; min-height: 35px; margin: 0; padding: 7px 0; }
+html #cardsView .card-review-summary { padding: 15px 18px; border: 1px solid var(--line); border-radius: 8px; background: var(--canvas); }
+html #cardsView .card-table-scroll { border: 1px solid var(--line); border-radius: 8px; background: var(--canvas); }
+html #cardsView .card-management-table th { padding-block: 13px; background: var(--workspace-surface); }
+html #cardsView .card-management-table tbody tr:hover { background: var(--hover); }
+html #cardsView .card-filter-chips button { min-height: 34px; border-radius: 5px; }
+html #cardsView .card-filter-chips button[aria-pressed=true] { background: var(--selected); }
+html .note-directory-grid { gap: 16px; }
+html .note-directory-grid .note-directory-card { min-height: 220px; padding: 21px; border-radius: 8px; background: var(--canvas); box-shadow: none; }
+html .note-directory-grid .note-directory-card:hover { border-color: var(--blue); background: var(--canvas); }
+html .note-directory-card-icon { border-radius: 5px; color: var(--muted); background: var(--hover); }
+html .note-directory-toolbar { margin-top: 24px; padding-block: 17px; }
+html .memo-controls { padding: 12px 0 20px; }
+html .memo-item { border-radius: 7px; }
+html #settingsView .settings-navigation { background: var(--workspace-surface); padding-inline: 18px; }
+html #settingsView .appearance-theme { padding: 15px; border-radius: 8px; }
+html .appearance-preview { border-radius: 8px; background: var(--canvas); }
+html dialog:not(.mermaid-editor-dialog):not(.diagram-fullscreen-dialog) { border-radius: 11px; }
+html dialog::backdrop { background: color-mix(in srgb, var(--ink) 30%, transparent); backdrop-filter: blur(4px); }
+html #reviewDialog { border-radius: 12px; }
+
+/* Page location uses the existing title row; editors keep that row for tabs. */
+.workspace-titlebar { display: none; }
+.workspace-title-page { display: none; }
+.shell:has(> #homeView:not(.hidden)) [data-workspace-page="home"],
+.shell:has(> #librariesView:not(.hidden)) [data-workspace-page="libraries"],
+.shell:has(> #cardsView:not(.hidden)) [data-workspace-page="cards"],
+.shell:has(> #memosView:not(.hidden)) [data-workspace-page="memos"],
+.shell:has(> #favoritesView:not(.hidden)) [data-workspace-page="favorites"],
+.shell:has(> #plansView:not(.hidden)) [data-workspace-page="plans"],
+.shell:has(> #learningView:not(.hidden)) [data-workspace-page="learning"],
+.shell:has(> #growthView:not(.hidden)) [data-workspace-page="growth"],
+.shell:has(> #statisticsView:not(.hidden)) [data-workspace-page="statistics"],
+.shell:has(> #pluginsView:not(.hidden)) [data-workspace-page="plugins"],
+.shell:has(> #freeReviewView:not(.hidden)) [data-workspace-page="freeReview"],
+.shell:has(> #settingsView:not(.hidden)) [data-workspace-page="settings"],
+.shell:has(> #trashView:not(.hidden)) [data-workspace-page="trash"],
+.shell:has(> #filePreviewView:not(.hidden)) [data-workspace-page="filePreview"] { display: flex; }
+.workspace-pinned-action > svg { flex: 0 0 18px; width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.sidebar-collapsed .workspace-pinned-action { justify-content: center; padding-inline: 0; }
+.sidebar-collapsed .workspace-pinned-action > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+html .shell > header .shell-search-button kbd { background: var(--hover); border-color: var(--line); color: var(--muted); }
+html .shell > header .sidebar-more-menu { z-index: 220; max-height: calc(100dvh - 80px); overflow-y: auto; }
+
+/* Real review rows retain their current actions and real learning data. */
+html #homeView .memory-row { grid-template-columns: 32px minmax(0, 1fr) auto; gap: 12px; min-height: 66px; padding: 14px 0; }
+html #homeView .memory-row, html #homeView .memory-row:hover { color: var(--ink); background: transparent; border-color: var(--line); }
+html #homeView .memory-row h3 { margin: 0; font-size: 14px; font-weight: 500; line-height: 1.65; overflow-wrap: anywhere; }
+html #homeView .memory-status { display: grid; place-items: center; width: 30px; height: 30px; border: 0; border-radius: 7px; background: var(--workspace-surface); color: var(--muted); }
+html #homeView .memory-status svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.7; }
+html #homeView .memory-status.due { background: var(--selected); color: var(--blue); }
+html #homeView .memory-row .tag { flex-shrink: 0; padding: 4px 7px; border-radius: 4px; background: var(--workspace-surface); color: var(--muted); white-space: nowrap; }
+html .home-library-health .text-btn { color: var(--muted); }
+html .home-library-health .text-btn:hover { color: var(--blue); }
+
+/* Tab chrome shares theme tokens and leaves native dragging and editor offsets intact. */
+html .note-tabs-bar { background: var(--workspace-surface); box-shadow: inset 0 -1px var(--line); }
+html .note-tab-navigation::after { background: var(--line); }
+html .note-tab-close, html .note-tab-add { color: var(--muted); }
+html .note-tab-close:is(:hover, :active), html .note-tab-add:is(:hover, :active) { color: var(--ink); background: var(--hover); }
+html .note-tabs-bar button:focus-visible { outline: 2px solid var(--blue); outline-offset: -3px; }
+html #librariesView.has-note-tabs { --note-tabs-height: 48px; }
+html #noteTabsBar { flex-wrap: nowrap; }
+html #noteTabsBar .note-tab-actions, html #librariesView #noteSaveStatus { display: none; }
+/* 原型：标签栏只放标签；常用操作在编辑器工具栏右端。 */
+html #librariesView #noteRichToolbar.ql-toolbar.ql-snow { display: flex; align-items: flex-start; gap: 6px; min-height: 44px; padding: 6px 12px 7px 22px; }
+html #librariesView #noteRichToolbar .note-rich-toolbar-content { flex: 1 1 auto; min-width: 0; }
+html #librariesView #noteRichToolbar .note-toolbar-toggle { position: static; flex: 0 0 30px; min-height: 30px; height: 30px; }
+html #librariesView .note-toolbar-actions { --note-action-faint: #8a92a0; display: flex; flex: 0 0 auto; align-items: center; gap: 2px; margin-left: auto; color: var(--muted); -webkit-app-region: no-drag; }
+html[data-appearance="dark"] #librariesView .note-toolbar-actions { --note-action-faint: #737b89; }
+html #librariesView #noteRichToolbar .note-toolbar-actions #captureNoteScreenshot { position: static; display: inline-flex; align-items: center; justify-content: center; gap: 6px; width: 64px; height: 30px; margin: 0 6px 0 0; padding: 0 5px; background: transparent; color: var(--muted); font-size: 12.5px; }
+html #librariesView .note-toolbar-separator { flex: 0 0 1px; width: 1px; height: 18px; margin-inline: 6px; background: var(--line); }
+html #librariesView .note-toolbar-actions > .note-toolbar-icon-button,
+html #librariesView .note-toolbar-actions .note-tab-more-trigger { display: grid; place-items: center; min-width: 30px; width: 30px; min-height: 30px; height: 30px; margin: 0; padding: 0; border: 0; border-radius: 7px; background: transparent; box-shadow: none; color: var(--muted); }
+html #librariesView .note-toolbar-actions > .note-toolbar-icon-button:hover,
+html #librariesView .note-toolbar-actions .note-tab-more-trigger:hover,
+html #librariesView .note-toolbar-actions .note-tab-more-control[open] > .note-tab-more-trigger { background: var(--hover); color: var(--ink); }
+html #librariesView .note-toolbar-actions svg { flex: none; width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+/* 「速览」「收起全部详细」和旁边的「截图」同一种安静的文字按钮：不描边、不加粗；速览开着时用浅底 + 主色表示。 */
+html #librariesView .note-toolbar-actions > :is(#noteSkimButton, #noteGistDetailsAll) { display: inline-flex; align-items: center; gap: 6px; min-width: 30px; width: auto; height: 30px; margin: 0; padding: 0 8px; border: 0; border-radius: 7px; background: transparent; box-shadow: none; color: var(--muted); font-size: 12.5px; font-weight: 400; white-space: nowrap; }
+html #librariesView .note-toolbar-actions > :is(#noteSkimButton, #noteGistDetailsAll):hover { background: var(--hover); color: var(--ink); }
+html #librariesView .note-toolbar-actions > #noteSkimButton[aria-pressed="true"] { background: var(--selected); box-shadow: none; color: var(--blue); }
+html #librariesView .note-toolbar-actions > [hidden] { display: none; }
+html #librariesView .note-text-editor > .note-editor-toolbar,
+html #librariesView .clean-note-editor[data-editor-mode="card"] > .note-editor-toolbar { min-height: 44px; gap: 8px; padding: 7px 12px 7px 22px; background: var(--canvas); }
+html #librariesView .note-text-editor > .note-editor-toolbar { display: flex; position: sticky; top: var(--note-tabs-height); -webkit-app-region: no-drag; }
+/* 阅读时保留查找和笔记操作入口，格式和编辑控件继续收起。 */
+html #librariesView.note-reading :is(#noteRichToolbar, .note-text-editor > .note-editor-toolbar, .clean-note-editor[data-editor-mode="card"] > .note-editor-toolbar) { display: flex !important; }
+html #librariesView.note-reading :is(.note-rich-toolbar-content, #toggleNoteToolbarButton, #captureNoteScreenshot, .note-toolbar-separator, .card-editor-breadcrumb, .card-editor-zoom) { display: none !important; }
+/* 笔记的收藏按钮：和旁边的「添加标签」一样轻；收藏后是实心主色星 + 深色字（design/prototype/note-favorite-button-20261113.md）。 */
+html .note-document-favorite { gap: 5px; height: 30px; min-height: 30px; padding: 4px 8px; border: 0; border-radius: 6px; background: transparent; color: var(--muted); font-size: 12px; }
+html .note-document-favorite > svg { width: 16px; height: 16px; stroke-width: 1.6; }
+html .note-document-favorite:hover:not(:disabled) { background: var(--hover); color: var(--ink); }
+html .note-document-favorite[aria-pressed="true"] { background: transparent; color: var(--ink); }
+html .note-document-favorite[aria-pressed="true"]:hover:not(:disabled) { background: var(--hover); }
+html .note-document-favorite[aria-pressed="true"] > svg { color: var(--blue); }
+html .note-document-favorite[aria-pressed="true"] > svg use[href="#icon-star"] { fill: currentColor; fill-opacity: 1; }
+html .note-tab-more-control { position: relative; flex: 0 0 auto; align-self: center; }
+html .note-tab-more-trigger { cursor: pointer; list-style: none; }
+html .note-tab-more-trigger::-webkit-details-marker { display: none; }
+html .note-tab-more-trigger:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+html .note-tab-more-trigger svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+html .note-tab-more-menu { position: absolute; top: calc(100% + 7px); right: 0; z-index: 180; display: flex; flex-direction: column; gap: 0; width: 232px; max-width: calc(100vw - 24px); max-height: min(75vh, 420px); overflow: auto; padding: 6px; border: 0; border-radius: 10px; background: var(--canvas); color: var(--ink); box-shadow: 0 0 0 1px var(--line), 0 18px 44px rgb(20 24 32 / 12%); }
+html #librariesView .note-toolbar-actions .note-tab-more-menu button { display: flex; align-items: center; justify-content: flex-start; gap: 9px; width: 100%; min-width: 0; min-height: 34px; height: 34px; margin: 0; padding: 0 9px; border: 0; border-radius: 6px; background: transparent; box-shadow: none; color: var(--ink); font: inherit; font-size: 13px; text-align: left; cursor: pointer; }
+html #librariesView .note-toolbar-actions .note-tab-more-menu button:hover:not(:disabled) { background: var(--hover); color: var(--ink); }
+html #librariesView .note-toolbar-actions .note-tab-more-menu button:disabled { background: transparent; color: var(--note-action-faint); opacity: 1; cursor: default; }
+html #librariesView .note-toolbar-actions .note-tab-more-menu button[hidden] { display: none; }
+html #librariesView .note-tab-more-menu .note-save-shortcut { display: inline; margin-left: auto; padding: 0; border: 0; background: none; color: var(--note-action-faint); font: inherit; font-size: 11.5px; }
+html .note-tab-more-menu .note-workspace-controls { display: flex; flex-direction: column; align-items: stretch; width: 100%; gap: 0; margin: 5px 0 0; padding-top: 5px; border-top: 1px solid var(--line); }
+html .note-tab-more-menu .note-workspace-button { justify-content: flex-start; width: 100%; min-width: 0; min-height: 34px; height: auto; padding: 0 9px; border: 0; color: var(--ink); }
+html .note-tab-more-menu .note-workspace-button:hover { background: var(--hover); color: var(--ink); }
+html .note-tab-more-menu .note-workspace-button > span { display: inline; position: static; width: auto; height: auto; overflow: visible; clip-path: none; white-space: nowrap; }
+html .note-tab-more-menu .note-history-control { width: 100%; padding-top: 0; border-top: 0; }
+html .note-tab-more-menu .note-history-menu { position: static; inset: auto; width: 100%; max-height: min(42vh, 260px); overflow: auto; margin-top: 4px; border-color: var(--line); border-radius: 6px; background: var(--canvas); box-shadow: none; }
+html .note-tab-more-menu .note-history-control .note-toolbar-icon-button { display: flex; justify-content: flex-start; gap: 9px; width: 100%; height: 34px; padding: 0 9px; border: 0; color: var(--ink); }
+html .note-tab-more-menu .note-history-control .note-toolbar-icon-button:hover { background: var(--hover); }
+html .note-tab-more-menu .note-history-control .card-editor-only { display: inline; }
+html .note-tabs-bar .note-back-button:hover { background: var(--hover); color: var(--ink); }
+html .note-tab-context-menu button:disabled { color: var(--muted); opacity: .5; }
+html #librariesView.has-note-tabs { scroll-padding-top: 96px; }
+html #librariesView.has-note-tabs .note-rich-toolbar .ql-formats:not(:last-child)::after { background: var(--line); }
+html #librariesView #noteRichToolbar :is(button, .ql-picker-label):focus-visible { outline: 2px solid var(--blue); outline-offset: -2px; }
+html #cardsView .card-table-scroll { overflow-x: auto; overscroll-behavior-x: contain; }
+html #cardsView .card-management-table .card-row-tags button { background: var(--workspace-surface); color: var(--muted); border-radius: 4px; }
+html #cardsView .card-management-table .card-row-tags button:hover { background: var(--selected); color: var(--blue); }
+
+@media (min-width: 901px) {
+  html:not(.note-window) .shell:not(.sidebar-collapsed):not(:has(.card-editor-immersive:not(.hidden))) { grid-template-columns: var(--workspace-sidebar-width) minmax(0, 1fr); }
+}
+@media (min-width: 681px) {
+  html[data-theme]:not(.note-window) .shell:not(:has(.card-editor-immersive:not(.hidden))) > .window-toolbar { background: var(--workspace-nav); }
+  html .shell > .window-toolbar::before { content: none; }
+  html .shell > .window-toolbar .sidebar-collapse-button { z-index: 1; width: var(--workspace-icon-button-size); height: var(--workspace-icon-button-size); margin: 0; border-radius: 6px; }
+  html .shell > .window-toolbar .sidebar-collapse-button svg { width: var(--workspace-control-icon-size); height: var(--workspace-control-icon-size); stroke-width: 1.7; }
+  html:not(.note-window) .shell.sidebar-collapsed > header :is(.shell-search-button, .nav, .note-tag-nav, .workspace-pinned-action, .sidebar-more-button) {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: var(--workspace-icon-button-size);
+    min-width: var(--workspace-icon-button-size);
+    height: var(--workspace-icon-button-size);
+    min-height: var(--workspace-icon-button-size);
+    margin-inline: auto;
+    padding: 0;
+    border-radius: 6px;
+  }
+  html:not(.note-window) .shell.sidebar-collapsed > header :is(.shell-search-button, .nav, .note-tag-nav, .workspace-pinned-action) > svg {
+    position: static;
+    width: var(--workspace-control-icon-size);
+    height: var(--workspace-control-icon-size);
+    stroke-width: 1.7;
+  }
+  html .shell.sidebar-collapsed > header .sidebar-more-icon { display: grid; place-items: center; width: var(--workspace-control-icon-size); height: var(--workspace-control-icon-size); line-height: 1; }
+  /* 标题行是一排标签：选中并连着内容区的那个 = 正在看的页面；已打开的笔记排在后面（note-tabs.css）。
+     原型 design/prototype/titlebar-open-notes-20261116.html（方案 A）。侧栏展开时页面标签的左边和内容区左边对齐，内容区左上角是直角。 */
+  .workspace-titlebar { --note-tab-surface: var(--canvas); --note-tab-corner: 10px; position: relative; z-index: 3; display: flex; flex: none; align-items: center; align-self: flex-end; box-sizing: border-box; max-width: 40%; height: 39px; margin: 0 0 -1px calc(var(--window-controls-width) + var(--note-tab-corner)); padding: 0 14px 0 12px; border: 1px solid var(--line); border-bottom: 0; border-radius: var(--note-tab-corner) var(--note-tab-corner) 0 0; background: var(--note-tab-surface); color: var(--ink); font-size: 13px; font-weight: 600; -webkit-app-region: no-drag; }
+  .workspace-titlebar::before, .workspace-titlebar::after { content: ''; position: absolute; bottom: 0; width: var(--note-tab-corner); height: var(--note-tab-corner); pointer-events: none; }
+  .workspace-titlebar::before { left: calc(-1 * var(--note-tab-corner)); background: radial-gradient(circle at 0 0, transparent calc(var(--note-tab-corner) - 1.25px), var(--line) calc(var(--note-tab-corner) - .75px), var(--line) calc(var(--note-tab-corner) - .25px), var(--note-tab-surface) calc(var(--note-tab-corner) + .25px)); }
+  .workspace-titlebar::after { right: calc(-1 * var(--note-tab-corner)); background: radial-gradient(circle at 100% 0, transparent calc(var(--note-tab-corner) - 1.25px), var(--line) calc(var(--note-tab-corner) - .75px), var(--line) calc(var(--note-tab-corner) - .25px), var(--note-tab-surface) calc(var(--note-tab-corner) + .25px)); }
+  .workspace-titlebar .workspace-title-page { align-items: center; gap: 7px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .workspace-titlebar .workspace-title-page > svg { width: 15px; height: 15px; flex: none; fill: none; stroke: var(--muted); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  html:not(.note-window) .shell:not(.sidebar-collapsed):not(:has(.card-editor-immersive:not(.hidden))) .workspace-titlebar { margin-left: max(calc(var(--window-controls-width) + var(--note-tab-corner)), var(--workspace-sidebar-width)); }
+  html:not(.note-window) .shell:not(.sidebar-collapsed):not(:has(.card-editor-immersive:not(.hidden))) .workspace-titlebar::before { content: none; }
+  /* 设置页最左边是浅底的分类栏，页面标签跟它同色才连得上。 */
+  .shell:has(> #settingsView:not(.hidden)) .workspace-titlebar { --note-tab-surface: var(--workspace-surface); }
+  html:not(.note-window) .shell:not(.sidebar-collapsed):not(:has(.card-editor-immersive:not(.hidden))) > .view:not(.has-note-tabs) { border-top-left-radius: 0; }
+  .shell:has(> #librariesView.has-note-tabs:not(.hidden)) .workspace-titlebar { display: none; }
+  html .shell.sidebar-collapsed .sidebar-topbar .brand { width: 36px; height: 36px; flex-basis: 36px; padding: 0; margin: 0 auto 12px; }
+  html .shell.sidebar-collapsed .brand-compact.workspace-brand-mark { display: grid; width: 36px; height: 36px; margin: 0; border-radius: 6px; box-shadow: none; }
+  html .shell.sidebar-collapsed .brand-compact svg { width: 18px; height: 18px; }
+  html:not(.note-window) .shell.sidebar-collapsed .sidebar-quick-tools { display: block; margin: 0 0 12px; padding: 0; }
+  html:not(.note-window) .shell.sidebar-collapsed > header .sidebar-action-bar { justify-content: center; }
+  html .shell.sidebar-collapsed #sidebarQuickCreate { width: 36px; height: 36px; flex-basis: 36px; padding: 0; border: 1px solid var(--line); border-radius: 6px; background: var(--canvas); }
+  html .shell.sidebar-collapsed .sidebar-quick-tools :is(#sidebarQuickFolder, #toggleAllKnowledgeDirectories) { display: none; }
+}
+@media (max-width: 1100px) {
+  html .note-tab-more-menu .note-workspace-button { width: 100%; min-width: 0; padding-inline: 9px; }
+  html .note-tab-more-menu .note-workspace-button > span { position: static; width: auto; height: auto; overflow: visible; clip-path: none; white-space: nowrap; }
+}
+@media (max-width: 680px) {
+  html .shell > header .sidebar-more-menu { position: fixed; inset: 56px 12px auto auto; width: min(240px, calc(100vw - 24px)); max-height: calc(100dvh - 72px); }
+  html .note-tab-navigation { margin-right: 4px; padding-right: 4px; }
+  html .note-tab-add { margin-inline: 4px; }
+  html #librariesView #noteRichToolbar.ql-toolbar.ql-snow { padding-left: 10px; padding-right: 8px; }
+  html #librariesView .note-toolbar-actions > :is(#noteSkimButton, #noteGistDetailsAll) > span { display: none; }
+}
+@media (max-width: 600px) {
+  html #homeView .memory-row { grid-template-columns: 28px minmax(0, 1fr) auto; gap: 9px; }
+  html #homeView .memory-status { width: 28px; height: 28px; }
+}
+@media (min-width: 901px) { html .home-side-column { display: block; } }
+@media (max-width: 1100px) and (min-width: 901px) {
+  html .home-workspace { grid-template-columns: minmax(0, 1fr) 205px; gap: 28px; }
+  html .home-review-panel { padding: 20px; }
+  html .home-plan-summary strong { font-size: 48px; }
+  html .home-plan-summary > span { max-width: 6em; }
+  html #homeView .home-start-review { padding-inline: 14px; }
+}
+@media (max-width: 900px) {
+  html .home-workspace { grid-template-columns: minmax(0, 1fr); gap: 26px; }
+  html .home-side-column { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+  html .home-library-health { grid-column: 1 / -1; }
+  html #homeView > .stats article { padding-inline: 16px; }
+  html #homeView > .stats article:first-child { padding-left: 0; }
+}
+@media (max-width: 680px) {
+  html .shell > header .brand { font-size: 17px; }
+  .workspace-brand-mark { width: 25px; height: 25px; margin-right: 6px; border-radius: 5px; }
+  .workspace-brand-mark svg { width: 15px; height: 15px; }
+  html .shell > .view:not(#librariesView):not(#settingsView):not(#filePreviewView) { padding: 25px 18px 40px; }
+  html .home-page-heading { gap: 12px; padding-bottom: 25px; }
+  html .home-page-heading h1 { font-size: 30px; }
+  html .home-page-heading > button { padding: 8px 11px; font-size: 12px; }
+  html[data-theme] #homeView > .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 24px; margin-bottom: 25px; padding-bottom: 24px; }
+  html #homeView > .stats article { min-height: 65px; padding: 0 16px; border: 0; }
+  html #homeView > .stats article:nth-child(odd) { padding-left: 0; border-right: 1px solid var(--line); }
+  html #homeView > .stats article:nth-child(even) { border-right: 0; }
+  html #homeView > .stats strong { font-size: 28px; }
+  html .home-review-panel { grid-template-areas: "heading heading" "count count" "detail detail" "budget budget" "actions actions"; padding: 20px; }
+  html .home-plan-summary strong { font-size: 50px; }
+  html .home-plan-actions { flex-direction: row; align-items: center; gap: 12px; margin-top: 12px; }
+  html #homeView .home-start-review { padding-inline: 14px; }
+  html .home-budget-options { padding-top: 13px; margin-top: 12px; }
+  html .home-budget-options button { padding-inline: 9px; }
+  html .home-side-column { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  html .home-week-panel, html .home-pet-panel { margin-bottom: 0; }
+  html .home-library-health { grid-column: auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html *, html *::before, html *::after { scroll-behavior: auto !important; transition: none !important; animation: none !important; }
+}

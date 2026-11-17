@@ -1,0 +1,165 @@
+/* Shared appearance tokens. Content-authored colors and diagram themes stay intact. */
+html[data-theme] body { background:var(--canvas); color:var(--ink); }
+html[data-theme] .shell>header { background:var(--sidebar); border-color:var(--line); }
+html[data-theme] :is(.view,.shell,.settings-card,dialog,.note-editor-canvas,.clean-note-editor,.card-editor-paper,.card-editor-canvas,.workspace-grid,.library-main,.card-main,.note-outline,.note-tabs-bar,.file-preview-content,.card-detail-source-drawer) { background-color:var(--canvas); color:var(--ink); border-color:var(--line); }
+html[data-theme] :is(.nav,.knowledge-tree-row,.tree-item-name,.card-directory-row,.card-notebook-row,.sidebar-action-bar button,.note-title-input,.note-title,.section-title h1,.brand) { color:var(--ink); }
+html[data-theme] :is(.nav.active,.tree-item.active,.tree-item.selected,.card-directory-row.active,.card-notebook-row.active,.sidebar-action-bar button:hover) { background:var(--selected); color:var(--blue); }
+html[data-theme] :is(input,select,textarea,.choices__inner,.choices__list--dropdown,.choices__list[aria-expanded]) { background-color:var(--canvas); color:var(--ink); border-color:var(--line); }
+html[data-theme] :is(.secondary,.tag,.badge,.toolbar,.ql-toolbar,.note-editor-toolbar,.note-tabs,.dialog-head,.card-editor-toolbar,.card-detail-meta>span,.card-detail-tags,.mermaid-editor-toolbar) { background-color:var(--hover); color:var(--ink); border-color:var(--line); }
+html[data-theme] :is(.tree-item-menu,.card-directory-menu,.note-more-menu,.sidebar-create-menu,.ql-picker-options,.note-outline-panel,.file-preview-outline,.sidebar-search-results) { background:var(--canvas); color:var(--ink); border-color:var(--line); }
+html[data-theme] :is(.tree-item-menu,.card-directory-menu,.ql-toolbar,.note-editor-toolbar) button:not(.danger) { color:var(--ink); }
+html[data-theme] :is(.ql-snow .ql-stroke) { stroke:var(--ink); }
+html[data-theme] :is(.ql-snow .ql-fill) { fill:var(--ink); }
+html[data-theme] .ql-snow .ql-picker { color:var(--ink); }
+/* Match editor ID specificity so legacy light-palette rules cannot override ink. */
+html[data-theme] :is(#noteRichEditor,#memoContentEditor) .ql-editor { color:var(--ink); }
+html[data-theme] :is(#noteRichEditor,#memoContentEditor) .ql-editor.ql-blank::before { color:var(--muted); }
+html[data-theme] .ql-editor { color:var(--ink); }
+html[data-theme] .ql-editor.ql-blank::before { color:var(--muted); }
+/* Inline code uses the reading surface palette; code blocks keep their own theme. */
+html[data-theme] :is(.ql-editor,.markdown-body) code:not(pre code,.ql-code-block-container code) { background-color:color-mix(in srgb,var(--ink) 8%,var(--canvas));color:var(--ink); }
+html[data-theme] :is(.note-outline,.file-preview-outline) a { color:var(--muted); }
+html[data-theme] :is(.note-outline,.file-preview-outline) a.active { color:var(--blue); background:var(--selected); }
+html[data-theme] .note-eye-mode { --canvas:#f3efdf; --ink:#454b3e; --muted:#777d6b; --sidebar:#eeeadd; --line:#dedbcd; }
+html[data-theme] .card-editor { --card-editor-paper:var(--canvas); }
+#settingsView { padding:0; }
+#settingsView .appearance-layout { display:grid;grid-template-columns:180px minmax(0,1fr);width:100%;max-width:none;margin:0;gap:0;min-height:100dvh; }
+.settings-navigation { padding:70px 16px 24px;border-right:1px solid var(--line);background:var(--sidebar);gap:6px; }
+.settings-navigation h1 { font-size:20px;margin:0 12px 24px; }
+.settings-navigation button { border:0;border-radius:8px;background:transparent;color:var(--muted);padding:12px;text-align:left;font-weight:500; }
+.settings-navigation button[aria-pressed=true] { background:var(--selected);color:var(--blue); }
+.settings-content { padding:76px 34px 48px;min-width:0;max-width:940px;width:100%; }
+.settings-content>[hidden] { display:none!important; }
+.settings-content>.settings-card { margin-bottom:20px; }
+.appearance-panel h2 { font-size:26px;margin:0 0 8px; }
+.appearance-panel>.hint { margin:0 0 28px; }
+.appearance-mode { display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 0 24px;border-bottom:1px solid var(--line); }
+.appearance-mode .hint { font-size:12px;margin:6px 0 0; }
+.appearance-segments { display:flex;padding:3px;border:1px solid var(--line);background:var(--hover);border-radius:9px;flex-shrink:0; }
+.appearance-segments button { padding:8px 12px;border:0;border-radius:6px;background:transparent;color:var(--muted);font-size:12px; }
+.appearance-segments button[aria-pressed=true] { background:var(--canvas);color:var(--blue);box-shadow:0 1px 4px #00000012; }
+.appearance-heading { display:flex;justify-content:space-between;align-items:center;margin:24px 0 14px; }
+.appearance-heading h3 { font-size:15px;margin:0; }
+.appearance-heading span { color:var(--muted);font-size:12px; }
+#appearanceThemes { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px; }
+/* 两组：浅色时用 / 深色时用，各选一个；正在使用的那组标出来。 */
+.appearance-group h4 { display:flex;align-items:center;gap:8px;margin:0 0 10px;font-size:13px;font-weight:600;color:var(--muted); }
+.appearance-group h4 small { display:none;font-size:12px;font-weight:500;color:var(--blue);background:var(--selected);border-radius:999px;padding:0 8px; }
+.appearance-group.is-current h4 { color:var(--ink); }
+.appearance-group.is-current h4 small { display:inline-block; }
+.appearance-group-options { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px; }
+.appearance-theme { position:relative;display:block;text-align:left;border:1px solid var(--line);border-radius:10px;padding:12px;background:var(--canvas);color:var(--ink);font-size:13px; }
+.appearance-theme:hover { border-color:var(--blue); }
+.appearance-theme[aria-checked=true] { border-color:var(--blue);box-shadow:inset 0 0 0 1px var(--blue);background:var(--selected); }
+.appearance-swatches { display:flex;height:34px;border-radius:5px;overflow:hidden;margin-bottom:14px;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--ink) 14%,transparent); }
+.appearance-swatches i { box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--ink) 6%,transparent); }
+.appearance-swatches i { flex:1; }
+.appearance-swatches i:first-child { flex:2; }
+.appearance-check { position:absolute;right:12px;bottom:12px;color:var(--blue);visibility:hidden; }
+.appearance-theme[aria-checked=true] .appearance-check { visibility:visible; }
+.appearance-preview { display:grid;grid-template-columns:155px minmax(0,1fr);border:1px solid var(--line);border-radius:10px;overflow:hidden; }
+.appearance-preview-nav { background:var(--sidebar);padding:20px 12px;border-right:1px solid var(--line);font-size:12px; }
+.appearance-preview-nav p { padding:9px;margin:4px 0;color:var(--muted); }
+.appearance-preview-nav strong { display:block;margin-bottom:14px; }
+.appearance-preview-nav .active { background:var(--selected);color:var(--blue);border-radius:5px; }
+.appearance-preview article { padding:24px; }
+.appearance-preview article h3 { margin:0 0 14px;font-size:19px; }
+.appearance-preview article p { color:var(--muted);line-height:1.9;font-size:13px; }
+.appearance-preview mark { background:var(--selected);color:var(--ink);padding:3px; }
+.appearance-preview article>span { display:block;color:var(--blue);margin-top:22px;font-size:12px; }
+.appearance-footer { display:flex;align-items:center;justify-content:space-between;margin-top:18px;color:var(--muted);font-size:12px; }
+.appearance-footer button { border:0;background:transparent;color:var(--blue);padding:8px; }
+.appearance-layout button:focus-visible { outline:2px solid var(--blue);outline-offset:3px; }
+@media(max-width:1050px) { #settingsView .appearance-layout { grid-template-columns:150px minmax(0,1fr); }.settings-content { padding:72px 24px 48px; }.appearance-mode { align-items:flex-start;flex-direction:column; } }
+@media(max-width:760px) { #settingsView .appearance-layout { display:block; }.settings-navigation { flex-direction:row;flex-wrap:wrap;border-right:0;border-bottom:1px solid var(--line); }.settings-navigation h1 { width:100%;margin-bottom:8px; }#appearanceThemes { grid-template-columns:1fr; }.appearance-preview { grid-template-columns:110px minmax(0,1fr); }.appearance-preview article { padding:16px; } }
+html[data-theme] .clean-note-editor { --card-editor-paper:var(--canvas);--card-editor-chrome:var(--hover);--card-editor-hover:var(--hover);--card-editor-active:var(--selected);--card-editor-ink:var(--ink);--card-editor-muted:var(--muted);--card-editor-line:var(--line);--card-editor-blue:var(--blue); }
+html[data-theme] :is(#librariesView.editing-note,#librariesView.editing-card-note,#noteRichEditor,.note-rich-workspace,.note-rich-editor-column,.note-document-heading,.library-content,#noteOutlinePanel,#noteRichSlashMenu,.note-editor-context-menu,.note-table-menu,.card-notebook-section) { background-color:var(--canvas);color:var(--ink);border-color:var(--line); }
+html[data-theme] :is(#homeView .stats,#homeView .card-list,.card-notebook-item,.card-folder-item,.memo-item,.empty-state) { background:var(--hover);color:var(--ink);border-color:var(--line); }
+html[data-theme] #homeView .hero { background-color:var(--sidebar);color:var(--ink); }
+html[data-theme] :is(.close-btn,.icon-btn,.note-outline-header,.note-outline-item,.tree-item-label,.sidebar-more-trigger) { color:var(--muted); }
+html[data-appearance=dark] .primary { color:var(--canvas); }
+html[data-theme] #librariesView #noteRichEditorPane { background:var(--canvas); }
+html[data-theme] #librariesView #noteRichToolbar { background:var(--hover);border-color:var(--line);color:var(--ink); }
+html[data-theme] #librariesView .note-outline-hover-target { background:var(--canvas);color:var(--muted); }
+html[data-theme] #librariesView #noteRichToolbar :is(.note-rich-toolbar-content button,.ql-picker-label) { color:var(--ink); }
+/* Card workspace uses its own tokens; bridge them to the application palette. */
+html[data-theme] #cardsView {
+  --card-accent:var(--blue);--card-accent-hover:var(--blue);
+  --card-ink:var(--ink);--card-muted:var(--muted);--card-line:var(--line);--card-hover:var(--selected);
+  background:var(--canvas);color:var(--ink);
+}
+html[data-theme] #cardsView :is(#newCardBtn,#cardLibraryFilter,.card-search-field,.card-tag-filter,.card-create-menu,.card-tag-menu) { background:var(--canvas);color:var(--ink);border-color:var(--line); }
+html[data-theme] #cardsView .card-search-field input { background:transparent;color:var(--ink); }
+html[data-theme] #cardsView .card-search-field input::placeholder { color:var(--muted); }
+html[data-theme] #cardsView :is(.card-review-banner,.card-management-summary) { background:var(--selected);color:var(--ink); }
+html[data-theme] #cardsView :is(.card-notebook-heading h2,.card-notebook-link strong,.card-empty-state h2,.card-table-row td,.card-source-cell span) { color:var(--ink); }
+html[data-theme] #cardsView :is(.card-management-table thead th,.card-filter-chips button,.card-row-actions button,.card-notebook-link small,.card-bulk-actions>span,.card-due-cell,#cardTotal) { color:var(--muted); }
+html[data-theme] #cardsView .card-filter-chips button[aria-pressed=true] { color:var(--blue); }
+html[data-theme] #cardsView .card-filter-chips button[aria-pressed=true]::after { background:var(--blue); }
+html[data-theme] #cardsView #cardStartReviewBtn:disabled { background:var(--hover);color:var(--muted); }
+html[data-appearance=dark] #cardsView :is(#cardStartReviewBtn,.card-empty-state button) { color:var(--canvas); }
+html[data-theme] :is(.tree-library,.tree-document,.card-tree-row,.note-outline-title) { color:var(--ink); }
+html[data-theme] :is(.tree-library-row.active .tree-library,.tree-document.active,.card-tree-row.selected,.card-tree-row.selected .card-tree-label) { color:var(--blue); }
+html[data-theme] #librariesView #noteRichEditor .ql-editor :is(h1,h2,h3,h4,h5,h6) { color:var(--ink); }
+html[data-theme] #noteRichEditor .ql-editor a { color:var(--blue); }
+html[data-theme] #noteRichEditor .ql-editor table { border-color:var(--line); }
+html[data-theme] #noteRichEditor .ql-editor td { background:var(--canvas);border-color:var(--line); }
+html[data-theme] #noteRichEditor .ql-editor tr:first-child td { background:var(--hover); }
+html[data-theme] #noteRichEditor .ql-editor td:focus { background:var(--selected);outline-color:var(--blue); }
+html[data-theme] #noteRichEditor .ql-editor td.is-table-axis-selected { background:var(--selected)!important;box-shadow:inset 0 0 0 1px var(--blue); }
+html[data-theme] #noteRichEditor .ql-editor table.has-table-axis-selection { border-color:var(--blue); }
+html[data-theme] #noteRichEditor .ql-editor table.is-copy-selected td { background:var(--selected); }
+html[data-theme] #librariesView .note-outline-header { border-color:var(--line); }
+html[data-theme] #librariesView .note-outline-pin { background:transparent;color:var(--muted); }
+html[data-theme] #librariesView .note-outline-pin:is(:hover,.active) { background:var(--selected);color:var(--blue); }
+html[data-theme] #cardsView :is(.card-review-summary,.card-tag-modes) { background:var(--selected);color:var(--ink); }
+html[data-theme] #cardsView .card-review-summary :is(strong,p,span) { color:var(--ink); }
+html[data-theme] #cardsView :is(.card-tag-panel,.card-tag-filter summary) { background:var(--canvas);color:var(--ink);border-color:var(--line); }
+html[data-theme] #cardsView :is(.card-tag-options label:hover,.card-tag-filter[open] summary) { background:var(--hover); }
+/* Selection chrome follows the active palette, including icons and tree chevrons. */
+html[data-theme] .shell>header .nav.active .nav-ui-icon { color:var(--blue); }
+html[data-theme] .shell>header .nav:hover:not(.active) .nav-ui-icon { color:var(--ink); }
+html[data-theme] :is(.tree-library.active,.tree-document.active,.card-tree-row.selected .card-tree-label,.card-tree-row.selected .card-tree-chevron) { color:var(--blue); }
+html[data-theme] .tree-library-row:has(>.tree-library.active)>.tree-library-toggle::before { border-color:var(--blue); }
+html[data-theme] :is(.tree-library-row:has(>.tree-library.active),.tree-document-row:has(>.tree-document.active),.card-tree-row.selected) { background:var(--selected); }
+html[data-theme] :is(.doc-icon,.card-tree-row.nested svg) { color:var(--blue); }
+html[data-theme] .doc-icon { background:var(--selected); }
+html[data-theme] :is(.tree-library-row,.tree-document-row,.card-tree-row) .tree-more:is(:hover,.menu-open) { color:var(--blue);background:var(--selected); }
+/* Active tabs stay distinct from both the tab strip and inactive documents. */
+html[data-theme] .note-tabs-bar { background:var(--sidebar);box-shadow:inset 0 -1px var(--line); }
+html[data-theme] .note-tabs-bar button:focus-visible { outline-color:var(--blue); }
+/* Editor controls and outline selection use the same theme as navigation. */
+html[data-theme] #librariesView .note-outline-item:hover { background:var(--hover);color:var(--ink); }
+html[data-theme] #librariesView .note-outline-item.active { background:var(--selected);color:var(--blue); }
+html[data-theme] #librariesView .note-outline-item.active::before { background:var(--blue); }
+html[data-theme] #librariesView .note-outline-toggle:hover { background:var(--selected); }
+html[data-theme] #librariesView .note-outline-item button:focus-visible { outline-color:var(--blue); }
+html[data-theme] #librariesView #noteRichToolbar :is(button:not(:disabled):hover,button:not(:disabled):focus-visible,button.ql-active,.ql-picker-label:hover,.ql-picker-label.ql-active,.ql-expanded .ql-picker-label) { background:var(--selected);color:var(--blue); }
+html[data-theme] #librariesView #noteRichToolbar :is(button.ql-active,button:not(:disabled):hover,.ql-picker-label.ql-active,.ql-expanded .ql-picker-label) .ql-stroke { stroke:var(--blue); }
+html[data-theme] #librariesView #noteRichToolbar :is(button.ql-active,button:not(:disabled):hover,.ql-picker-label.ql-active,.ql-expanded .ql-picker-label) .ql-fill { fill:var(--blue); }
+html[data-theme] #librariesView #noteRichToolbar .ql-picker-options { background:var(--canvas);border-color:var(--line); }
+html[data-theme] #librariesView #noteRichToolbar :is(.ql-header,.ql-align) .ql-picker-item { color:var(--ink); }
+html[data-theme] #librariesView #noteRichToolbar :is(.ql-header,.ql-align) .ql-picker-item:hover { background:var(--hover);color:var(--ink); }
+html[data-theme] #librariesView #noteRichToolbar :is(.ql-header,.ql-align) .ql-picker-item.ql-selected { background:var(--selected);color:var(--blue); }
+html[data-theme] #librariesView #noteRichToolbar .note-heading-level { background:var(--hover);color:var(--muted); }
+html[data-theme] #librariesView #noteRichToolbar .ql-selected .note-heading-level { background:var(--selected);color:var(--blue); }
+html[data-theme] #librariesView #noteRichToolbar :is(.ql-picker-label,.ql-picker-item):focus-visible { outline-color:var(--blue); }
+/* Sidebar tree: shape identifies kind; indentation identifies parentage. */
+html[data-theme] :is(.tree-library,.tree-document) { display:flex;align-items:center;gap:8px;line-height:1.4; }
+html[data-theme] .tree-label-text { min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
+html[data-theme] :is(.tree-library,.card-tree-label[data-card-scope=folder]) { font-size:13px;font-weight:600; }
+html[data-theme] :is(.tree-document,.card-tree-label[data-card-scope=notebook]) { font-size:12px;font-weight:400; }
+html[data-theme] :is(.tree-document.active,.card-tree-row.selected .card-tree-label[data-card-scope=notebook]) { font-weight:550; }
+html[data-theme] .tree-kind-icon { width:16px;height:16px;flex:0 0 16px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;color:var(--muted); }
+html[data-theme] :is(.tree-library.active,.tree-document.active,.card-tree-row.selected) .tree-kind-icon { color:var(--blue); }
+html[data-theme] .tree-document-row { margin-left:36px; }
+html[data-theme] .card-tree-row:has([data-card-scope=notebook]) { padding-left:18px; }
+html[data-theme] :is(.tree-library-row,.tree-document-row,.card-tree-row) { border-radius:5px; }
+html[data-theme] :is(.tree-library-row:hover:not(:has(.active)),.tree-document-row:hover:not(:has(.active)),.card-tree-row:hover:not(.selected)) { background:var(--hover); }
+html[data-theme] :is(.tree-library,.tree-document,.card-tree-label):focus-visible { outline:2px solid var(--blue);outline-offset:-2px; }
+/* Direct-card directory actions use the active theme without promoting note creation. */
+html[data-theme] #cardsView #newCardBtn { background: var(--blue); color: var(--canvas); border-color: var(--blue); }
+html[data-theme] #cardsView #newCardBtn:hover { background: color-mix(in srgb, var(--blue) 90%, var(--ink)); }
+html[data-theme] #cardsView #cardStartReviewBtn { background: var(--canvas); color: var(--ink); border: 1px solid var(--line); }
+html[data-theme] #cardsView #cardStartReviewBtn:hover:not(:disabled) { background: var(--hover); }
+html[data-theme] #cardsView .card-empty-state .card-import-action { background: transparent; color: var(--muted); }

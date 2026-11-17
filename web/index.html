@@ -1,0 +1,939 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MemoKeep</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon.png">
+  <link rel="stylesheet" href="vendor/choices/choices.min.css">
+  <link rel="stylesheet" href="vendor/quill/quill.snow.css">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="enhancements.css">
+  <link rel="stylesheet" href="../modules/content/editor/image.css">
+  <link rel="stylesheet" href="card-workspace.css">
+  <link rel="stylesheet" href="file-preview.css">
+  <link rel="stylesheet" href="cat-sizing.css">
+  <link rel="stylesheet" href="reference-cat.css">
+  <link rel="stylesheet" href="card-editor.css">
+  <link rel="stylesheet" href="note-tabs.css">
+  <link rel="stylesheet" href="note-find.css">
+  <link rel="stylesheet" href="review-presentation.css">
+  <link rel="stylesheet" href="review-outcome.css">
+  <link rel="stylesheet" href="card-edit-dialog.css">
+  <link rel="stylesheet" href="memo-dialog.css">
+  <link rel="stylesheet" href="memo-list.css">
+  <link rel="stylesheet" href="appearance.css">
+  <link rel="stylesheet" href="note-directory.css">
+  <link rel="stylesheet" href="library-settings.css">
+  <link rel="stylesheet" href="note-tags.css">
+  <link rel="stylesheet" href="note-files.css">
+  <link rel="stylesheet" href="shortcuts.css">
+  <link rel="stylesheet" href="window-chrome.css">
+  <link rel="stylesheet" href="../modules/content/editor/code.css">
+  <link rel="stylesheet" href="note-selection-cards.css">
+  <link rel="stylesheet" href="note-split.css">
+  <link rel="stylesheet" href="product-design.css">
+  <link rel="stylesheet" href="card-formats-editor.css">
+  <link rel="stylesheet" href="engagement.css">
+  <link rel="stylesheet" href="workspace-history.css">
+  <link rel="stylesheet" href="source-learning.css">
+  <link rel="stylesheet" href="workspace-design.css">
+  <link rel="stylesheet" href="polish.css">
+  <link rel="stylesheet" href="sidebar-tree.css">
+  <link rel="stylesheet" href="plans.css">
+  <link rel="stylesheet" href="pomodoro.css">
+  <link rel="stylesheet" href="sidebar-footer.css">
+  <link rel="stylesheet" href="today.css">
+  <link rel="stylesheet" href="review-v2.css">
+  <link rel="stylesheet" href="review-voice.css">
+  <link rel="stylesheet" href="voice-settings.css">
+  <link rel="stylesheet" href="card-topics.css">
+  <link rel="stylesheet" href="note-card-marks.css">
+  <link rel="stylesheet" href="note-gist.css">
+  <link rel="stylesheet" href="tokens.css">
+  <link rel="stylesheet" href="ui-refresh.css">
+  <link rel="stylesheet" href="card-list.css">
+  <link rel="stylesheet" href="memory-boost.css">
+  <link rel="stylesheet" href="typography.css">
+  <link rel="stylesheet" href="plugins.css">
+  <link rel="stylesheet" href="sidebar-plugins.css">
+  <link rel="stylesheet" href="workspace-page-tabs.css">
+  <!-- edition:styles -->
+  <script src="appearance.js"></script>
+  <link rel="stylesheet" href="../modules/editions/current/community.css">
+</head>
+<body>
+  <button id="backgroundLoading" class="background-loading" type="button" role="status" aria-live="polite" hidden></button>
+  <div id="startupLoading" class="startup-loading" role="status" aria-live="polite" aria-busy="true">
+    <span class="startup-spinner" aria-hidden="true"></span>
+    <strong id="startupLoadingText">正在加载…</strong>
+    <span id="startupLoadingHint" hidden></span>
+    <button id="startupRetry" type="button" hidden>重新加载</button>
+  </div>
+  <!-- Lucide icons (ISC): https://lucide.dev -->
+  <svg class="ui-icon-sprite" aria-hidden="true">
+    <symbol id="icon-sun" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2m-7.07-17.07 1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+    </symbol>
+    <symbol id="icon-sprout" viewBox="0 0 24 24">
+      <path d="M7 20h10M10 20c5.5-2.5.8-6.4 3-10M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8zM14.1 6a7 7 0 0 0-1.1 4c1.9-.1 3.3-.6 4.3-1.4 1-1 1.6-2.3 1.7-4.6-2.7.1-4 1-4.9 2z"/>
+    </symbol>
+    <symbol id="icon-star" viewBox="0 0 24 24">
+      <path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.12 2.12 0 0 0 1.595 1.16l5.164.75a.53.53 0 0 1 .294.904l-3.736 3.638a2.12 2.12 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.12 2.12 0 0 0-1.969 0l-4.618 2.428a.53.53 0 0 1-.77-.56l.881-5.139a2.12 2.12 0 0 0-.611-1.879L2.16 9.788a.53.53 0 0 1 .294-.906l5.165-.75a2.12 2.12 0 0 0 1.597-1.157z"/>
+    </symbol>
+    <symbol id="icon-book-open" viewBox="0 0 24 24">
+      <path d="M12 7v14"/>
+      <path d="M3 18a1 1 0 0 1-1-1V5a2 2 0 0 1 2-2h5a3 3 0 0 1 3 3v15a3 3 0 0 0-3-3Z"/>
+      <path d="M21 18a1 1 0 0 0 1-1V5a2 2 0 0 0-2-2h-5a3 3 0 0 0-3 3v15a3 3 0 0 1 3-3Z"/>
+    </symbol>
+    <symbol id="icon-layers" viewBox="0 0 24 24">
+      <path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"/>
+      <path d="m22 12.5-9.17 4.17a2 2 0 0 1-1.66 0L2 12.5"/>
+      <path d="m22 17.5-9.17 4.17a2 2 0 0 1-1.66 0L2 17.5"/>
+    </symbol>
+    <symbol id="icon-chart" viewBox="0 0 24 24">
+      <path d="M5 21v-6"/>
+      <path d="M12 21V9"/>
+      <path d="M19 21V3"/>
+    </symbol>
+    <symbol id="icon-book-open-text" viewBox="0 0 24 24">
+      <path d="M12 7v14"/>
+      <path d="M3 18a1 1 0 0 1-1-1V5a2 2 0 0 1 2-2h5a3 3 0 0 1 3 3v15a3 3 0 0 0-3-3Z"/>
+      <path d="M21 18a1 1 0 0 0 1-1V5a2 2 0 0 0-2-2h-5a3 3 0 0 0-3 3v15a3 3 0 0 1 3-3Z"/>
+      <path d="M6 8h2"/><path d="M6 12h2"/><path d="M16 8h2"/><path d="M16 12h2"/>
+    </symbol>
+    <symbol id="icon-puzzle" viewBox="0 0 24 24"><path d="M9 4h4v2.5a1.75 1.75 0 1 0 3.5 0V4H20v5h-2.2a1.75 1.75 0 1 0 0 3.5H20V20h-5v-2.2a1.75 1.75 0 1 0-3.5 0V20H4v-6h2.2a1.75 1.75 0 1 0 0-3.5H4V4h5"/></symbol>
+    <symbol id="icon-settings" viewBox="0 0 24 24">
+      <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.09a2 2 0 0 1-1-1.74v-.51a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+      <circle cx="12" cy="12" r="3"/>
+    </symbol>
+    <symbol id="icon-user-plus" viewBox="0 0 24 24">
+      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+      <circle cx="9" cy="7" r="4"/>
+      <path d="M19 8v6"/><path d="M22 11h-6"/>
+    </symbol>
+    <symbol id="icon-gem" viewBox="0 0 24 24">
+      <path d="M6 3h12l4 6-10 13L2 9Z"/>
+      <path d="m12 22 4-13-3-6"/><path d="M9 3 6 9l6 13"/><path d="M2 9h20"/>
+    </symbol>
+    <symbol id="icon-timer" viewBox="0 0 24 24"><path d="M10 2h4"/><path d="m12 14 3-3"/><circle cx="12" cy="14" r="8"/></symbol>
+    <symbol id="icon-square" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="1.5"/></symbol>
+    <symbol id="icon-skip-forward" viewBox="0 0 24 24"><path d="m5 4 10 8-10 8z"/><path d="M19 5v14"/></symbol>
+    <symbol id="icon-x" viewBox="0 0 24 24">
+      <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+    </symbol>
+    <symbol id="icon-maximize" viewBox="0 0 24 24">
+      <path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/>
+    </symbol>
+    <symbol id="icon-minimize" viewBox="0 0 24 24">
+      <path d="M8 3v3a2 2 0 0 1-2 2H3"/><path d="M21 8h-3a2 2 0 0 1-2-2V3"/><path d="M3 16h3a2 2 0 0 1 2 2v3"/><path d="M16 21v-3a2 2 0 0 1 2-2h3"/>
+    </symbol>
+    <symbol id="icon-lightbulb" viewBox="0 0 24 24">
+      <path d="M9 18h6"/><path d="M10 22h4"/>
+      <path d="M15.09 14c.18-.85.66-1.59 1.21-2.31A6 6 0 0 0 9.32 2.3a6 6 0 0 0-1.62 9.4c.54.71 1.03 1.45 1.21 2.3Z"/>
+    </symbol>
+    <symbol id="icon-eye" viewBox="0 0 24 24">
+      <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/>
+      <circle cx="12" cy="12" r="3"/>
+    </symbol>
+    <symbol id="icon-copy" viewBox="0 0 24 24">
+      <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
+      <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+    </symbol>
+    <symbol id="icon-workflow" viewBox="0 0 24 24">
+      <rect x="3" y="3" width="6" height="6" rx="1.5"/><rect x="15" y="15" width="6" height="6" rx="1.5"/><path d="M9 6h6a3 3 0 0 1 3 3v6M6 9v9h9"/>
+    </symbol>
+    <symbol id="icon-table" viewBox="0 0 24 24">
+      <rect width="18" height="18" x="3" y="3" rx="2"/>
+      <path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 3v18"/><path d="M15 3v18"/>
+    </symbol>
+    <symbol id="icon-circle-check" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>
+    </symbol>
+    <symbol id="icon-clock" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>
+    </symbol>
+    <symbol id="icon-calendar-days" viewBox="0 0 24 24">
+      <path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/>
+      <path d="M3 10h18"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/>
+    </symbol>
+    <symbol id="icon-rotate-ccw" viewBox="0 0 24 24">
+      <path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/>
+    </symbol>
+    <symbol id="icon-undo-2" viewBox="0 0 24 24">
+      <path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/>
+    </symbol>
+    <symbol id="icon-redo-2" viewBox="0 0 24 24">
+      <path d="m15 14 5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/>
+    </symbol>
+    <symbol id="icon-paint-roller" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="4" width="14" height="6" rx="1.5"/><path d="M17 7h3v6h-8v3"/><rect x="10" y="16" width="4" height="5" rx="1"/>
+      </g>
+    </symbol>
+    <symbol id="icon-paint-bucket" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round">
+        <path d="m10 3 8 8-7 7a2 2 0 0 1-3 0l-5-5a2 2 0 0 1 0-3l7-7ZM5 12h12M6 3l5 5M19 13s-2 2.4-2 3.5a2 2 0 0 0 4 0C21 15.4 19 13 19 13Z"/>
+      </g>
+    </symbol>
+    <symbol id="icon-paintbrush" viewBox="0 0 24 24">
+      <path d="m14.6 4.4 5 5"/><path d="M16.5 2.5a2.1 2.1 0 0 1 3 3L9.8 15.2l-5-5Z"/>
+      <path d="M5.8 13.2c-2.5.5-3.8 2.1-3.8 4.8 1.4-.8 2.8-.7 4.2.1 2.4 1.4 5.2-.3 5.2-3.1 0-.6-.1-1.1-.4-1.6"/>
+    </symbol>
+    <symbol id="icon-history" viewBox="0 0 24 24">
+      <path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/>
+    </symbol>
+    <symbol id="icon-alert-triangle" viewBox="0 0 24 24">
+      <path d="m21.73 18-8-14a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/>
+    </symbol>
+    <symbol id="icon-sparkles" viewBox="0 0 24 24">
+      <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/><path d="M5 3v4"/><path d="M3 5h4"/><path d="M19 17v4"/><path d="M17 19h4"/>
+    </symbol>
+    <symbol id="icon-check" viewBox="0 0 24 24">
+      <path d="m5 12 4 4L19 6"/>
+    </symbol>
+    <symbol id="icon-mic" viewBox="0 0 24 24">
+      <rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M8.5 21h7"/>
+    </symbol>
+    <symbol id="icon-audio-lines" viewBox="0 0 24 24"><path d="M3 10v4M7 6v12M12 2v20M17 6v12M21 10v4"/></symbol>
+    <symbol id="icon-lock" viewBox="0 0 24 24">
+      <rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>
+    </symbol>
+    <symbol id="icon-refresh-cw" viewBox="0 0 24 24">
+      <path d="M20 11a8.1 8.1 0 0 0-15.5-2M4 4v5h5"/><path d="M4 13a8.1 8.1 0 0 0 15.5 2M20 20v-5h-5"/>
+    </symbol>
+    <symbol id="icon-arrow-up-right" viewBox="0 0 24 24">
+      <path d="M7 17 17 7"/><path d="M7 7h10v10"/>
+    </symbol>
+    <symbol id="icon-arrow-right" viewBox="0 0 24 24">
+      <path d="M5 12h14"/><path d="m13 6 6 6-6 6"/>
+    </symbol>
+    <symbol id="icon-arrow-left" viewBox="0 0 24 24">
+      <path d="m12 19-7-7 7-7"/><path d="M19 12H5"/>
+    </symbol>
+    <symbol id="icon-corner-down-left" viewBox="0 0 24 24">
+      <path d="M20 4v7a4 4 0 0 1-4 4H4"/><path d="m9 10-5 5 5 5"/>
+    </symbol>
+    <symbol id="icon-search" viewBox="0 0 24 24">
+      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+    </symbol>
+    <symbol id="icon-pencil" viewBox="0 0 24 24">
+      <path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>
+    </symbol>
+    <symbol id="icon-file-import" viewBox="0 0 24 24">
+      <path d="M14 2H6a2 2 0 0 0-2 2v4m0 12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6Z"/><path d="M14 2v6h6M2 14h10m-4-4 4 4-4 4"/>
+    </symbol>
+    <symbol id="icon-file-plus-2" viewBox="0 0 24 24">
+      <path d="M4 22h14a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v4"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M3 15h6"/><path d="M6 12v6"/>
+    </symbol>
+    <symbol id="icon-file-text" viewBox="0 0 24 24">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6M8 13h8M8 17h6"/>
+    </symbol>
+    <symbol id="icon-image-plus" viewBox="0 0 24 24">
+      <path d="M16 5h6"/><path d="M19 2v6"/><path d="M21 11.5V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7.5"/>
+      <circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/>
+    </symbol>
+    <symbol id="icon-pause" viewBox="0 0 24 24">
+      <rect width="4" height="16" x="6" y="4" rx="1"/><rect width="4" height="16" x="14" y="4" rx="1"/>
+    </symbol>
+    <symbol id="icon-play" viewBox="0 0 24 24">
+      <path d="m7 4 13 8-13 8Z"/>
+    </symbol>
+    <symbol id="icon-trash" viewBox="0 0 24 24">
+      <path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="m19 6-1 14H6L5 6"/><path d="M10 11v5"/><path d="M14 11v5"/>
+    </symbol>
+    <symbol id="icon-list-checks" viewBox="0 0 24 24">
+      <path d="m3 5 2 2 4-4"/><path d="M11 6h10"/><path d="m3 12 2 2 4-4"/><path d="M11 13h10"/><path d="m3 19 2 2 4-4"/><path d="M11 20h10"/>
+    </symbol>
+    <symbol id="icon-list-tree" viewBox="0 0 24 24">
+      <path d="M8 5h13"/><path d="M13 12h8"/><path d="M13 19h8"/><path d="M3 10a2 2 0 0 0 2 2h3"/><path d="M3 5v12a2 2 0 0 0 2 2h3"/>
+    </symbol>
+    <symbol id="icon-pin" viewBox="0 0 24 24">
+      <path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/>
+    </symbol>
+    <symbol id="icon-pin-off" viewBox="0 0 24 24">
+      <path d="M12 17v5"/><path d="M15 9.34V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H7.89"/><path d="m2 2 20 20"/><path d="M9 9v1.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h11"/>
+    </symbol>
+    <symbol id="icon-bell" viewBox="0 0 24 24">
+      <path d="M10.27 21a2 2 0 0 0 3.46 0"/><path d="M3.26 15.33A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.67C19.41 13.81 18 12.08 18 8A6 6 0 0 0 6 8c0 4.08-1.41 5.81-2.74 7.33"/>
+    </symbol>
+    <symbol id="icon-flag" viewBox="0 0 24 24">
+      <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><path d="M4 22v-7"/>
+    </symbol>
+    <symbol id="icon-repeat-2" viewBox="0 0 24 24">
+      <path d="m2 9 3-3 3 3"/><path d="M5 6h11a4 4 0 0 1 4 4v1"/><path d="m22 15-3 3-3-3"/><path d="M19 18H8a4 4 0 0 1-4-4v-1"/>
+    </symbol>
+    <symbol id="icon-tag" viewBox="0 0 24 24">
+      <path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/>
+    </symbol>
+    <symbol id="icon-chevron-down" viewBox="0 0 24 24"><path d="m5 9 7 7 7-7"/></symbol>
+    <symbol id="icon-chevron-right" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+    <symbol id="icon-save" viewBox="0 0 24 24"><path d="M5 3h12l4 4v14H3V3zM7 3v6h9V3M7 21v-8h10v8"/></symbol>
+    <symbol id="icon-plus" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5v14"/></symbol>
+    <symbol id="icon-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+    <symbol id="icon-inbox" viewBox="0 0 24 24"><path d="M4 4h16l2 9v7a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-7Z"/><path d="M2 13h6l2 3h4l2-3h6"/></symbol>
+    <symbol id="icon-folder" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h5l2 3h7a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></symbol>
+  </svg>
+  <main class="shell">
+    <div class="window-toolbar" aria-label="窗口工具栏">
+      <button class="sidebar-collapse-button" id="sidebarCollapseBtn" type="button" aria-label="收起侧栏" aria-expanded="true" aria-describedby="sidebarCollapseTooltip">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path class="sidebar-collapse-rail" d="M5.2 4H9v16H5.2A2.2 2.2 0 0 1 3 17.8V6.2A2.2 2.2 0 0 1 5.2 4Z"/><rect x="3" y="4" width="18" height="16" rx="2.2"/><path d="M9 4v16"/><path class="sidebar-collapse-chevron" d="m17 8-4 4 4 4"/></svg>
+        <span class="sidebar-collapse-tooltip" id="sidebarCollapseTooltip" role="tooltip">收起侧栏</span>
+      </button>
+      <div id="workspacePageTabs" class="workspace-page-tabs" role="tablist" aria-label="页面标签" hidden></div>
+      <div class="workspace-titlebar" aria-label="当前页面">
+        <span class="workspace-title-page" data-workspace-page="home" aria-current="page"><svg aria-hidden="true"><use href="#icon-sun"></use></svg>今天</span>
+        <span class="workspace-title-page" data-workspace-page="libraries" aria-current="page"><svg aria-hidden="true"><use href="#icon-book-open"></use></svg>知识库</span>
+        <span class="workspace-title-page" data-workspace-page="cards" aria-current="page"><svg aria-hidden="true"><use href="#icon-layers"></use></svg>记忆卡片</span>
+        <span class="workspace-title-page" data-workspace-page="memos" aria-current="page"><svg aria-hidden="true"><use href="#icon-list-checks"></use></svg>备忘录</span>
+        <span class="workspace-title-page" data-workspace-page="favorites" aria-current="page"><svg aria-hidden="true"><use href="#icon-star"></use></svg>收藏</span>
+        <span class="workspace-title-page" data-workspace-page="plans" aria-current="page"><svg aria-hidden="true"><use href="#icon-calendar-days"></use></svg>计划</span>
+        <span class="workspace-title-page" data-workspace-page="learning" aria-current="page"><svg aria-hidden="true"><use href="#icon-layers"></use></svg>卡片整理</span>
+        <span class="workspace-title-page" data-workspace-page="growth" aria-current="page"><svg aria-hidden="true"><use href="#icon-sprout"></use></svg>学习成长</span>
+        <!-- edition:workspace-pages -->
+        <span class="workspace-title-page" data-workspace-page="plugins" aria-current="page"><svg aria-hidden="true"><use href="#icon-puzzle"></use></svg>插件</span>
+        <span class="workspace-title-page" data-workspace-page="settings" aria-current="page"><svg aria-hidden="true"><use href="#icon-settings"></use></svg>设置与偏好</span>
+        <span class="workspace-title-page" data-workspace-page="trash" aria-current="page"><svg aria-hidden="true"><use href="#icon-trash"></use></svg>回收站</span>
+        <span class="workspace-title-page" data-workspace-page="filePreview" aria-current="page"><svg aria-hidden="true"><use href="#icon-file-text"></use></svg>文件预览</span>
+      </div>
+      <div id="workspaceOpenTabs" class="workspace-open-tabs" role="group" aria-label="已打开的笔记" hidden></div>
+    </div>
+    <header>
+      <div class="sidebar-topbar">
+        <a class="brand" href="#" data-view-link="home" title="返回今天" aria-label="MemoKeep，返回今天"><span class="brand-full"><span class="workspace-brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-book-open"></use></svg></span>MemoKeep</span><span class="brand-compact workspace-brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-book-open"></use></svg></span></a>
+      </div>
+      <button type="button" class="shell-search-button" id="workspaceSearchButton"><svg aria-hidden="true"><use href="#icon-search"></use></svg><span>搜索内容</span><kbd>⌘ K</kbd></button>
+      <nav>
+        <button class="nav active" data-view="home" title="今日复习"><svg class="nav-ui-icon" aria-hidden="true"><use href="#icon-sun"></use></svg><span class="nav-label">今天</span><span id="homeNavBadge" class="nav-count nav-count-due hidden" aria-label="待复习"></span></button>
+        <div class="nav-section" id="sidebarNotesHeading"><span>笔记</span><div class="sidebar-action-bar">
+          <button id="sidebarQuickCreate" type="button" title="新建笔记" aria-label="新建笔记" aria-haspopup="menu" aria-expanded="false"><svg aria-hidden="true"><use href="#icon-file-plus-2"></use></svg></button>
+          <button id="sidebarQuickFolder" type="button" title="新建目录" aria-label="新建目录" aria-haspopup="menu" aria-expanded="false"><svg aria-hidden="true"><use href="#icon-folder"></use></svg></button>
+          <button id="locateCurrentNoteButton" type="button" disabled title="打开已保存的笔记后可定位" aria-label="在侧栏中定位当前笔记" aria-controls="knowledgeTree"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="1"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg></button>
+          <button type="button" id="toggleAllKnowledgeDirectories" aria-label="展开全部目录" title="展开全部目录"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 8 4-4 4 4M8 16l4 4 4-4"/></svg></button>
+        </div></div>
+        <div class="knowledge-nav-group collapsed"><div class="knowledge-nav-heading nav-heading"><button class="nav knowledge-nav" data-view="libraries" title="知识库"><svg class="nav-ui-icon" aria-hidden="true"><use href="#icon-book-open"></use></svg><span class="nav-label">知识库</span><span class="nav-twisty" data-nav-toggle="libraries" aria-hidden="true"><svg><use href="#icon-chevron-right"></use></svg></span></button><button type="button" class="nav-add" id="newLibraryBtn" aria-label="新建知识库" title="新建知识库"><svg aria-hidden="true"><use href="#icon-plus"></use></svg></button></div><div id="knowledgeTree" class="knowledge-tree"></div></div>
+        <div class="note-tag-nav-group"><div class="note-tag-nav-heading nav-heading"><button type="button" id="noteTagsNav" class="note-tag-nav" title="标签" aria-expanded="false" aria-controls="noteTagTree"><svg aria-hidden="true"><use href="#icon-tag"></use></svg><span class="nav-label">标签</span><span class="nav-twisty" data-nav-toggle="tags" aria-hidden="true"><svg><use href="#icon-chevron-right"></use></svg></span></button><button type="button" class="nav-add" id="newNoteTagBtn" aria-label="新建标签" title="新建标签"><svg aria-hidden="true"><use href="#icon-plus"></use></svg></button></div><div id="noteTagTree" class="knowledge-tree note-tag-tree" hidden></div></div>
+        <button type="button" class="nav" id="sidebarFavoritesBtn" data-view="favorites" title="收藏的笔记和卡片"><svg class="nav-ui-icon" aria-hidden="true"><use href="#icon-star"></use></svg><span class="nav-label">收藏</span></button>
+        <div class="nav-section" id="sidebarLearningHeading"><span>学习</span></div>
+        <div class="card-nav-group tree-collapsed"><div class="card-nav-heading nav-heading"><button class="nav" data-view="cards" title="记忆卡片"><svg class="nav-ui-icon" aria-hidden="true"><use href="#icon-layers"></use></svg><span class="nav-label">记忆卡片</span><span class="nav-twisty" data-nav-toggle="cards" aria-hidden="true"><svg><use href="#icon-chevron-right"></use></svg></span></button><button type="button" class="nav-add" id="newCardFolderBtn" aria-label="新建卡片目录" title="新建卡片目录"><svg aria-hidden="true"><use href="#icon-plus"></use></svg></button></div><div class="card-tree-content"><div id="cardTree"></div></div></div>
+        <div class="plan-nav-group"><div class="plan-nav-heading nav-heading"><button class="nav" data-view="plans" title="计划" aria-expanded="false" aria-controls="planNavList"><svg class="nav-ui-icon" aria-hidden="true"><use href="#icon-calendar-days"></use></svg><span class="nav-label">计划</span><span id="planNavMeta" class="plan-nav-meta" aria-hidden="true"></span><span class="nav-twisty" data-nav-toggle="plans" aria-hidden="true"><svg><use href="#icon-chevron-right"></use></svg></span></button><button type="button" class="nav-add" id="newPlanBtn" aria-label="新建计划" title="新建计划"><svg aria-hidden="true"><use href="#icon-plus"></use></svg></button></div><div id="planNavList" class="plan-nav-list" aria-label="计划列表" hidden></div></div>
+        <button class="nav" data-view="memos" title="备忘录"><svg class="nav-ui-icon" aria-hidden="true"><use href="#icon-list-checks"></use></svg><span class="nav-label">备忘录</span><span id="memoNavBadge" class="nav-count hidden">0</span></button>
+        <!-- edition:navigation -->
+        <div id="sidebarPluginGroup" class="sidebar-plugin-group" role="group" aria-labelledby="sidebarPluginHeading" hidden>
+          <div class="nav-section sidebar-plugin-heading"><span id="sidebarPluginHeading">插件</span><button type="button" id="sidebarPluginManage" data-plugin-manager="mine" aria-label="管理插件" title="管理插件"><svg aria-hidden="true"><use href="#icon-puzzle"></use></svg><span>管理</span></button></div>
+          <div id="sidebarPluginItems" class="sidebar-plugin-items"></div>
+          <div id="sidebarPluginEmpty" class="sidebar-plugin-empty" hidden><span>暂时没有插件入口</span><button type="button" data-plugin-manager="market">去找插件 <span aria-hidden="true">→</span></button></div>
+        </div>
+      </nav>
+      <button type="button" id="pomodoroPill" class="pomodoro-pill" popovertarget="pomodoroPanel" aria-haspopup="dialog" aria-expanded="false" aria-label="打开番茄钟"></button>
+      <div id="pomodoroPanel" class="pomodoro-panel" popover role="dialog" aria-label="番茄钟"></div>
+      <div class="sidebar-footer" aria-label="工作空间与更多">
+        <div class="sidebar-foot-row">
+          <button type="button" class="sidebar-workspace" id="sidebarWorkspaceBtn" aria-haspopup="menu" aria-expanded="false" aria-controls="sidebarMoreMenu"><span class="sidebar-workspace-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M22 12H2M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11Z"/><path d="M6 16h.01M10 16h.01"/></svg></span><span class="sidebar-workspace-text"><b>本地工作空间</b><small data-backup-status>还没有备份</small></span><svg class="sidebar-workspace-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 9 5-5 5 5M7 15l5 5 5-5"/></svg></button>
+          <button type="button" class="sidebar-foot-icon" id="sidebarFootSettings" data-view-link="settings" aria-label="设置" title="设置"><svg aria-hidden="true"><use href="#icon-settings"></use></svg></button>
+          <button type="button" class="sidebar-foot-icon sidebar-more-button" id="sidebarMoreBtn" aria-label="更多" title="更多" aria-haspopup="menu" aria-expanded="false" aria-controls="sidebarMoreMenu"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg></button>
+        </div>
+        <div id="sidebarMoreMenu" class="sidebar-more-menu hidden" role="menu" aria-label="更多">
+          <div class="sidebar-menu-head"><span class="sidebar-menu-avatar" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M22 12H2M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11Z"/><path d="M6 16h.01M10 16h.01"/></svg></span><span class="sidebar-menu-workspace"><b>本地工作空间</b><small data-backup-status>还没有备份</small></span><button type="button" id="sidebarBackupNow" role="menuitem">备份</button><button type="button" id="sidebarManageData" role="menuitem">管理</button></div>
+          <div class="sidebar-menu-group" role="group" aria-label="内容">
+            <button type="button" id="sourceLearningNav" role="menuitem"><svg aria-hidden="true"><use href="#icon-layers"></use></svg><span>卡片整理</span><em class="sidebar-menu-badge" id="sidebarCandidateCount" hidden></em></button>
+            <button type="button" id="sidebarHistoryBtn" role="menuitem"><svg aria-hidden="true"><use href="#icon-history"></use></svg><span>历史版本</span></button>
+            <button type="button" id="trashBtn" role="menuitem"><svg aria-hidden="true"><use href="#icon-trash"></use></svg><span>回收站</span><em class="sidebar-menu-badge" id="sidebarTrashCount" hidden></em></button>
+          </div>
+          <div class="sidebar-menu-group" role="group" aria-label="偏好">
+            <div class="sidebar-menu-appearance"><button type="button" id="sidebarAppearanceBtn" role="menuitem" title="外观设置"><svg aria-hidden="true"><use href="#icon-paintbrush"></use></svg><span>外观</span></button><span class="sidebar-appearance-modes" role="group" aria-label="显示模式"><button type="button" data-appearance-mode="light" aria-label="浅色" title="浅色"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button><button type="button" data-appearance-mode="dark" aria-label="深色" title="深色"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></svg></button><button type="button" data-appearance-mode="system" aria-label="跟随系统" title="跟随系统"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg></button></span></div>
+            <button type="button" id="sidebarSettingsBtn" role="menuitem"><svg aria-hidden="true"><use href="#icon-settings"></use></svg><span>设置</span></button>
+          </div>
+          <div class="sidebar-menu-group" role="group" aria-label="帮助">
+            <button type="button" id="tutorialBtn" role="menuitem"><svg aria-hidden="true"><use href="#icon-book-open-text"></use></svg><span>教程</span></button>
+            <button type="button" id="sidebarShortcutsBtn" role="menuitem"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M7 14h10"/></svg><span>键盘快捷键</span></button>
+            <button type="button" id="inviteBtn" role="menuitem"><svg aria-hidden="true"><use href="#icon-user-plus"></use></svg><span>邀请好友</span></button>
+          </div>
+          <button type="button" id="upgradeBtn" class="sidebar-menu-pro" role="menuitem"><svg aria-hidden="true"><use href="#icon-gem"></use></svg><span class="sidebar-menu-pro-copy"><b>升级至 Pro</b><small>云端同步、AI 制卡、学习报告</small></span><span class="sidebar-menu-pro-go">了解</span></button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Page: 今日复习 -->
+    <section id="homeView" class="view">
+      <div class="today-page">
+        <div class="today-head"><div><time id="today"></time><h1 id="todayGreeting">今天</h1></div><button type="button" class="secondary" id="homeNewNoteBtn"><svg aria-hidden="true"><use href="#icon-file-plus-2"></use></svg>新建笔记</button></div>
+        <p id="todaySummary" class="today-summary" aria-live="polite"></p>
+        <div id="todayMeter" class="today-meter" hidden><div class="today-bar" role="img"><i data-part="review"></i><i data-part="plan"></i></div><span id="todayMeterText"></span></div>
+        <div id="todayStart" class="today-start" aria-label="开始使用" hidden></div>
+        <div id="todayDone" class="today-done" hidden></div>
+        <div class="today-grid">
+          <div class="today-col">
+            <section id="homeReviewPanel" class="today-block home-review-panel" aria-labelledby="homePlanHeading">
+              <div class="today-block-head"><h2 id="homePlanHeading"><svg aria-hidden="true"><use href="#icon-layers"></use></svg>复习</h2><button type="button" class="text-btn" data-view-link="cards" id="homeAllDue" title="超出今天时长或新卡上限的卡片，明天优先安排">全部卡片</button></div>
+              <div class="today-review">
+                <div class="today-review-count"><strong id="homePlanCount">0</strong><small>张今天复习</small></div>
+                <div class="today-review-mix"><div id="homePlanDetail" class="today-review-detail"></div>
+                  <div class="today-budget"><span id="homePlanEstimate"></span><button type="button" id="homeBudgetBtn" aria-haspopup="menu" aria-expanded="false" aria-controls="homeBudgetMenu" title="每天学习时长">每天 15 分钟<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+                    <div id="homeBudgetMenu" class="today-budget-menu" role="menu" aria-label="每天学习时长" hidden><button type="button" role="menuitemradio" data-study-minutes="5">5 分钟</button><button type="button" role="menuitemradio" data-study-minutes="10">10 分钟</button><button type="button" role="menuitemradio" data-study-minutes="15">15 分钟</button><button type="button" role="menuitemradio" data-study-minutes="30">30 分钟</button><button type="button" role="menuitem" id="studyPlanSettingsBtn">自定义…</button></div></div></div>
+                <button id="startReviewBtn" type="button" class="primary today-start-review"><svg aria-hidden="true"><use href="#icon-play"></use></svg><span>开始复习</span></button>
+              </div>
+            </section>
+            <section id="todayPlans" class="today-block" aria-label="计划 · 今天的任务"></section>
+          </div>
+          <aside class="today-col">
+            <section id="todayFocus" class="today-block" aria-label="专注"></section>
+            <section class="today-block home-week-panel" aria-labelledby="homeWeekHeading">
+              <div class="today-block-head"><h2 id="homeWeekHeading"><svg aria-hidden="true"><use href="#icon-chart"></use></svg>本周</h2><!-- edition:home-actions --></div>
+              <div id="homeWeekChart" class="today-week" role="img" aria-label="最近七天的学习"></div>
+              <div class="today-streak"><span id="homeStreak"></span><span class="home-pet-panel"><h2>小久</h2><span id="petSpeech" class="visually-hidden"></span></span></div>
+              <p id="homeWeekSummary" class="visually-hidden"></p>
+            </section>
+            <section class="today-block panel home-recent-notes"><div class="panel-head today-block-head"><h2>继续写</h2><button class="text-btn" data-view-link="libraries">知识库</button></div><div id="homeRecentNotes"></div></section>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section id="learningView" class="view hidden"><div id="learningContent"></div></section>
+    <section id="growthView" class="view hidden"><!-- edition:growth-navigation --><div id="growthContent"></div></section>
+
+    <!-- Page: 知识库 -->
+    <section id="librariesView" class="view hidden">
+      <div id="noteTabsBar" class="note-tabs-bar" hidden></div>
+      <div class="knowledge-page-actions"><button class="primary" id="newNoteBtn">＋ 新建笔记</button></div>
+      <div class="workspace-grid"><section class="library-content" id="libraryContent"><div class="empty-state"><span>⌁</span><h2>暂无知识库</h2><button class="primary" id="emptyCreateBtn">新建知识库</button></div></section></div>
+    </section>
+
+    <!-- Page: 备忘录 -->
+    <section id="plansView" class="view hidden plan-view" aria-label="计划"><div id="plansContent"></div></section>
+
+    <section id="memosView" class="view hidden memo-view">
+      <div class="memo-page-head">
+        <h1>备忘录</h1>
+        <button id="newMemoBtn" class="primary memo-new-button"><svg aria-hidden="true"><use href="#icon-plus"></use></svg><span>新建</span></button>
+      </div>
+      <div class="memo-controls">
+        <div id="memoFilterChips" class="memo-filter-chips" aria-label="筛选备忘录">
+          <button class="active" data-memo-filter="all" aria-pressed="true">全部<span data-memo-count="all" hidden></span></button><button data-memo-filter="today" aria-pressed="false">今天<span data-memo-count="today" hidden></span></button><button data-memo-filter="upcoming" aria-pressed="false">计划<span data-memo-count="upcoming" hidden></span></button><button data-memo-filter="completed" aria-pressed="false">已完成<span data-memo-count="completed" hidden></span></button>
+        </div>
+        <label class="memo-search"><svg aria-hidden="true"><use href="#icon-search"></use></svg><input id="memoSearch" type="search" placeholder="搜索备忘录" aria-label="搜索备忘录"></label>
+      </div>
+      <div id="memoList" class="memo-list"></div>
+      <div id="memoRowMenu" class="memo-row-menu" popover="auto" aria-label="备忘录操作"><button type="button" data-memo-action="edit">编辑</button><button type="button" data-memo-action="snooze">延后 10 分钟</button><button type="button" data-memo-action="delete" class="delete">删除</button></div>
+    </section>
+
+    <!-- Page: 记忆卡片 -->
+    <section id="favoritesView" class="view hidden favorites-view" aria-label="收藏">
+      <div class="favorites-head"><h1>收藏</h1></div>
+      <div class="favorites-controls">
+        <div class="favorites-tabs" role="tablist" aria-label="收藏类型"><button type="button" role="tab" data-favorite-tab="notes" aria-selected="true">笔记<span></span></button><button type="button" role="tab" data-favorite-tab="cards" aria-selected="false">卡片<span></span></button></div>
+        <select class="favorites-kind" data-favorite-kind aria-label="笔记类型" hidden><option value="all">全部笔记</option><option value="notes">知识笔记</option><option value="cards">卡片笔记</option></select>
+        <label class="favorites-search"><svg aria-hidden="true"><use href="#icon-search"></use></svg><input type="search" data-favorite-query placeholder="搜索收藏的笔记" aria-label="搜索收藏" autocomplete="off" spellcheck="false"></label>
+      </div>
+      <p class="favorites-count" data-favorite-count aria-live="polite" hidden></p>
+      <div class="favorites-list" data-favorite-list></div>
+    </section>
+
+    <section id="cardsView" class="view hidden">
+      <div id="cardBreadcrumb" class="card-breadcrumb">记忆卡片 / 全部卡片</div>
+      <div class="section-title"><div><h1 id="cardWorkspaceTitle">全部卡片</h1><p id="cardWorkspaceSubtitle" class="muted" hidden></p></div><div class="button-row"><div id="cardViewToggle" class="ct-view-toggle" role="group" aria-label="卡片视图" hidden><button type="button" data-card-view="topics" aria-pressed="true"><svg aria-hidden="true"><use href="#icon-layers"></use></svg>主题</button><button type="button" data-card-view="list" aria-pressed="false"><svg aria-hidden="true"><use href="#icon-list-checks"></use></svg>列表</button></div><button type="button" id="importCardsBtn" class="secondary">导入卡片</button><button type="button" id="newCardBtn" class="primary"><svg aria-hidden="true"><use href="#icon-plus"></use></svg><span>新建卡片</span></button><button type="button" id="cardStartReviewBtn" class="secondary"><svg aria-hidden="true"><use href="#icon-play"></use></svg><span>开始复习</span></button></div></div>
+      <div id="cardTopicHead" class="ct-head" hidden></div>
+      <div id="cardTopicsBoard" class="ct-board" hidden></div>
+      <div class="card-review-summary" role="status">
+        <svg aria-hidden="true"><use href="#icon-clock"></use></svg>
+        <div><strong id="cardReviewSummaryTitle"></strong><p id="cardReviewSummaryHint"></p></div>
+      </div>
+      <div class="card-manager-toolbar"><div id="cardFilterChips" class="card-filter-chips" aria-label="按学习阶段筛选"></div><div class="card-manager-tools"><label class="card-search-field"><svg aria-hidden="true"><use href="#icon-search"></use></svg><input id="cardSearch" type="search" placeholder="搜索问题、答案、标签" aria-label="搜索记忆卡片"><kbd class="card-search-key" aria-hidden="true">⌘F</kbd></label><select id="cardSort" aria-label="卡片排序"><option value="updated">最新修改</option><option value="created">最新创建</option><option value="due">下次复习</option></select><details id="cardAdvancedFilters" class="card-advanced-filters"><summary>筛选 <span id="cardAdvancedCount" hidden></span></summary><div class="card-advanced-panel" role="group" aria-label="更多筛选"><span class="card-advanced-label">类型</span><select id="cardKindFilter" aria-label="按卡片类型筛选"><option value="all">全部类型</option><option value="point">知识点</option><option value="card">普通卡片</option></select><span class="card-advanced-label">整理</span><select id="cardRecallFilter" aria-label="按整理需要筛选"><option value="all">不限</option><option value="weak">有常漏的要点</option><option value="long">答案太长</option><option value="noitems">没设判断项的多行卡</option></select><span class="card-advanced-label">知识库</span><select id="cardLibraryFilter" aria-label="按知识库筛选"><option value="all">全部知识库</option></select>
+        <span class="card-advanced-label">标签</span><details id="cardTagFilter" class="card-tag-filter"><summary aria-label="筛选标签"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h8l10 10-8 8L3 11Z"/><circle cx="7.5" cy="7.5" r="1"/></svg><span id="cardTagFilterLabel">全部标签</span><svg class="tag-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg></summary>
+        <div class="card-tag-panel"><div class="card-tag-panel-head"><strong>筛选标签</strong><button type="button" id="cardTagClear">清空</button></div>
+          <input id="cardTagSearch" type="search" placeholder="搜索标签" aria-label="搜索标签">
+          <div id="cardTagModes" class="card-tag-modes" role="group" aria-label="标签匹配方式"><button type="button" data-tag-mode="any" aria-pressed="true">任一标签</button><button type="button" data-tag-mode="all" aria-pressed="false">全部标签</button></div>
+          <p id="cardTagModeHint"></p><div id="cardTagOptions" class="card-tag-options"></div>
+          <div class="card-tag-panel-foot"><span id="cardTagSelectedCount"></span><button id="cardTagDone" type="button">完成</button></div>
+        </div></details></div></details></div></div>
+      <div class="card-applied-row"><div id="cardTagApplied" class="card-tag-applied" hidden></div><div id="cardSearchSummary" class="card-search-summary" role="status" hidden></div></div>
+      <div id="allCards" class="card-table-host"></div>
+      <div class="card-list-footer"><span id="cardTotal" role="status" aria-live="polite">0 张卡片</span><span id="cardPageStatus" role="status" aria-live="polite"></span><nav id="cardPagination" class="card-pagination" aria-label="卡片列表分页"></nav></div>
+      <div class="card-list-help"><p id="cardListHint" hidden></p></div>
+      <div id="cardBulkSummary" class="card-management-summary hidden"><div id="cardBulkActions" class="card-bulk-actions" role="toolbar" aria-label="批量操作"><span id="selectedCardCount" role="status">已选择 0 张</span><button id="bulkReviewCards" type="button" class="card-bulk-review"><svg aria-hidden="true"><use href="#icon-play"></use></svg>复习所选</button><button id="bulkMoveCards" type="button"><svg aria-hidden="true"><use href="#icon-book-open-text"></use></svg>移动</button><button id="bulkRestartCards" type="button" title="重置记忆进度并加入待复习"><svg aria-hidden="true"><use href="#icon-refresh-cw"></use></svg>重新复习</button><button id="bulkPauseCards" type="button"><svg aria-hidden="true"><use href="#icon-pause"></use></svg>暂停</button><button id="bulkResumeCards" type="button"><svg aria-hidden="true"><use href="#icon-play"></use></svg>恢复</button><button id="bulkDeleteCards" class="danger" type="button"><svg aria-hidden="true"><use href="#icon-trash"></use></svg>删除</button><button id="bulkClearSelection" type="button" class="card-bulk-clear" aria-label="取消选择" title="取消选择"><svg aria-hidden="true"><use href="#icon-x"></use></svg></button></div></div>
+    </section>
+
+    <section id="pluginsView" class="view hidden" aria-label="插件"></section>
+
+    <!-- edition:pages -->
+
+    <section id="trashView" class="view hidden">
+      <div class="trash-page-head">
+        <div><h1>回收站</h1></div>
+        <div class="trash-page-actions">
+          <label><svg aria-hidden="true"><use href="#icon-search"></use></svg><input id="trashSearch" type="search" placeholder="搜索名称或原位置" aria-label="搜索回收站"></label>
+          <button id="emptyTrashButton" class="trash-empty-button danger" type="button" disabled><svg aria-hidden="true"><use href="#icon-trash"></use></svg><span>清空回收站</span></button>
+        </div>
+      </div>
+      <input id="trashType" type="hidden" value="all">
+      <div id="trashTabs" class="trash-tabs" role="tablist" aria-label="回收站内容类型"><button type="button" role="tab" aria-selected="true" data-trash-filter="all">全部</button><button type="button" role="tab" aria-selected="false" data-trash-filter="note">笔记</button><button type="button" role="tab" aria-selected="false" data-trash-filter="card">记忆卡片</button></div>
+      <div class="trash-table-head"><span>名称</span><span>归属</span><span>删除时间</span><span>操作</span></div>
+      <div id="trashList" class="trash-list"></div>
+
+    </section>
+
+    <!-- Page: 设置 -->
+    <section id="settingsView" class="view hidden">
+      <div class="settings-layout appearance-layout">
+        <nav class="settings-navigation" aria-label="设置分类"><h1>设置</h1>
+          <button type="button" data-settings-panel="appearance" aria-pressed="true">外观</button>
+          <button type="button" data-settings-panel="learning" aria-pressed="false">学习与复习</button>
+          <button type="button" data-settings-panel="voice" aria-pressed="false">语音作答</button>
+          <button type="button" data-settings-panel="editor" aria-pressed="false">笔记编辑</button>
+          <button type="button" data-settings-panel="reminders" aria-pressed="false">桌面伙伴与提醒</button>
+          <button type="button" data-settings-panel="data" aria-pressed="false">数据与备份</button>
+        </nav>
+        <div class="settings-content">
+          <section class="settings-card vs-page" hidden data-settings-section="learning"><h2>学习与复习</h2>
+            <div class="vs-box">
+              <div class="vs-row"><div><b>学习计划</b><small>每天复习多少、什么时候开始，在学习计划里设置。</small></div><button type="button" class="vs-btn" id="settingsStudyPlanBtn">学习计划</button></div>
+              <label class="vs-row"><div><b>复习时先作答</b><small>看到题目先写或说出答案，再对照参考答案。关掉后直接显示答案。</small></div><input type="checkbox" class="vs-switch" role="switch" id="answerFirstEnabled"></label>
+              <label class="vs-row"><div><b>评分后自动切换</b><small>评分后直接进入下一张，不停在本张的结果上。</small></div><input type="checkbox" class="vs-switch" role="switch" id="fastReviewEnabled"></label>
+              <label class="vs-row"><div><b>新写的要点自动加入复习</b><small>关闭时，要点只用来速览；在要点上点「加入复习」才会和卡片一起复习。</small></div><input type="checkbox" class="vs-switch" role="switch" id="autoAddGists"></label>
+              <button type="button" class="vs-row vs-link" data-open-settings-panel="voice"><div><b>语音作答</b><small>复习时说出答案、停顿时长、语音词库。</small></div><span class="vs-link-state"><span id="voiceLearningState">开</span><svg aria-hidden="true"><use href="#icon-chevron-right"></use></svg></span></button>
+              <div class="vs-scale" id="reviewScheduleSettings">
+                <div class="vs-scale-head"><b>复习间隔</b><small>新卡片第一次评分后，隔多久再出现</small><button type="button" class="vs-text-button" id="reviewScheduleReset" hidden>恢复默认</button></div>
+                <div class="vs-rates">
+                  <label class="vs-rate" data-rating="again"><b>忘记</b><select id="reviewAgain" aria-label="忘记后隔多久"><option value="1m">1 分钟后</option><option value="5m">5 分钟后</option><option value="10m">10 分钟后</option><option value="30m">30 分钟后</option></select></label>
+                  <label class="vs-rate" data-rating="hard"><b>有点难</b><select id="reviewHard" aria-label="有点难隔多久"><option value="">自动</option><option value="5">5 分钟后</option><option value="10">10 分钟后</option><option value="30">30 分钟后</option><option value="60">1 小时后</option><option value="240">4 小时后</option></select></label>
+                  <label class="vs-rate" data-rating="good"><b>记住</b><select id="reviewGood" aria-label="记住后隔多久"><option value="10m">10 分钟后</option><option value="30m">30 分钟后</option><option value="1h">1 小时后</option><option value="4h">4 小时后</option><option value="1d">1 天后</option></select></label>
+                  <label class="vs-rate" data-rating="easy"><b>很简单</b><select id="reviewEasy" aria-label="很简单隔多久"><option value="">自动</option><option value="1">1 天后</option><option value="2">2 天后</option><option value="3">3 天后</option><option value="4">4 天后</option><option value="7">7 天后</option><option value="14">14 天后</option><option value="30">30 天后</option></select></label>
+                </div>
+              </div>
+              <div class="vs-row"><div><b>复习节奏</b><small id="reviewPaceHint"></small></div><div class="vs-seg" role="radiogroup" aria-label="复习节奏" id="reviewRetention"><button type="button" role="radio" data-value="0.85" aria-checked="false">轻松</button><button type="button" role="radio" data-value="0.9" aria-checked="false">标准</button><button type="button" role="radio" data-value="0.95" aria-checked="false">密集</button></div></div>
+              <label class="vs-row"><div><b>最长间隔</b><small>记得再牢，两次复习也不超过这么久。</small></div><select class="vs-select" id="reviewMaximumInterval" aria-label="最长间隔"><option value="36500">不限</option><option value="30">1 个月</option><option value="90">3 个月</option><option value="180">半年</option><option value="365">1 年</option></select></label>
+            </div>
+          </section>
+          <section class="settings-card vs-page voice-settings" hidden data-settings-section="voice" aria-label="语音作答设置"><h2>语音作答</h2>
+            <p class="vs-sub">复习时说出答案，在本机转成文字，再和参考答案逐条对照。录音只在这张卡复习时可以回放，换卡或关掉复习就丢掉，不存到磁盘。</p>
+            <p class="vs-unsupported" id="voiceUnsupported" hidden>这台电脑不支持语音作答（需要 macOS 桌面版）。语音词库仍可编辑。</p>
+            <div class="vs-alert" id="voicePermissionAlert" hidden role="alert"><svg aria-hidden="true"><use href="#icon-lock"></use></svg><span id="voicePermissionText"></span><button type="button" class="vs-btn" id="voicePermissionOpen">打开系统设置</button></div>
+            <div class="vs-group" data-voice-group="basic"><div class="vs-box">
+              <label class="vs-row"><div><b>复习时显示「语音作答」</b><small>复习时按 V 开始说，Space 说完。</small></div><input type="checkbox" class="vs-switch" role="switch" data-voice-setting="voiceReview"></label>
+              <div class="vs-row"><div><b>停顿多久自动结束</b><small>停顿一半时间后显示倒计时；说话会重新计时。</small></div><div class="vs-seg" role="radiogroup" aria-label="停顿多久自动结束" data-voice-setting="voicePauseSeconds"><button type="button" role="radio" data-value="8" aria-checked="false">8 秒</button><button type="button" role="radio" data-value="12" aria-checked="false">12 秒</button><button type="button" role="radio" data-value="20" aria-checked="false">20 秒</button><button type="button" role="radio" data-value="0" aria-checked="false">不自动</button></div></div>
+              <div class="vs-row"><div><b>判定严格程度</b><small>一个要点说中多少关键词才算说中。</small></div><div class="vs-seg" role="radiogroup" aria-label="判定严格程度" data-voice-setting="voiceStrictness"><button type="button" role="radio" data-value="loose" aria-checked="false">宽松</button><button type="button" role="radio" data-value="normal" aria-checked="false">标准</button><button type="button" role="radio" data-value="strict" aria-checked="false">严格</button></div></div>
+            </div></div>
+            <div class="vs-group" data-voice-group="terms" id="voiceTermsSection"><h3>语音词库<small>说这些词时，会被识别成左边的写法。复习时改字后点「记住」会加到「我的词库」。</small></h3><div class="vs-packs-head"><b>使用的词库</b><span id="voicePackSummary"></span><span class="vs-grow"></span><button type="button" class="vs-btn" id="voicePackAll">全部启用</button></div><div class="vs-packs" id="voicePackGrid" aria-label="使用的词库"></div><p class="vs-pack-hint">一个读法属于多个词库时（「斯威夫特」可能是 Swift，也可能是 SWIFT）：卡片答案里出现的写法优先，其次是我的词库，再按上面卡片的顺序。拖动卡片可以排序。</p><div class="vs-box">
+              <div class="vs-lex-tools"><label class="vs-lex-search"><svg aria-hidden="true"><use href="#icon-search"></use></svg><input id="voiceTermSearch" type="search" placeholder="搜索术语或读法" aria-label="搜索术语或读法"></label><div class="vs-chips" id="voiceTermFilter" role="group" aria-label="按词库筛选"></div><button type="button" class="vs-btn primary" id="voiceTermAddBtn" aria-expanded="false" aria-controls="voiceTermForm"><svg aria-hidden="true"><use href="#icon-plus"></use></svg>添加</button></div>
+              <form id="voiceTermForm" class="vs-lex-add" hidden><input id="voiceTermName" maxlength="60" autocomplete="off" placeholder="术语，例如 Kafka" aria-label="术语"><input id="voiceTermAliases" maxlength="300" autocomplete="off" placeholder="会被识别成，例如：卡夫卡，咖夫卡" aria-label="会被识别成（用逗号分开）"><select id="voiceTermPack" class="vs-pack-select" aria-label="加到哪个词库"></select><button type="submit" class="vs-btn primary" id="voiceTermSubmit">保存</button><button type="button" class="vs-btn" id="voiceTermCancel">取消</button></form>
+              <p id="voiceTermError" class="vs-lex-error" role="alert"></p>
+              <div class="vs-lex-list" id="voiceTermList"></div>
+              <div class="vs-pager" id="voiceTermPager" role="navigation" aria-label="词库分页"></div>
+            </div></div>
+          </section>
+          <section class="appearance-panel" data-settings-section="appearance" aria-label="外观设置">
+            <h2>外观</h2>
+            <div class="appearance-mode"><div><strong>显示模式</strong></div><div class="appearance-segments" role="group" aria-label="显示模式"><button type="button" data-appearance-mode="system">跟随系统</button><button type="button" data-appearance-mode="light">明亮</button><button type="button" data-appearance-mode="dark">深色</button></div></div>
+            <div class="appearance-heading"><h3>主题配色</h3></div>
+            <div id="appearanceThemes" role="radiogroup" aria-label="主题配色"></div>
+            <div class="appearance-heading"><h3>界面预览</h3></div>
+            <div class="appearance-preview"><div class="appearance-preview-nav"><strong>知识库</strong><p>快捷键总结</p><p class="active">产品思考</p><p>阅读记录</p></div><article><h3>笔记预览</h3><p>记录想法，整理<mark>知识</mark>。</p><span>查看关联卡片 →</span></article></div>
+            <div class="appearance-footer"><span id="appearanceStatus" role="status"></span><button type="button" id="appearanceReset">恢复默认</button></div>
+          </section>
+          <section class="note-editing-settings" hidden data-settings-section="editor" aria-labelledby="noteEditingSettingsTitle">
+            <h2 id="noteEditingSettingsTitle">笔记编辑</h2>
+            <h3>划词操作</h3>
+            <div class="note-selection-preference-row">
+              <div class="note-selection-preference-copy"><label id="selectionCardPopupLabel" for="selectionCardPopupEnabled">划词制卡</label><p id="selectionCardPopupHint" hidden></p></div>
+              <div class="note-selection-preference-control"><label class="note-selection-preference-switch"><input id="selectionCardPopupEnabled" type="checkbox" role="switch" aria-labelledby="selectionCardPopupLabel" aria-describedby="selectionCardPopupHint"><span aria-hidden="true"></span></label><span id="selectionCardPopupState" role="status" aria-live="polite"></span></div>
+            </div>
+
+
+          </section>
+          <section class="settings-card" hidden data-settings-section="reminders"><h2>桌面伙伴与提醒</h2><label class="switch-row">显示桌面伙伴<input id="petEnabled" type="checkbox"></label><label class="switch-row">允许系统通知<input id="notificationsEnabled" type="checkbox"></label><div class="reminder-interval-setting"><div class="reminder-setting-copy"><span class="reminder-setting-icon"><svg aria-hidden="true"><use href="#icon-clock"></use></svg></span><span><strong id="reminderIntervalLabel">提醒间隔</strong></span></div><div class="reminder-interval-control"><select id="reminderMinutes" aria-labelledby="reminderIntervalLabel"><option value="15">15 分钟</option><option value="30">30 分钟 · 推荐</option><option value="60">1 小时</option><option value="120">2 小时</option></select></div></div><div class="time-row"><label>开始时间<input id="activeHoursStart" type="time"></label><label>结束时间<input id="activeHoursEnd" type="time"></label></div></section>
+<section class="settings-card" hidden data-settings-section="data"><h2>文档存储</h2><div class="storage-location"><div><span>当前存储位置</span><strong id="knowledgeStoragePath">正在读取…</strong></div><button class="secondary" id="chooseKnowledgeStorageBtn">更改位置</button></div><p id="knowledgeSyncHint" class="data-summary" hidden></p></section>
+<section class="settings-card" hidden data-settings-section="data"><h2>本地数据与备份</h2><div class="stack-buttons"><button class="secondary" id="exportBackupBtn">导出完整备份</button><button class="secondary" id="importBackupBtn">从备份恢复</button><button class="secondary" id="undoBackupRestoreBtn" disabled>撤销上次恢复</button><button class="secondary" id="exportCardsBtn">导出卡片 CSV</button></div><p id="dataSummary" class="data-summary"></p></section>
+        </div>
+      </div>
+    </section>
+    <section id="filePreviewView" class="view file-preview-view hidden" aria-label="文档预览">
+      <div class="file-preview-toolbar"><div><h2 id="filePreviewSource"></h2><p id="filePreviewStatus" class="hint" role="status" aria-live="polite"></p></div><div class="file-preview-actions"><button type="button" id="filePreviewEdit" class="secondary">编辑</button><button type="button" id="filePreviewSkip" class="secondary file-preview-close">关闭</button><div class="file-preview-save-wrap"><button type="button" id="filePreviewOpenSave" class="primary" aria-haspopup="menu" aria-expanded="false">保存</button><div id="filePreviewSaveMenu" class="file-preview-save-menu hidden" role="menu"><button type="button" id="filePreviewSaveOriginal" role="menuitem">原路径保存</button><button type="button" id="filePreviewSaveLibrary" role="menuitem">保存到知识库</button></div></div></div></div>
+      <div class="file-preview-body"><article id="filePreviewContent" class="markdown-body file-preview-content" aria-label="文档内容"></article><textarea id="filePreviewEditor" class="file-preview-editor hidden" aria-label="编辑文档内容" spellcheck="false"></textarea><div id="filePreviewOutline" class="file-preview-outline" aria-label="文档大纲" tabindex="0"><span class="file-preview-outline-icon" role="img" aria-label="文档大纲"><svg aria-hidden="true"><use href="#icon-list-tree"></use></svg></span><button type="button" id="filePreviewOutlinePin" class="file-preview-outline-pin" aria-label="固定大纲" aria-pressed="false" aria-controls="filePreviewOutlineList"><svg aria-hidden="true"><use href="#icon-pin"></use></svg></button><nav id="filePreviewOutlineList"></nav></div></div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast hidden"></div>
+  <div id="cardUndoStack" class="card-undo-stack" role="status" aria-live="polite"></div>
+
+  <dialog id="appConfirmDialog" class="app-confirm-dialog" aria-labelledby="appConfirmTitle" aria-describedby="appConfirmMessage">
+    <div class="app-confirm-card">
+      <button id="appConfirmClose" class="app-confirm-close" type="button" aria-label="关闭确认框"><svg aria-hidden="true"><use href="#icon-x"></use></svg></button>
+      <span id="appConfirmIconWrap" class="app-confirm-icon danger" aria-hidden="true"><svg><use id="appConfirmIcon" href="#icon-trash"></use></svg></span>
+      <div class="app-confirm-copy"><h2 id="appConfirmTitle">确认删除</h2><p id="appConfirmMessage"></p></div>
+      <div class="app-confirm-actions"><button id="appConfirmExtra" class="secondary hidden" type="button">不保存</button><button id="appConfirmCancel" class="secondary" type="button">取消</button><button id="appConfirmSubmit" class="app-confirm-submit danger" type="button"><svg aria-hidden="true"><use href="#icon-trash"></use></svg><span>删除</span></button></div>
+    </div>
+  </dialog>
+
+  <dialog id="tutorialDialog"><div class="dialog-body tutorial-dialog"><div class="dialog-head"><div><h2>快速开始</h2></div><button type="button" class="icon-btn" data-close-dialog>×</button></div><ol class="tutorial-steps"><li><span>1</span><div><strong>建立知识库</strong><p>按主题分类。</p></div></li><li><span>2</span><div><strong>创建笔记</strong><p>记录知识。</p></div></li><li><span>3</span><div><strong>加入记忆计划</strong><p>选中内容制卡，按计划复习。</p></div></li></ol><div class="dialog-actions"><button class="secondary" data-close-dialog>稍后再看</button><button class="primary" id="tutorialStartBtn">新建知识库</button></div></div></dialog>
+
+  <dialog id="upgradeDialog"><div class="dialog-body upgrade-dialog"><div class="dialog-head"><div><h2>学习服务</h2></div><button type="button" class="icon-btn" data-close-dialog>×</button></div><p class="hint">在线服务暂未开放。</p><div class="pro-feature-list"><span>云端同步</span><span>AI 智能制卡</span><span>高级学习报告</span></div><div class="dialog-actions"><button class="primary" data-close-dialog>知道了</button></div></div></dialog>
+
+  <dialog id="libraryDialog">
+    <form id="libraryForm">
+      <div class="dialog-head"><h2>新建目录</h2><button type="button" class="icon-btn" data-close-dialog aria-label="关闭">×</button></div>
+      <label><span>目录名称</span><input id="libraryName" required maxlength="80" placeholder="例如：工作学习"></label>
+      <input id="libraryParentId" type="hidden">
+      <p id="libraryParentHint" class="directory-parent-hint"></p>
+      <div class="dialog-actions"><button type="button" class="secondary" data-close-dialog>取消</button><button class="primary" type="submit">创建</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="librarySettingsDialog" aria-labelledby="librarySettingsTitle">
+    <form id="librarySettingsForm">
+      <div class="library-settings-head"><h2 id="librarySettingsTitle">编辑知识库</h2><button type="button" data-library-settings-close aria-label="关闭"><svg aria-hidden="true"><use href="#icon-x"></use></svg></button></div>
+      <fieldset class="library-settings-fields">
+        <label for="libraryEditName">名称</label>
+        <input id="libraryEditName" required maxlength="80" autocomplete="off" aria-describedby="librarySettingsError">
+        <label for="libraryEditDescription">描述 <small>选填</small></label>
+        <textarea id="libraryEditDescription" maxlength="120" rows="3" placeholder="简单介绍这个知识库的用途" aria-describedby="libraryDescriptionCount"></textarea>
+        <p id="libraryDescriptionCount" class="library-description-count">0/120</p>
+        <label for="libraryEditType">类型</label>
+        <select id="libraryEditType"><option value="general">通用</option><option value="tech">技术</option><option value="vocabulary">单词</option><option value="sentences">语句</option></select>
+        <details id="libraryEditMore"><summary>更多信息 <small>选填</small></summary>
+          <label for="libraryEditLanguage">语言</label>
+          <select id="libraryEditLanguage" aria-describedby="libraryLanguageHint"></select>
+          <p id="libraryLanguageHint" class="library-settings-hint">未设置时，不在目录页显示。</p>
+        </details>
+      </fieldset>
+      <p id="librarySettingsError" class="library-settings-error" role="alert"></p>
+      <div class="library-settings-actions"><button type="button" class="secondary" data-library-settings-close>取消</button><button type="submit" class="primary" id="librarySettingsSave">保存</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="noteTagDialog" aria-labelledby="noteTagDialogTitle">
+    <form id="noteTagForm">
+      <div class="dialog-head"><h2 id="noteTagDialogTitle">新建标签</h2><button type="button" class="note-tag-close" data-close-dialog aria-label="关闭"><svg aria-hidden="true"><use href="#icon-x"></use></svg></button></div>
+      <div class="note-tag-field">
+        <label for="noteTagName">标签名称</label>
+        <input id="noteTagName" required maxlength="40" autocomplete="off" placeholder="例如：阅读" aria-describedby="noteTagError" autofocus>
+        <p id="noteTagError" class="note-tag-error" role="alert"></p>
+      </div>
+      <div class="dialog-actions"><button type="button" class="secondary" data-close-dialog>取消</button><button type="submit" class="primary" id="noteTagSubmit">创建</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="newNoteNameDialog" aria-labelledby="newNoteFileTitle">
+    <form id="newNoteNameForm" class="note-name-form" novalidate>
+      <div class="dialog-head"><h2 id="newNoteFileTitle">新建笔记</h2><button type="button" class="icon-btn" data-close-dialog aria-label="关闭新建笔记">×</button></div>
+      <input id="newNoteFileType" type="hidden" value="md">
+      <div id="newNoteFileNameBox" class="note-file-name-input">
+        <input id="newNoteName" required maxlength="100" autocomplete="off" spellcheck="false" placeholder="文件名称" aria-label="文件名称" aria-describedby="newNoteFileError newNoteFileTypeHint">
+        <button type="button" id="newNoteFileTypeButton" class="note-file-type-chip" aria-haspopup="listbox" aria-controls="newNoteFileTypeMenu" aria-expanded="false"><span id="newNoteFileSuffix">.md</span><svg aria-hidden="true"><use href="#icon-chevron-down"></use></svg></button>
+      </div>
+      <div class="note-file-message" aria-live="polite"><p id="newNoteFileError" hidden></p><p id="newNoteFileTypeHint"></p></div>
+      <div class="note-file-destination">
+        <span id="newNoteLibraryLabel">位置</span>
+        <button type="button" id="newNoteLibraryButton" aria-haspopup="listbox" aria-controls="newNoteLibraryMenu" aria-expanded="false" aria-labelledby="newNoteLibraryLabel newNoteLibraryValue"><svg aria-hidden="true"><use href="#icon-folder"></use></svg><span id="newNoteLibraryValue" class="note-file-crumbs"></span><svg aria-hidden="true"><use href="#icon-chevron-down"></use></svg></button>
+        <select id="newNoteLibrary" required hidden aria-label="保存到知识库"></select>
+      </div>
+      <div class="dialog-actions"><span class="note-file-submit-hint" aria-hidden="true"><kbd>↵</kbd> 创建并打开</span><button type="button" class="secondary" data-close-dialog>取消</button><button class="primary" type="submit">创建</button></div>
+      <div id="newNoteFileTypeMenu" class="note-file-menu" popover="auto"><div class="note-file-menu-search" hidden><svg aria-hidden="true"><use href="#icon-search"></use></svg><input id="newNoteFileTypeSearch" type="search" placeholder="搜索类型或后缀" aria-label="搜索文件类型" autocomplete="off"></div><div class="note-file-type-options" role="listbox" aria-label="文件类型"></div></div>
+      <div id="newNoteLibraryMenu" class="note-file-menu" popover="auto"><div class="note-file-menu-search"><svg aria-hidden="true"><use href="#icon-search"></use></svg><input id="newNoteLibrarySearch" type="search" placeholder="搜索目录" aria-label="搜索目录" autocomplete="off"></div><div id="newNoteLibraryOptions" class="note-file-library-options" role="listbox" aria-label="保存位置"></div></div>
+    </form>
+  </dialog>
+
+  <dialog id="cardDialog" class="card-editor-dialog" aria-labelledby="cardDialogTitle">
+    <form id="cardForm" novalidate>
+      <div class="ce-header"><div><h2 id="cardDialogTitle">新建卡片</h2><span id="cardEditStatus" role="status" class="sr-only"></span></div><div class="ce-tabs" role="tablist" aria-label="卡片编辑与预览"><button type="button" id="cardEditTab" role="tab" aria-selected="true" aria-controls="cardEditPanel">编辑</button><button type="button" id="cardPreviewTab" role="tab" aria-selected="false" aria-controls="cardPreviewPanel" tabindex="-1">预览</button></div><button type="button" class="ce-close" data-card-close aria-label="关闭编辑">×</button></div>
+
+      <div class="ce-scroll">
+        <div id="cardEditPanel" class="ce-layout" role="tabpanel" aria-labelledby="cardEditTab">
+          <section class="ce-content" aria-label="卡片内容">
+            <section class="ce-field" data-card-field="question"><div class="ce-field-head"><label for="questionEditor">问题</label><button type="button" class="ce-image-insert" data-card-image-field="question" aria-label="问题插入图片">＋ 图片</button></div><textarea id="question" hidden placeholder="输入问题" aria-describedby="cardQuestionHint"></textarea><div id="questionEditor" class="ce-rich-editor" contenteditable="true" role="textbox" aria-multiline="true" aria-label="问题" aria-placeholder="例如：怎样做一次主动回忆？"></div><p id="cardQuestionHint" class="ce-hint" hidden></p></section>
+            <section class="ce-field" data-card-field="answer"><div class="ce-field-head"><label for="answerEditor">答案</label><button type="button" class="ce-image-insert" data-card-image-field="answer" aria-label="答案插入图片">＋ 图片</button></div><textarea id="answer" hidden placeholder="输入答案" aria-describedby="cardAnswerHint"></textarea><div id="answerEditor" class="ce-rich-editor" contenteditable="true" role="textbox" aria-multiline="true" aria-label="答案" aria-placeholder="写下答案，或在笔记中选中文字后制卡"></div><p id="cardAnswerHint" class="ce-hint" hidden></p></section>
+            <section id="cardSourceContext" class="ce-source-context"><div class="ce-source-head"><svg aria-hidden="true"><use href="#icon-book-open-text"></use></svg><span>来源</span><strong id="cardSourceName"></strong><button type="button" id="cardSourceExpand" aria-expanded="false" aria-controls="cardSourceExcerpt">查看原文</button></div><p id="cardSourceExcerpt" hidden></p><p class="ce-hint" id="cardSourceHint" hidden></p></section>
+            <button type="button" id="cardSettingsToggle" aria-expanded="false" aria-controls="cardSettings"><svg aria-hidden="true" viewBox="0 0 16 16"><path d="m6 3 5 5-5 5"/></svg>更多设置</button>
+            <aside id="cardSettings" class="ce-meta" aria-label="卡片设置" hidden>
+              <div class="ce-destination"><label for="cardNotebookSelect">保存位置</label><select id="cardNotebookSelect" aria-label="卡片目录"></select></div>
+              <label for="cardTagDraft">标签</label><div class="ce-tags"><div id="cardTagChips"></div><input id="cardTagDraft" placeholder="＋ 添加标签" aria-label="添加标签" autocomplete="off"></div><input id="cardTags" type="hidden"><div class="ce-library-row"><svg aria-hidden="true"><use href="#icon-book-open-text"></use></svg><span id="cardLibraryLabel">关联知识库</span><select id="cardLibrary" hidden aria-label="关联知识库"></select><button type="button" id="cardLibraryTrigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="cardLibraryChoices" aria-labelledby="cardLibraryLabel cardLibraryValue"><span id="cardLibraryValue">不关联</span><svg aria-hidden="true" viewBox="0 0 16 16"><path d="m4 6 4 4 4-4"/></svg></button></div>
+              <div id="cardLibraryPopover" popover="auto" aria-label="选择知识库"><div class="ce-library-search"><svg aria-hidden="true" viewBox="0 0 20 20"><circle cx="8.5" cy="8.5" r="5.5"/><path d="m13 13 4 4"/></svg><input id="cardLibrarySearch" type="search" placeholder="搜索知识库" aria-label="搜索知识库" autocomplete="off"></div><div id="cardLibraryChoices" role="listbox" aria-label="关联知识库"></div><p id="cardLibraryNoResults" hidden>没有匹配的知识库</p></div>
+            </aside>
+          </section>
+        </div>
+        <section id="cardPreviewPanel" class="ce-preview" role="tabpanel" aria-labelledby="cardPreviewTab" hidden>
+          <div class="ce-preview-toolbar"><div class="ce-preview-tools"><button type="button" id="cardPreviewReset" class="secondary" hidden><span aria-hidden="true">↺</span> 重新回忆</button><button type="button" id="cardPreviewBack">返回编辑</button></div></div>
+          <article class="ce-preview-paper">
+            <p class="review-label">试着回忆</p><h3 id="cardPreviewQuestion"></h3><p id="cardPreviewSource" class="review-source"></p>
+            <section id="cardPreviewAnswerArea" class="answer-area" hidden><p>参考答案</p><div id="cardPreviewAnswer"></div></section>
+            <p id="cardPreviewEmpty" class="ce-hint" hidden></p>
+            <div class="ce-preview-actions"><button type="button" id="cardPreviewReveal" class="primary">显示答案 <kbd>Space</kbd></button></div>
+          </article>
+          <p class="ce-preview-notice">草稿预览</p>
+        </section>
+      </div>
+      <input id="cardImageInput" type="file" accept="image/png,image/jpeg,image/gif,image/webp" multiple hidden><input id="editingCardId" type="hidden"><input id="sourceItemId" type="hidden"><input id="sourceDocumentId" type="hidden">
+      <div id="cardEditError" class="ce-error" role="alert" hidden></div>
+      <div id="cardDiscardPrompt" class="ce-discard" role="group" aria-label="未保存的修改" hidden><span>修改尚未保存，确定放弃吗？</span><button id="cardKeepEditing" type="button">继续编辑</button><button id="cardDiscard" type="button">放弃修改</button></div>
+      <div class="ce-footer"><span id="cardEditFooterHint">修改内容会保留已有复习记录。</span><div><button type="button" class="secondary" data-card-close>取消</button><button id="cardSaveButton" class="primary" type="submit"><span id="cardSaveLabel">保存修改</span> <kbd id="cardSaveShortcut">⌘ S</kbd></button></div></div>
+    </form>
+  </dialog>
+
+  <dialog id="cardDetailDialog" class="card-detail-dialog">
+    <div id="cardDetailLayout" class="card-detail-layout"><div class="card-detail-box">
+      <div class="dialog-head"><div><h2 id="cardDetailTitle">记忆卡片</h2></div><button type="button" class="icon-btn" data-close-dialog aria-label="关闭卡片详情" title="关闭卡片详情">×</button></div>
+      <input id="cardDetailId" type="hidden">
+      <section class="card-detail-face front"><span>正面 · 问题</span><div id="cardDetailQuestion"></div></section>
+      <section class="card-detail-face back"><span>背面 · 答案</span><div id="cardDetailAnswer"></div></section>
+      <div id="cardDetailMeta" class="card-detail-meta"></div>
+      <div class="card-detail-actions"><button type="button" id="cardDetailOpenSource" class="secondary hidden"><svg aria-hidden="true"><use href="#icon-book-open-text"></use></svg>查看来源笔记</button><span></span><button type="button" id="cardDetailDelete" class="secondary danger-text">删除</button><button type="button" id="cardDetailEdit" class="primary">编辑卡片</button></div>
+    </div><aside id="cardDetailSourceDrawer" class="card-detail-source-drawer hidden" aria-label="来源笔记预览"><div class="card-detail-source-head"><div><span>来源笔记</span><strong id="cardDetailSourceTitle"></strong></div><button type="button" id="cardDetailCloseSource" class="icon-btn" aria-label="关闭来源笔记">×</button></div><div class="card-detail-source-preserved"><svg aria-hidden="true"><use href="#icon-circle-check"></use></svg><span>卡片详情已保留，关闭后继续查看</span></div><article id="cardDetailSourceContent" class="card-detail-source-content markdown-body"></article></aside></div>
+  </dialog>
+
+  <dialog id="moveCardsDialog" class="move-cards-dialog">
+    <form id="moveCardsForm"><div class="dialog-head"><div><h2>移动到卡片目录</h2></div><button type="button" class="icon-btn" data-close-dialog aria-label="关闭">×</button></div><p id="moveCardsHint" class="muted"></p><label>目标目录<select id="moveCardsLibrary"></select></label><div class="dialog-actions"><button type="button" class="secondary" data-close-dialog>取消</button><button type="submit" class="primary">确认移动</button></div></form>
+  </dialog>
+
+  <dialog id="memoDialog" class="memo-dialog">
+    <form id="memoForm">
+      <div class="memo-dialog-head"><h2 id="memoDialogTitle">新建备忘录</h2><button id="memoOptionsButton" type="button" aria-label="更多设置" aria-expanded="false" aria-controls="memoOptionsPopover">···</button><button type="button" class="icon-btn" data-close-dialog aria-label="关闭">×</button></div>
+      <input id="editingMemoId" type="hidden">
+      <input id="memoTitle" required maxlength="120" autocomplete="off" aria-label="备忘录标题" placeholder="标题">
+      <div class="memo-content-field">
+
+        <div class="memo-rich-editor-shell">
+          <div id="memoContentToolbar" hidden class="memo-rich-toolbar" role="toolbar" aria-label="内容格式">
+            <span class="ql-formats">
+              <button type="button" class="ql-bold" aria-label="加粗"></button>
+              <button type="button" class="ql-italic" aria-label="斜体"></button>
+              <button type="button" class="ql-underline" aria-label="下划线"></button>
+              <button type="button" class="ql-strike" aria-label="删除线"></button>
+            </span>
+            <span class="ql-formats">
+              <button type="button" class="ql-list" value="ordered" aria-label="有序列表"></button>
+              <button type="button" class="ql-list" value="bullet" aria-label="无序列表"></button>
+              <button type="button" class="ql-blockquote" aria-label="引用"></button>
+            </span>
+            <span class="ql-formats">
+              <button type="button" class="ql-link" aria-label="链接"></button>
+              <button type="button" class="ql-clean" aria-label="清除格式"></button>
+            </span>
+          </div>
+          <div id="memoContentEditor" aria-label="备忘录内容"></div><div class="memo-editor-actions"><button id="memoInsertImage" type="button"><svg aria-hidden="true"><use href="#icon-image-plus"></use></svg>图片</button><button id="memoFormatToggle" type="button" aria-label="文字格式" aria-expanded="false" aria-controls="memoContentToolbar">Aa</button></div><input id="memoImageInput" type="file" accept="image/png,image/jpeg,image/gif,image/webp" multiple hidden>
+        </div>
+
+      </div>
+      <div class="memo-compose-meta"><div class="memo-reminder-pill"><button id="memoTimeButton" type="button" aria-label="设置提醒时间" aria-describedby="memoTimeLabel" aria-expanded="false" aria-controls="memoTimePopover"><svg class="memo-reminder-bell" aria-hidden="true" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg><span id="memoTimeLabel">不提醒</span><svg class="memo-reminder-chevron" aria-hidden="true" viewBox="0 0 16 16"><path d="m5 6 3 3 3-3"/></svg></button><button id="memoClearTime" type="button" aria-label="取消提醒">×</button></div><button id="memoTagsButton" type="button" aria-expanded="false" aria-controls="memoTagsPopover">＋ 添加标签</button></div>
+      <div id="memoOptionsPopover" class="memo-compose-popover" popover="auto"><label>重复<select id="memoRepeat"><option value="none">不重复</option><option value="daily">每天</option><option value="weekdays">工作日</option><option value="weekly">每周</option><option value="monthly">每月</option><option value="yearly">每年</option></select></label><label>优先级<select id="memoPriority"><option value="normal">普通</option><option value="medium">重要</option><option value="high">紧急</option></select></label></div>
+      <div id="memoTimePopover" class="memo-compose-popover" popover="auto" aria-label="提醒时间"><button type="button" data-memo-preset="later">1 小时后</button><button type="button" data-memo-preset="evening">今晚 18:00</button><button type="button" data-memo-preset="tomorrow">明天 09:00</button><button id="memoCustomTime" type="button" aria-expanded="false">自定义时间…</button><label id="memoCustomTimeField" hidden>提醒时间<input id="memoRemindAt" type="datetime-local"></label><button type="button" data-memo-preset="clear">不提醒</button></div>
+      <div id="memoTagsPopover" class="memo-compose-popover" popover="auto"><label for="memoTags">标签</label><input id="memoTags" maxlength="120" placeholder="工作, 生活" autocomplete="off"></div>
+      <div class="dialog-actions"><button type="button" class="secondary" data-close-dialog>取消</button><button class="primary memo-save-button" type="submit">保存</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="memoReminderDialog" class="memo-reminder-dialog" aria-labelledby="memoReminderTitle" aria-describedby="memoReminderContent">
+    <div class="memo-reminder-card">
+      <button id="memoReminderDismissIcon" type="button" class="memo-reminder-close" aria-label="关闭提醒"><svg aria-hidden="true"><use href="#icon-x"></use></svg></button>
+      <span class="memo-reminder-icon"><svg aria-hidden="true"><use href="#icon-bell"></use></svg></span>
+      <p class="memo-reminder-kicker">备忘录提醒</p>
+      <h2 id="memoReminderTitle"></h2>
+      <p id="memoReminderContent" class="memo-reminder-content"></p>
+      <p class="memo-reminder-time"><svg aria-hidden="true"><use href="#icon-clock"></use></svg><span id="memoReminderTime"></span></p>
+      <div class="memo-reminder-actions">
+        <button id="memoReminderDismiss" type="button" class="secondary">知道了</button>
+        <button id="memoReminderSnooze" type="button" class="secondary"><svg aria-hidden="true"><use href="#icon-clock"></use></svg>稍后 10 分钟</button>
+        <button id="memoReminderComplete" type="button" class="primary"><svg aria-hidden="true"><use href="#icon-check"></use></svg>完成</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="documentDialog"><div class="document-dialog"><div class="dialog-head"><div><p class="eyebrow" id="documentSource"></p><h2 id="documentTitle"></h2></div><button type="button" class="icon-btn" data-close-dialog>×</button></div><div class="selection-bar"><span>选中文字制卡</span><button id="createFromSelectionBtn" class="primary small">将选中内容加入记忆</button></div><article id="documentPreview" class="markdown-body"></article></div></dialog>
+
+  <dialog id="reviewDialog" class="review-focus-dialog review-dialog rv2"><div id="reviewDialogLayout" class="review-dialog-layout"><div class="review-box">
+    <div class="dialog-head rv-head"><div class="rv-title"><strong>今日复习</strong><span id="reviewProgress" class="rv-count">1 / 1</span></div><p id="reviewSaveStatus" class="review-save-status" role="alert" hidden></p><button class="icon-btn rv-close" data-close-dialog aria-label="退出复习，下次继续" title="退出后保留本轮进度"><svg aria-hidden="true"><use href="#icon-x"></use></svg></button></div>
+    <div class="review-progress-track rv-progress" aria-hidden="true"><span id="reviewProgressBar"></span><span id="reviewProgressSegments" class="rv-segments"></span></div><p id="reviewSessionNote" class="review-session-note rv-sr" aria-live="polite"></p>
+    <div class="review-card-stage"><button type="button" id="reviewPreviousCard" class="review-navigation previous" aria-label="前一个" title="前一个（←）"><svg aria-hidden="true"><use href="#icon-arrow-left"></use></svg></button><div class="review-card-center"><p class="review-label rv-from"><span class="rv-kind"><svg aria-hidden="true"><use href="#icon-layers"></use></svg>卡片</span><span id="reviewSource" class="review-source"></span></p><h2 id="reviewQuestion"></h2><div id="reviewVoicePanel" class="rv-voice hidden" aria-live="polite"></div><div id="answerArea" class="answer-area hidden"><p class="rv-sr">参考答案</p><div id="reviewVoiceCompare" class="rv-voice-compare hidden"></div><div id="reviewAnswer"></div><div class="rv-more"><button type="button" id="reviewOpenSource" class="review-source-button rv-chip hidden"><svg aria-hidden="true"><use href="#icon-book-open-text"></use></svg><span class="rv-source-label">看出处</span><kbd data-shortcut-label="review-source">D</kbd></button><button type="button" id="reviewEditCard" class="review-source-button rv-chip hidden"><svg aria-hidden="true"><use href="#icon-pencil"></use></svg><span class="rv-edit-label">编辑卡片</span><kbd data-shortcut-label="review-edit">E</kbd></button></div></div></div><button type="button" id="reviewNextCard" class="review-navigation next" aria-label="后一个" title="后一个（→）"><svg aria-hidden="true"><use href="#icon-arrow-right"></use></svg></button></div>
+    <div class="rv-reveal"><button type="button" id="reviewVoiceBtn" class="rv-voice-btn hidden" title="说出答案，转成文字后和参考答案对照"><svg aria-hidden="true"><use href="#icon-mic"></use></svg>语音作答<kbd data-shortcut-label="review-voice">V</kbd></button><button id="revealBtn" class="primary" autofocus>显示答案 <kbd>Space</kbd></button><button type="button" id="reviewVoiceRedo" class="rv-voice-redo hidden"><svg aria-hidden="true"><use href="#icon-refresh-cw"></use></svg>重说<kbd data-shortcut-label="review-voice-redo">R</kbd></button><button type="button" id="reviewVoiceDone" class="rv-voice-done hidden">说完了，对照答案<kbd>Space</kbd></button></div>
+    <div id="ratings" class="ratings rv-rates hidden"><button class="rating-option again" data-rating="again"><b>忘记</b><small><span data-interval>10 分钟</span><kbd>1</kbd></small></button><button class="rating-option hard" data-rating="hard"><b>有点难</b><small><span data-interval>1 天</span><kbd>2</kbd></small></button><button class="rating-option good" data-rating="good"><b>记住</b><small><span data-interval>3 天</span><kbd>3</kbd></small></button><button class="rating-option easy" data-rating="easy"><b>很简单</b><small><span data-interval>7 天</span><kbd>4</kbd></small></button></div>
+    <div class="rv-reveal"><button id="reviewContinue" type="button" class="primary review-continue hidden">下一张</button></div>
+    <div class="review-footer rv-foot"><button type="button" id="reviewUndo" class="rv-text-btn" hidden><svg aria-hidden="true"><use href="#icon-rotate-ccw"></use></svg>撤销上一个<kbd data-shortcut-label="review-undo">Z</kbd></button><span class="rv-saved"><svg aria-hidden="true"><use href="#icon-circle-check"></use></svg>进度自动保存</span><span class="rv-grow"></span><button type="button" id="reviewLater" class="rv-text-btn" data-defer="later"><svg aria-hidden="true"><use href="#icon-clock"></use></svg>稍后再看<kbd data-shortcut-label="review-later">L</kbd></button></div>
+  </div><aside id="reviewSourceDrawer" class="review-source-drawer hidden" aria-label="来源笔记预览"><div class="review-source-drawer-head"><div><span>来源笔记</span><strong id="reviewSourceTitle"></strong></div><button type="button" id="reviewSourceEdit" class="rv-source-edit"><svg aria-hidden="true"><use href="#icon-pencil"></use></svg>去笔记里编辑</button><button type="button" id="reviewCloseSource" class="icon-btn" aria-label="关闭来源笔记">×</button></div><div class="review-source-preserved"><svg aria-hidden="true"><use href="#icon-circle-check"></use></svg><span>复习状态已保留，关闭后继续当前卡片</span></div><article id="reviewSourceContent" class="review-source-content markdown-body"></article></aside></div></dialog>
+
+  <dialog id="reviewResultDialog" class="review-result-dialog"><div id="reviewOutcomeHost"></div></dialog>
+
+  <dialog id="cardOrganizationDialog">
+    <form id="cardOrganizationForm">
+      <div class="dialog-head"><h2 id="cardOrganizationTitle">新建目录</h2><button type="button" class="icon-btn" data-close-dialog aria-label="关闭">×</button></div>
+      <input id="cardOrganizationId" type="hidden">
+      <input id="cardOrganizationType" type="hidden" value="folder">
+      <input id="cardOrganizationParentId" type="hidden">
+      <label><span id="cardOrganizationNameLabel">目录名称</span><input id="cardOrganizationName" required maxlength="80" placeholder="例如：工作学习"></label>
+      <p id="cardOrganizationParentHint" class="directory-parent-hint hidden"></p>
+      <label id="cardOrganizationFolderField" class="hidden">所属目录<select id="cardOrganizationFolder"></select></label>
+      <div class="dialog-actions"><button type="button" class="secondary" data-close-dialog>取消</button><button id="cardOrganizationSubmit" class="primary" type="submit">创建</button></div>
+    </form>
+  </dialog>
+  <input id="cardImportInput" type="file" accept=".csv,text/csv" hidden>
+  <input id="webBackupInput" class="hidden" type="file" accept=".json">
+  <div id="fileDropOverlay" class="file-drop-overlay" hidden><div><strong>拖入文档，开始预览</strong><span>支持 Markdown 和 TXT · 预览后选择知识库保存</span></div></div>
+  <dialog id="filePreviewDialog" class="file-preview-dialog" aria-labelledby="filePreviewHeading">
+    <form id="filePreviewForm" class="file-preview-form">
+      <div class="dialog-head"><div><h2 id="filePreviewHeading">保存笔记</h2></div><button type="button" id="filePreviewCancel" class="icon-btn" aria-label="取消保存">×</button></div>
+      <div class="file-preview-fields"><label>笔记名称<input id="filePreviewName" required maxlength="100" placeholder="请输入笔记名称"></label><label>保存到知识库<select id="filePreviewLibrary" required></select></label><button type="button" id="filePreviewNewLibrary" class="secondary">新建知识库</button></div>
+      <p id="filePreviewSaveStatus" class="hint" role="status" aria-live="polite"></p>
+      <div class="dialog-actions"><button type="button" id="filePreviewCancelSave" class="secondary">取消</button><button type="submit" id="filePreviewSave" class="primary">保存笔记</button></div>
+    </form>
+  </dialog>
+  <input id="markdownImportInput" class="hidden" type="file" accept=".md,.markdown,.txt" multiple aria-label="导入笔记">
+  <dialog id="workspaceSearchDialog" class="product-search-dialog" aria-label="搜索">
+    <div class="product-search-field">
+      <svg aria-hidden="true"><use href="#icon-search"></use></svg>
+      <input type="search" id="workspaceSearchQuery" placeholder="搜索笔记、卡片和备忘录" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="true" aria-controls="workspaceSearchResults" aria-autocomplete="list" aria-label="搜索内容">
+      <button type="button" class="product-search-clear" id="workspaceSearchClear" aria-label="清空搜索内容" hidden><svg aria-hidden="true"><use href="#icon-x"></use></svg></button>
+      <button type="button" class="product-search-esc" data-close-dialog="workspaceSearchDialog" aria-label="关闭搜索">esc</button>
+    </div>
+    <div class="product-search-scopes" id="workspaceSearchScopes" role="tablist" aria-label="结果类型" hidden></div>
+    <div id="workspaceSearchResults" class="product-search-list" role="listbox" aria-label="搜索结果"></div>
+    <div class="product-search-foot">
+      <span><kbd>↑</kbd><kbd>↓</kbd>选择</span>
+      <span><kbd>↵</kbd>打开</span>
+      <span id="workspaceSearchTabHint" hidden><kbd>⇥</kbd>切换类型</span>
+      <span class="product-search-count" id="workspaceSearchCount" aria-live="polite"></span>
+    </div>
+  </dialog>
+  <dialog id="studyPlanDialog" class="study-plan-dialog" aria-labelledby="studyPlanTitle"><form id="studyPlanForm"><h2 id="studyPlanTitle">学习计划</h2><label>每天时长（分钟）<input type="number" name="minutes" min="1" max="120" required></label><label>每天新卡上限<input type="number" name="newLimit" min="0" max="100" required></label><p id="studyPlanError" role="alert"></p><div class="dialog-actions"><button type="button" data-close-dialog>取消</button><button class="primary" type="submit">保存计划</button></div></form></dialog>
+  <dialog id="workspaceHistoryDialog" class="workspace-history-dialog" aria-labelledby="workspaceHistoryTitle"><form method="dialog" class="product-search-heading"><h2 id="workspaceHistoryTitle">历史版本</h2><button type="submit" class="icon-btn" aria-label="关闭历史">×</button></form><div id="workspaceHistoryNotes" class="product-search-list"></div></dialog>
+  <!-- Page modules must load before the application entry point. -->
+  <script src="directory-tree.js"></script>
+  <script src="card-workspace.js"></script>
+  <script src="card-import.js"></script>
+  <script src="sidebar-tools.js"></script>
+  <script src="sidebar-layout.js"></script>
+  <script src="file-preview.js"></script>
+  <script src="diagram-preview.js"></script>
+  <script src="../modules/content/editor/image-format.js"></script>
+  <script src="../modules/core/runtime.js"></script>
+  <script src="../modules/editions/current/features.js"></script>
+  <script src="../modules/core/plugins.js"></script>
+  <script src="../modules/editions/current/plugins.js"></script>
+  <script src="plugins-view.js"></script>
+  <script src="../modules/editions/current/browser.js"></script>
+  <script src="shortcut-settings.js"></script>
+  <script src="shortcuts.js"></script>
+  <script src="note-block-navigation.js"></script>
+  <script src="note-heading-fold.js"></script>
+  <script src="note-gist.js"></script>
+  <script src="vendor/prism/languages.js"></script>
+  <script src="../modules/content/editor/code-details.js"></script>
+  <script src="../modules/content/editor/code-format.js"></script>
+  <script src="../modules/content/editor/table-format.js"></script>
+  <script src="note-markdown-shortcuts.js"></script>
+  <script src="note-diagram-paste.js"></script>
+  <script src="note-link-paste.js"></script>
+  <script src="note-plain-paste.js"></script>
+  <script src="note-view-modes.js"></script>
+  <script src="note-find.js"></script>
+  <script src="note-selection-cards.js"></script>
+  <script src="note-card-marks.js"></script>
+  <script src="../modules/content/diagrams/source.js"></script>
+  <script src="review-session.js"></script>
+  <script src="review-outcome.js"></script>
+  <script src="vendor/ts-fsrs/index.umd.js"></script>
+  <script src="fsrs-scheduler.js"></script>
+  <script src="domain/card-formats.js"></script>
+  <script src="review-presentation.js"></script>
+  <script src="state-merge.js"></script>
+  <script src="note-file-types.js"></script>
+  <script src="note-file-create.js"></script>
+  <script src="note-text-editor.js"></script>
+  <script src="note-tabs.js"></script>
+  <script src="card-formats-editor.js"></script>
+  <script src="card-edit-dialog.js"></script>
+  <script src="card-split-hint.js"></script>
+  <script src="note-directory.js"></script>
+  <script src="library-settings.js"></script>
+  <script src="note-tags.js"></script>
+  <script src="domain/naming.js"></script>
+  <script src="domain/inline-cards.js"></script>
+  <script src="domain/image-references.js"></script>
+  <script src="domain/queries.js"></script>
+  <script src="domain/learning-plan.js"></script>
+  <script src="domain/source-learning.js"></script>
+  <script src="domain/plans.js"></script>
+  <script src="domain/knowledge-points.js"></script>
+  <script src="domain/pomodoro.js"></script>
+  <script src="domain/content-search.js"></script>
+  <script src="domain/card-list.js"></script>
+  <script src="persistence/storage-adapter.js"></script>
+  <script src="persistence/save-coordinator.js"></script>
+  <script src="persistence/sync-coordinator.js"></script>
+  <script src="state/application-state.js"></script>
+  <script src="application/card-operations.js"></script>
+  <script src="application/card-trash.js"></script>
+  <script src="application/card-runtime.js"></script>
+  <script src="application/memo-operations.js"></script>
+  <script src="application/plan-operations.js"></script>
+  <script src="application/settings-operations.js"></script>
+  <script src="application/knowledge-operations.js"></script>
+  <script src="application/source-learning.js"></script>
+  <script src="application/review-transactions.js"></script>
+  <script src="application/review-runtime.js"></script>
+  <script src="application/review-operations.js"></script>
+  <script src="editor/session.js"></script>
+  <script src="editor/save-session.js"></script>
+  <script src="editor/content-transactions.js"></script>
+  <script src="editor/quill-transactions.js"></script>
+  <script src="views/note-tabs.js"></script>
+  <script src="views/card-list.js"></script>
+  <script src="views/card-bulk.js"></script>
+  <script src="views/card-editor.js"></script>
+  <script src="views/card-detail.js"></script>
+  <script src="views/card-dialog-events.js"></script>
+  <script src="views/card-list-events.js"></script>
+  <script src="domain/voice-answer.js"></script>
+  <script src="domain/voice-term-packs.js"></script>
+  <script src="domain/voice-terms.js"></script>
+  <script src="domain/voice-settings.js"></script>
+  <script src="review-voice.js"></script>
+  <script src="voice-terms-settings.js"></script>
+  <script src="voice-settings-page.js"></script>
+  <script src="domain/card-topics.js"></script>
+  <script src="domain/card-anchors.js"></script>
+  <script src="domain/point-recall.js"></script>
+  <script src="card-topics-view.js"></script>
+  <script src="views/review.js"></script>
+  <script src="views/review-events.js"></script>
+  <script src="views/shell.js"></script>
+  <script src="bootstrap/composition.js"></script>
+  <script src="bootstrap/startup.js"></script>
+  <script src="editor/features/interactions.js"></script>
+  <script src="editor/features/card-layout.js"></script>
+  <script src="editor/features/images.js"></script>
+  <script src="editor/features/save-history.js"></script>
+  <script src="editor/features/rich-text.js"></script>
+  <script src="editor/features/outline.js"></script>
+  <script src="editor/features/tables.js"></script>
+  <script src="editor/features/card-preview.js"></script>
+  <script src="editor/features/card-tags.js"></script>
+  <script src="editor/features/zoom.js"></script>
+  <script src="shell/assets.js"></script>
+  <script src="shell/content.js"></script>
+  <script src="shell/knowledge.js"></script>
+  <script src="shell/shell.js"></script>
+  <script src="shell/plugins.js"></script>
+  <script src="shell/lifecycle.js"></script>
+  <script src="shell/selectors.js"></script>
+  <script src="shell/trash.js"></script>
+  <script src="shell/notebooks.js"></script>
+  <script src="shell/editor-view.js"></script>
+  <script src="shell/editor-binding.js"></script>
+  <script src="shell/memos.js"></script>
+  <script src="shell/settings.js"></script>
+  <script src="shell/reminders.js"></script>
+  <script src="shell/workspace.js"></script>
+  <script src="domain/engagement.js"></script>
+  <script src="shell/engagement.js"></script>
+  <script src="shell/workspace-history.js"></script>
+  <script src="shell/page-tabs.js"></script>
+  <script src="shell/source-learning.js"></script>
+  <script src="shell/plans.js"></script>
+  <script src="shell/pomodoro.js"></script>
+  <script src="shell/knowledge-points.js"></script>
+  <script src="shell/today.js"></script>
+  <!-- edition:scripts -->
+  <script src="shell/assembly.js"></script>
+  <script src="shell/environment.js"></script>
+  <script src="legacy/application.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

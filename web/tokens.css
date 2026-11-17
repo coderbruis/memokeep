@@ -1,0 +1,65 @@
+/* 设计令牌（design/prototype/ui-audit-20261109.md）：字号 6 级、圆角 3 种、一个主色 + 三个状态色。
+   先覆盖「今天」「记忆卡片」「笔记编辑」；最后加载，统一修正小于 12px 的字、低对比度和过小的点击区。
+   颜色取自当前主题（appearance.js 写入的 --ink / --muted / --blue / --canvas），7 套主题都适用。 */
+:root {
+  --fs-xs: 12px; --fs-sm: 13px; --fs-md: 14px; --fs-lg: 16px; --fs-xl: 20px; --fs-2xl: 28px;
+  --radius-sm: 6px; --radius-md: 10px; --radius-lg: 14px;
+  --motion: 150ms;
+  --accent: var(--blue);
+  --on-accent: var(--canvas);
+  /* 次要文字：从正文色和背景混出来，7 套主题下都 ≥ 4.5:1（--muted 在浅色底上只有 3.9:1）。 */
+  --text-secondary: color-mix(in srgb, var(--ink) 74%, var(--canvas));
+  --success: #2f7a4f; --warning: #a15c07; --danger: #c2362b;
+}
+html[data-appearance="dark"] { --success: #7ccf9c; --warning: #f0b35a; --danger: #ff8a80; }
+
+/* —— 最小字号 12px —— */
+html[data-theme] kbd,
+html[data-theme] #planNavMeta,
+html[data-theme] :is(.sidebar-workspace-text, .sidebar-menu-workspace) small,
+html[data-theme] #homeView :is(.today-week small, #homeWeekSummary, .home-recent-note small, .home-recent-note time),
+html[data-theme] #cardsView :is(#cardTagModeHint, .card-tag-options small, .card-tag-options button, #cardFilterChips span, .card-row-tags button, .card-tags-cell button),
+html[data-theme] :is(#noteSaveStatus, .note-code-name, .note-code-actions, .note-code-actions span, .note-gist-button),
+html[data-theme] #librariesView :is(.badge, #noteDirectoryCount, .note-directory-card-kind, .note-directory-card-footer time, .note-directory-card-memory, #noteDirectoryStatus, .note-directory-page-size, .note-directory-view-switch button, .note-directory-pagination button),
+html[data-theme] #plansView :is(.plan-stats span, .plan-legend span, .plan-week span, .plan-calendar small),
+html[data-theme] #memosView .memo-tag,
+html[data-theme] #growthView :is(.engagement-days span, .engagement-days small, .engagement-caption, .engagement-companion small),
+html[data-theme] :is(#reviewDialog .rv-kind, #cardSaveShortcut, .product-search-esc) { font-size: var(--fs-xs); }
+
+/* —— 次要文字至少 4.5:1：统一用主题的 --muted —— */
+html[data-theme] #homeView :is(.today-review-count small, #homePlanDetail span, #homePlanEstimate, .today-task-focus),
+html[data-theme] #cardsView :is(#cardTagModeHint, .card-tag-options small, #cardTagSelectedCount, .card-row-tags button, .card-tags-cell button, .card-row-answer, .card-row-source, .card-due-cell, .card-tag-modes button:not([aria-pressed=true])),
+html[data-theme] #cardEditStatus,
+html[data-theme] #plansView .plan-focus-task,
+html[data-theme] #settingsView .settings-navigation button:not([aria-pressed=true]),
+html[data-theme] #trashView :is([role=tab], .trash-tabs button):not([aria-selected=true]):not([aria-pressed=true]),
+html[data-theme] :is(.note-code-name.is-placeholder, .note-code-actions span) { color: var(--text-secondary); }
+html[data-theme] .sidebar-menu-workspace small.is-stale { color: var(--warning); }
+
+
+/* 主色底上的文字：浅色主题用白，深色主题用深色（主色在深色主题里是浅蓝）。 */
+html[data-theme] #cardsView :is(.card-tag-modes button[aria-pressed=true], #cardTagDone) { color: var(--on-accent); }
+
+/* —— 专注按钮不再用红底：红色只留给「正在计时」和危险操作 —— */
+html[data-theme] #plansView .plan-button.focus,
+html[data-theme] #homeView .today-focus-start { background: var(--canvas); color: var(--ink); border: 1px solid var(--line); box-shadow: none; }
+html[data-theme] #plansView .plan-button.focus:hover,
+html[data-theme] #homeView .today-focus-start:hover { background: var(--hover, var(--selected)); filter: none; }
+html[data-theme] :is(#plansView .plan-button.focus, #homeView .today-focus-start) svg { color: var(--danger); }
+
+/* —— 点击区至少 24×24：复选框外观不变，用伪元素扩大可点范围 —— */
+html[data-theme] :is(.today-check, .plan-check, .memo-check) { position: relative; }
+html[data-theme] :is(.today-check, .plan-check, .memo-check)::after { content: ""; position: absolute; inset: -8px; }
+
+/* —— 动效：统一 150ms，并遵守「减少动态效果」 —— */
+@media (prefers-reduced-motion: reduce) {
+  html *, html *::before, html *::after { transition-duration: 0ms !important; animation-duration: 0ms !important; }
+}
+
+/* —— 剩余的低对比度：日历打卡格、新卡标记、空状态 —— */
+html[data-theme] #plansView .plan-day.full { background: color-mix(in srgb, var(--plan-done) 82%, #000); }
+html[data-appearance="dark"] #plansView .plan-day.full { background: var(--plan-done); }
+html[data-theme] #plansView .plan-day.part, html[data-theme] #plansView .plan-day.part :is(small, .plan-day-sub) { color: var(--ink); }
+html[data-theme] #plansView .plan-day.miss .plan-day-num { color: var(--text-secondary); }
+html[data-theme] #cardsView .card-stage-badge.new { color: color-mix(in srgb, #2c8659 80%, var(--ink)); }
+html[data-theme] :is(.trash-empty, .trash-empty strong) { color: var(--text-secondary); }

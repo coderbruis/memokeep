@@ -1,0 +1,92 @@
+/* Layer 40: floating utility; dialog uses the native modal top layer. */
+#shortcutEntry { position:fixed; right:24px; bottom:24px; z-index:40; display:grid; place-items:center; width:42px; height:42px; padding:0; border:1px solid var(--line); border-radius:50%; background:var(--canvas); color:var(--ink); box-shadow:0 5px 20px rgb(37 56 74 / 15%); }
+#shortcutEntry:hover { background:var(--hover); }
+#shortcutEntry:active { transform:scale(.96); }
+.shortcut-entry-symbol { font-family:'Apple Symbols','Segoe UI Symbol','Arial Unicode MS',sans-serif; font-size:23px; line-height:1; }
+/* Open leftward to stay clear of the back-to-top utility above this button. */
+.shortcut-entry-tooltip { position:absolute; right:calc(100% + 10px); top:50%; transform:translateY(-50%); padding:7px 10px; border-radius:6px; background:#45474b; color:#fafbfc; font-size:12px; white-space:nowrap; opacity:0; pointer-events:none; box-shadow:0 3px 10px rgb(37 56 74 / 12%); }
+#shortcutEntry:hover .shortcut-entry-tooltip, #shortcutEntry:focus-visible .shortcut-entry-tooltip { opacity:1; }
+#shortcutEntry:focus-visible, #shortcutDialog button:focus-visible, #shortcutDialog .shortcut-list:focus-visible { outline:2px solid var(--blue); outline-offset:3px; }
+#shortcutDialog { padding:0; width:710px; max-width:calc(100vw - 36px); max-height:calc(100dvh - 48px); border:1px solid var(--line); border-radius:16px; background:var(--canvas); color:var(--ink); box-shadow:0 24px 100px rgb(20 45 73 / 20%); overflow:hidden; }
+#shortcutDialog[open] { display:flex; flex-direction:column; }
+#shortcutDialog::backdrop { background:rgb(22 32 45 / 20%); backdrop-filter:blur(3px); }
+#shortcutDialog .shortcut-head { display:flex; justify-content:space-between; align-items:flex-start; padding:26px 28px 20px; flex-shrink:0; }
+#shortcutDialog h2 { margin:0 0 7px; font-size:23px; letter-spacing:-.5px; }
+#shortcutDialog p { margin:0; font-size:13px; color:var(--muted); }
+#shortcutDialog .shortcut-close { border:0; border-radius:6px; background:var(--hover); color:var(--muted); padding:6px 9px; font-size:12px; }
+#shortcutDialog .shortcut-search { display:flex; flex-shrink:0; align-items:center; gap:10px; margin:0 28px; padding:0 12px; border:1px solid var(--line); border-radius:8px; background:var(--hover); }
+#shortcutDialog .shortcut-search:focus-within { border-color:var(--blue); }
+#shortcutDialog .shortcut-search svg { width:17px; height:17px; fill:none; stroke:currentColor; stroke-width:1.7; color:var(--muted); flex-shrink:0; }
+#shortcutDialog input { width:100%; min-width:0; border:0; background:transparent; box-shadow:none; padding:12px 0; font-size:13px; color:var(--ink); }
+#shortcutDialog input::placeholder { color:var(--muted); opacity:1; }
+#shortcutDialog .shortcut-filters { display:flex; flex-shrink:0; gap:6px; margin:17px 28px 0; padding-bottom:17px; border-bottom:1px solid var(--line); }
+#shortcutDialog .shortcut-filters button { border:0; border-radius:6px; background:transparent; color:var(--muted); padding:7px 12px; font-size:13px; white-space:nowrap; }
+#shortcutDialog .shortcut-filters button:hover { background:var(--hover); }
+#shortcutDialog .shortcut-filters button[aria-pressed=true] { background:var(--selected); color:var(--blue); font-weight:600; }
+#shortcutDialog .shortcut-list { padding:4px 28px 20px; min-height:0; height:454px; overflow:auto; overscroll-behavior:contain; flex:0 1 454px; }
+#shortcutDialog h3 { margin:20px 0 9px; font-size:12px; color:var(--muted); font-weight:500; }
+#shortcutDialog .shortcut-row { display:flex; align-items:center; justify-content:space-between; gap:12px; min-height:40px; font-size:13px; }
+#shortcutDialog .shortcut-keys { display:flex; flex-shrink:0; gap:5px; align-items:center; }
+#shortcutDialog kbd { font-family:inherit; font-size:12px; min-width:27px; height:26px; padding:3px 7px; text-align:center; background:var(--hover); border:1px solid var(--line); border-bottom-width:2px; border-radius:5px; color:var(--ink); }
+#shortcutDialog .shortcut-key-separator { font-size:10px; color:var(--muted); }
+#shortcutDialog footer { display:flex; flex-shrink:0; justify-content:space-between; gap:10px; border-top:1px solid var(--line); padding:14px 28px; color:var(--muted); font-size:11px; background:var(--sidebar); }
+#shortcutDialog .shortcut-empty { padding:65px 0; text-align:center; }
+#shortcutDialog .shortcut-empty strong { display:block; margin-bottom:10px; font-size:15px; }
+#shortcutDialog .shortcut-empty button { margin-top:18px; border:1px solid var(--line); border-radius:6px; background:var(--hover); color:var(--ink); padding:7px 12px; }
+#shortcutDialog .shortcut-search-status { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
+#shortcutDialog button:active { transform:scale(.98); }
+@media(max-width:600px) {
+  #shortcutEntry { right:16px; bottom:16px; }
+  #shortcutDialog { max-width:calc(100vw - 24px); max-height:calc(100dvh - 24px); }
+  #shortcutDialog .shortcut-head { padding:20px 18px 16px; }
+  #shortcutDialog .shortcut-search { margin:0 18px; }
+  #shortcutDialog .shortcut-filters { margin:14px 18px 0; gap:2px; }
+  #shortcutDialog .shortcut-filters button { padding:7px 9px; }
+  #shortcutDialog .shortcut-list { padding:4px 18px 18px; }
+  #shortcutDialog .shortcut-row { flex-wrap:wrap; padding:7px 0; gap:8px; }
+  #shortcutDialog footer { padding:12px 18px; flex-wrap:wrap; }
+}
+@media(prefers-reduced-transparency:reduce) { #shortcutDialog::backdrop { backdrop-filter:none; background:rgb(22 32 45 / 40%); } }
+/* Editable bindings and inline recording. */
+#shortcutDialog { width:760px; }
+#shortcutDialog .shortcut-list { height:452px; flex-basis:452px; padding-top:12px; }
+#shortcutDialog .shortcut-row { min-height:49px; }
+#shortcutDialog .shortcut-custom { color:var(--blue); font-size:10px; margin-left:10px; padding:3px 6px; background:var(--selected); border-radius:4px; white-space:nowrap; }
+#shortcutDialog .shortcut-row-actions { display:flex; align-items:center; gap:14px; }
+#shortcutDialog .shortcut-edit-key { display:flex; gap:5px; align-items:center; border:1px solid transparent; background:transparent; padding:5px 7px; border-radius:7px; color:var(--ink); }
+#shortcutDialog .shortcut-edit-key:hover, #shortcutDialog .is-editing .shortcut-edit-key { background:var(--selected); border-color:var(--blue); }
+#shortcutDialog .shortcut-edit-key svg { width:13px; height:13px; fill:none; stroke:currentColor; stroke-width:1.7; margin-left:7px; color:var(--muted); }
+#shortcutDialog .shortcut-reset-one { border:0; background:transparent; color:var(--blue); font-size:11px; padding:5px; white-space:nowrap; }
+#shortcutDialog .is-editing { background:var(--hover); border:1px solid var(--line); border-radius:10px; padding:0 12px; margin:4px -12px 12px; }
+#shortcutDialog .shortcut-recorder { padding:12px 0 17px; border-top:1px solid var(--line); }
+#shortcutDialog .shortcut-record-label { font-size:12px; color:var(--muted); margin-bottom:10px; }
+#shortcutDialog .shortcut-record-box { min-height:58px; border:1.5px solid var(--blue); border-radius:8px; background:var(--canvas); display:flex; align-items:center; justify-content:center; gap:7px; outline-offset:3px; }
+#shortcutDialog .shortcut-record-box>span { font-size:13px; color:var(--muted); }
+#shortcutDialog .shortcut-record-box kbd { height:30px; min-width:32px; padding:5px 8px; font-size:14px; }
+#shortcutDialog .shortcut-record-meta { display:flex; justify-content:space-between; gap:10px; margin-top:10px; align-items:center; }
+#shortcutDialog .shortcut-record-meta p { font-size:11px; color:var(--blue); }
+#shortcutDialog .shortcut-record-meta>div { display:flex; gap:8px; flex-shrink:0; }
+#shortcutDialog .shortcut-record-meta button { font-size:12px; border:0; border-radius:6px; padding:7px 12px; background:var(--canvas); color:var(--ink); }
+#shortcutDialog .shortcut-record-meta [data-record-apply] { background:var(--blue); color:var(--canvas); }
+#shortcutDialog .conflict .shortcut-record-box { border-color:#b95146; }
+#shortcutDialog .conflict .shortcut-record-meta p { color:#b95146; }
+html[data-appearance=dark] #shortcutDialog .conflict .shortcut-record-meta p { color:#f1a49b; }
+#shortcutDialog footer { align-items:center; padding:15px 28px; }
+#shortcutDialog .shortcut-reset-all { border:0; padding:0; background:transparent; color:var(--muted); font-size:12px; white-space:nowrap; }
+#shortcutDialog .shortcut-save-area { display:flex; align-items:center; gap:12px; }
+#shortcutDialog .shortcut-save-area span { font-size:11px; max-width:245px; }
+#shortcutDialog .shortcut-save-area button, #shortcutDialog .shortcut-confirm button { border:1px solid var(--line); border-radius:7px; padding:8px 14px; font-size:12px; background:var(--canvas); color:var(--ink); white-space:nowrap; }
+#shortcutDialog .shortcut-save-area .shortcut-save { background:var(--blue); color:var(--canvas); border-color:var(--blue); }
+#shortcutDialog .shortcut-record-meta button:disabled, #shortcutDialog .shortcut-save-area button:disabled { background:var(--line); color:var(--muted); cursor:default; transform:none; }
+#shortcutDialog .shortcut-platform { font-size:11px; color:var(--muted); padding:12px 28px; border-top:1px solid var(--line); flex-shrink:0; }
+#shortcutDialog .shortcut-confirm { display:flex; align-items:center; gap:10px; padding:12px 28px; background:var(--selected); font-size:12px; flex-shrink:0; }
+#shortcutDialog .shortcut-confirm[hidden] { display:none; }
+#shortcutDialog .shortcut-confirm span { flex:1; }
+@media(max-width:600px) {
+  #shortcutDialog .shortcut-filters { flex-wrap:wrap; }
+  #shortcutDialog .shortcut-row-actions { margin-left:auto; gap:5px; }
+  #shortcutDialog .shortcut-record-meta, #shortcutDialog .shortcut-confirm { flex-wrap:wrap; }
+  #shortcutDialog .shortcut-platform { padding:10px 18px; }
+  #shortcutDialog .shortcut-save-area { flex-wrap:wrap; justify-content:flex-end; gap:8px; }
+  #shortcutDialog .shortcut-save-area span { flex-basis:100%; }
+}

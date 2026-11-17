@@ -1,0 +1,546 @@
+/* Shared immersive controls; card writing styles stay scoped to card mode. */
+.clean-note-editor[data-editor-mode="note"] .card-editor-only { display: none; }
+
+.shell:has(#librariesView.editing-card-note:not(.hidden)) {
+  height: 100dvh;
+  background: #fff;
+  transition: none;
+}
+
+.shell:has(#librariesView.editing-note.card-editor-immersive:not(.hidden)) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+}
+
+.shell:has(#librariesView.editing-note.card-editor-immersive:not(.hidden)) > header { display: none; }
+
+#librariesView.editing-note.card-editor-immersive { grid-column: 1; }
+
+#librariesView.editing-card-note {
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  background: #fff;
+}
+
+#librariesView.editing-card-note .workspace-grid,
+#librariesView.editing-card-note .library-content {
+  min-height: 0;
+  background: transparent;
+}
+
+.clean-note-editor {
+  --card-editor-paper: #fff;
+  --card-editor-chrome: #fbfdff;
+  --card-editor-hover: #eaf2fd;
+  --card-editor-active: #deebfc;
+  --card-editor-ink: #2b3949;
+  --card-editor-muted: #74859a;
+  --card-editor-line: #dce7f4;
+  --card-editor-blue: #426c9d;
+}
+
+.clean-note-editor[data-editor-mode="note"] {
+  display: flex;
+  flex-direction: column;
+}
+
+.clean-note-editor[data-editor-mode="card"] {
+  --card-editor-scale: .8;
+  --note-title-scale: calc(var(--card-editor-scale) / .8);
+  --card-editor-text-size: 21px;
+  --card-editor-line-height: calc(52px * var(--card-editor-scale));
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  margin: 0;
+  background: var(--card-editor-paper);
+  color: var(--card-editor-ink);
+}
+
+.clean-note-editor[data-editor-mode="card"] > .note-editor-toolbar {
+  position: sticky;
+  top: 0;
+  flex: 0 0 auto;
+  min-height: 64px;
+  gap: 15px;
+  padding: 12px 32px;
+  border-bottom: 1px solid var(--card-editor-line);
+  background: var(--card-editor-chrome);
+}
+
+#librariesView.card-editor-immersive .clean-note-editor.card-editor-mac > .note-editor-toolbar,
+.note-window-mac .clean-note-editor[data-editor-mode="card"] > .note-editor-toolbar {
+  padding-left: 104px;
+}
+
+/* The formatting toolbar also reaches the window controls when a note scrolls. */
+#librariesView.card-editor-immersive .clean-note-editor.card-editor-mac .note-rich-toolbar,
+.note-window-mac .clean-note-editor .note-rich-toolbar {
+  padding-left: 104px;
+}
+
+.clean-note-editor[data-editor-mode="card"] .note-back-button {
+  min-width: 0;
+  height: 34px;
+  gap: 9px;
+  padding: 0 5px;
+  color: #616973;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.clean-note-editor[data-editor-mode="card"] .note-back-button svg { width: 17px; height: 17px; }
+
+.clean-note-editor[data-editor-mode="card"] .card-editor-breadcrumb {
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+  min-width: 0;
+  color: #858b93;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.clean-note-editor[data-editor-mode="card"] .card-editor-divider { color: #c7d6e7; }
+.clean-note-editor[data-editor-mode="card"] .card-editor-toolbar-spacer { flex: 1; min-width: 4px; }
+.clean-note-editor[data-editor-mode="card"] .card-editor-zoom {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  gap: 1px;
+  padding: 2px;
+  border: 1px solid var(--card-editor-line);
+  border-radius: 6px;
+}
+
+.clean-note-editor[data-editor-mode="card"] .card-editor-zoom button {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 3px;
+  background: transparent;
+  color: #616973;
+  font-size: 17px;
+  line-height: 1;
+}
+
+.clean-note-editor[data-editor-mode="card"] #cardEditorZoomReset { width: 46px; font-size: 11px; font-variant-numeric: tabular-nums; }
+.clean-note-editor[data-editor-mode="card"] .card-editor-zoom button:hover:not(:disabled) { background: var(--card-editor-hover); color: var(--card-editor-blue); }
+.clean-note-editor[data-editor-mode="card"] .card-editor-zoom button:disabled { color: #b9bec5; cursor: default; opacity: .65; }
+.clean-note-editor[data-editor-mode="card"] .note-save-status { color: #858c94; font-size: 11px; }
+.clean-note-editor[data-editor-mode="card"] .note-save-status.is-dirty { color: #57789f; }
+
+.clean-note-editor[data-editor-mode="card"] .note-save-button {
+  height: 34px;
+  gap: 7px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 6px;
+  background: #e8f1fd;
+  color: var(--card-editor-blue);
+  box-shadow: none;
+  font-size: 12px;
+  font-weight: 550;
+}
+
+.clean-note-editor[data-editor-mode="card"] .note-save-button:disabled {
+  background: #edf4fc;
+  color: #81949e;
+  opacity: 1;
+}
+
+.clean-note-editor[data-editor-mode="card"] .note-save-button:hover:not(:disabled) { background: var(--card-editor-active); color: #315d7c; }
+
+.clean-note-editor[data-editor-mode="card"] .note-save-button kbd {
+  margin-left: 6px;
+  color: #8b9ca5;
+  font: 11px/1 -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.clean-note-editor[data-editor-mode="card"] .note-toolbar-icon-button {
+  width: auto;
+  height: 34px;
+  gap: 7px;
+  padding: 0 7px;
+  color: #777f89;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.clean-note-editor[data-editor-mode="card"] .note-toolbar-icon-button svg { width: 16px; height: 16px; }
+
+.clean-note-editor[data-editor-mode="card"] .note-back-button:hover,
+.clean-note-editor[data-editor-mode="card"] .note-toolbar-icon-button:hover,
+.clean-note-editor[data-editor-mode="card"] .note-toolbar-icon-button[aria-expanded="true"] {
+  background: var(--card-editor-hover);
+  color: #454f5b;
+}
+
+.clean-note-editor[data-editor-mode="card"] > .card-editor-heading {
+  position: static;
+  flex: 0 0 auto;
+  display: block;
+  width: calc(100% - 2 * var(--note-editor-gutter));
+  height: auto;
+  min-height: 0;
+  margin: var(--note-title-top) auto 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  user-select: auto;
+}
+
+.clean-note-editor[data-editor-mode="card"] .card-editor-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  min-height: 52px;
+  margin-top: 19px;
+  padding: 0 0 14px;
+  border-bottom: 1px solid var(--card-editor-line);
+  color: var(--card-editor-muted);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.clean-note-editor[data-editor-mode="card"] .card-editor-insert-actions { display: flex; align-items: center; gap: 15px; }
+
+.clean-note-editor[data-editor-mode="card"] .card-editor-insert-actions button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 0 4px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: #777f89;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.clean-note-editor[data-editor-mode="card"] .card-editor-insert-actions button:hover { background: var(--card-editor-hover); color: #455466; }
+
+.clean-note-editor[data-editor-mode="card"] .card-editor-insert-actions svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.clean-note-editor[data-editor-mode="card"] > .note-editor-canvas {
+  --note-editor-padding-x: 0px;
+  flex: 1 0 auto;
+  width: calc(100% - 2 * var(--note-editor-gutter));
+  max-width: none;
+  min-height: 320px;
+  margin: 0 auto;
+  padding: 24px 0 88px;
+}
+
+.clean-note-editor[data-editor-mode="card"] .note-editor-canvas textarea {
+  min-height: 208px;
+  padding: 0 76px 0 25px;
+  color: var(--card-editor-ink);
+  caret-color: var(--card-editor-blue);
+  font: 400 calc(var(--card-editor-text-size) * var(--card-editor-scale))/var(--card-editor-line-height) "SFMono-Regular", Menlo, Consolas, monospace;
+  letter-spacing: -.02em;
+  tab-size: 2;
+}
+
+.clean-note-editor[data-editor-mode="card"] .note-editor-canvas textarea::selection { background: #d8e9ff; }
+.clean-note-editor[data-editor-mode="card"] .note-editor-canvas textarea::placeholder { color: #aeb5bf; }
+.clean-note-editor[data-editor-mode="card"] .note-bullet-gutter { top: 24px; left: 3px; }
+.clean-note-editor[data-editor-mode="card"] .note-bullet-gutter span { height: var(--card-editor-line-height); }
+.clean-note-editor[data-editor-mode="card"] .note-bullet-gutter span::before { top: calc(var(--card-editor-line-height) / 2 - 2px); width: 4px; height: 4px; background: #a2abb5; }
+
+.clean-note-editor[data-editor-mode="card"] .inline-card-hover-layer span { background: var(--card-editor-hover); }
+.clean-note-editor[data-editor-mode="card"] .inline-card-hover-content { border-radius: 5px 0 0 5px; box-shadow: none; }
+.clean-note-editor[data-editor-mode="card"] .inline-card-hover-actions { border-radius: 0 5px 5px 0; }
+
+.clean-note-editor[data-editor-mode="card"] .inline-card-token {
+  width: calc(32px * var(--card-editor-scale));
+  height: calc(26px * var(--card-editor-scale));
+  background: var(--card-editor-paper);
+  color: #60758d;
+  font-size: calc(var(--card-editor-text-size) * var(--card-editor-scale));
+  letter-spacing: -.02em;
+}
+
+.clean-note-editor[data-editor-mode="card"] .inline-card-token.is-line-hovered { background: var(--card-editor-hover); }
+
+.clean-note-editor[data-editor-mode="card"] .inline-card-token:hover,
+.clean-note-editor[data-editor-mode="card"] .inline-card-token:focus-visible {
+  background: var(--card-editor-active);
+  color: var(--card-editor-blue);
+  font-size: 0;
+  box-shadow: inset 0 -1px 0 #9ab1cc;
+}
+
+.clean-note-editor[data-editor-mode="card"] .inline-card-token::after { font-size: calc(23px * var(--card-editor-scale)); }
+
+.clean-note-editor[data-editor-mode="card"] .inline-card-row-action {
+  border-color: transparent;
+  background: transparent;
+  color: #929daa;
+  box-shadow: none;
+}
+
+.clean-note-editor[data-editor-mode="card"] .inline-card-row-action:hover,
+.clean-note-editor[data-editor-mode="card"] .inline-card-row-action:focus-visible {
+  border-color: transparent;
+  background: var(--card-editor-active);
+  color: #506b8b;
+}
+
+.clean-note-editor[data-editor-mode="card"] .note-image-token,
+.clean-note-editor[data-editor-mode="card"] .note-image-continue { background: var(--card-editor-paper); }
+.clean-note-editor[data-editor-mode="card"] .note-image-continue.has-content span { font-size: calc(var(--card-editor-text-size) * var(--card-editor-scale)); letter-spacing: -.02em; }
+
+.clean-note-editor[data-editor-mode="card"] .note-image-reference-mask {
+  position: absolute;
+  background: var(--card-editor-paper);
+  pointer-events: none;
+}
+
+.clean-note-editor[data-editor-mode="card"] .note-image-token.is-wrapped-reference { overflow: hidden; }
+.clean-note-editor[data-editor-mode="card"] .is-wrapped-reference .note-image-continue { min-width: 0; }
+.clean-note-editor[data-editor-mode="card"] .is-wrapped-reference .note-image-continue span { overflow: hidden; text-overflow: ellipsis; }
+
+.clean-note-editor[data-editor-mode="card"] .note-image-lightbox {
+  position: fixed;
+  inset: 64px 0 0;
+}
+
+.clean-note-editor[data-editor-mode="card"] .note-image-lightbox-close {
+  position: absolute;
+  top: 20px;
+}
+
+.clean-note-editor[data-editor-mode="card"] .card-editor-hint {
+  position: absolute;
+  left: 25px;
+  right: 0;
+  margin: 0;
+  color: #969fa9;
+  font-size: 12px;
+  line-height: 1.7;
+  pointer-events: none;
+}
+
+.clean-note-editor[data-editor-mode="card"] .card-editor-hint kbd {
+  padding: 1px 5px;
+  border: 1px solid #dfe4e9;
+  border-radius: 3px;
+  font: 11px/1.4 "SFMono-Regular", Menlo, Consolas, monospace;
+}
+
+.clean-note-editor > .card-editor-footer {
+  position: sticky;
+  bottom: 0;
+  /* Keep the immersive control and its tooltip above inline content overlays. */
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 0 0 auto;
+  gap: 20px;
+  min-height: 47px;
+  margin-top: auto;
+  padding: 12px 32px;
+  background: var(--card-editor-paper);
+  color: #929ba5;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.clean-note-editor .card-editor-footer > span { display: inline-flex; align-items: center; gap: 12px; }
+.clean-note-editor .card-editor-footer i { color: #b5bdc7; font-style: normal; }
+.clean-note-editor .card-editor-footer kbd { font: inherit; color: #7c8999; }
+.clean-note-editor .card-editor-footer svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 1.6; }
+
+.clean-note-editor .card-editor-immersive-toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--card-editor-line);
+  border-radius: 6px;
+  background: var(--card-editor-chrome);
+  color: #6b829d;
+}
+
+.clean-note-editor .card-editor-immersive-toggle::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 0;
+  padding: 7px 10px;
+  border: 1px solid var(--card-editor-line);
+  border-radius: 6px;
+  background: var(--card-editor-chrome);
+  color: #42607f;
+  box-shadow: 0 3px 12px rgba(53, 86, 126, .1);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.5;
+  white-space: nowrap;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(3px);
+  transition: opacity 120ms ease, transform 120ms ease, visibility 120ms;
+}
+
+.clean-note-editor .card-editor-immersive-toggle:hover::after,
+.clean-note-editor .card-editor-immersive-toggle:focus-visible::after {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.clean-note-editor .card-editor-immersive-toggle svg { width: 18px; height: 18px; stroke-linecap: round; stroke-linejoin: round; }
+.clean-note-editor .card-editor-immersive-toggle:hover { background: var(--card-editor-hover); color: var(--card-editor-blue); }
+.clean-note-editor .card-editor-immersive-toggle[aria-pressed="true"] { background: var(--card-editor-active); color: var(--card-editor-blue); border-color: #c5d9f0; }
+.note-window .clean-note-editor .card-editor-immersive-toggle { display: none; }
+.note-window .clean-note-editor[data-editor-mode="note"] > .card-editor-footer { display: none; }
+.clean-note-editor .card-editor-immersive-toggle:focus-visible { outline: 2px solid #94acc8; outline-offset: 3px; }
+
+.clean-note-editor[data-editor-mode="card"] button { transition: color 160ms ease, background-color 160ms ease, opacity 160ms ease, transform 160ms ease; }
+.clean-note-editor[data-editor-mode="card"] button:active:not(:disabled) { transform: translateY(1px); }
+
+.clean-note-editor[data-editor-mode="card"] button:focus-visible {
+  outline: 2px solid #94acc8;
+  outline-offset: 3px;
+}
+
+@media (max-width: 680px) {
+  html:not(.note-window) .shell:has(#librariesView.editing-card-note:not(.card-editor-immersive):not(.hidden)) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+  html:not(.note-window) #librariesView.editing-card-note:not(.card-editor-immersive) { grid-column: 1; grid-row: 2; }
+}
+
+@container note-editor (max-width: 760px) {
+  .clean-note-editor[data-editor-mode="card"] > .note-editor-toolbar { gap: 10px; padding: 12px 20px; }
+  .clean-note-editor[data-editor-mode="card"] .note-save-status { display: none; }
+  .clean-note-editor[data-editor-mode="card"] .card-editor-breadcrumb { gap: 12px; }
+  .clean-note-editor[data-editor-mode="card"] .card-editor-breadcrumb,
+  .clean-note-editor[data-editor-mode="card"] .note-toolbar-icon-button span,
+  .clean-note-editor[data-editor-mode="card"] .note-save-button kbd { display: none; }
+  .clean-note-editor[data-editor-mode="card"] .card-editor-meta { margin-top: 17px; gap: 8px; }
+  .clean-note-editor[data-editor-mode="card"] .card-editor-insert-actions { gap: 10px; }
+  .clean-note-editor[data-editor-mode="card"] > .card-editor-footer { padding-inline: 20px; gap: 10px; }
+  .clean-note-editor[data-editor-mode="card"] .card-editor-footer > span { gap: 10px; }
+}
+
+@container note-editor (max-width: 480px) {
+  .clean-note-editor[data-editor-mode="card"] { --card-editor-text-size: 18px; }
+  .clean-note-editor[data-editor-mode="card"] > .note-editor-toolbar { gap: 8px; padding-inline: 16px; }
+  .clean-note-editor[data-editor-mode="card"] .card-editor-breadcrumb { gap: 8px; font-size: 11px; }
+  .clean-note-editor[data-editor-mode="card"] .note-toolbar-icon-button span,
+  .clean-note-editor[data-editor-mode="card"] .note-save-button kbd { display: none; }
+  .clean-note-editor[data-editor-mode="card"] .note-toolbar-icon-button { padding: 0 4px; }
+  .clean-note-editor[data-editor-mode="card"] .note-editor-canvas textarea { padding-right: 68px; }
+  .clean-note-editor[data-editor-mode="card"] .inline-card-token:hover,
+  .clean-note-editor[data-editor-mode="card"] .inline-card-token:focus-visible { font-size: 0; }
+  .clean-note-editor[data-editor-mode="card"] .card-editor-hint { font-size: 11px; }
+  .clean-note-editor[data-editor-mode="card"] > .card-editor-footer { flex-wrap: wrap; padding-inline: 20px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .clean-note-editor[data-editor-mode="card"] button { transition: none; }
+  .clean-note-editor .card-editor-immersive-toggle::after { transition: none; }
+}
+
+.clean-note-editor .card-question-error { flex-shrink: 0; margin: 8px 32px; padding: 10px 14px; border: 1px solid #f0d5d0; border-radius: 6px; background: #fff5f3; color: #b44c3d; font-size: 12px; line-height: 1.6; overflow-wrap: anywhere; }
+.clean-note-editor .card-question-error[hidden] { display: none; }
+.inline-tag-panel { position: fixed; inset: auto; margin: 0; width: min(310px, calc(100vw - 24px)); max-height: calc(100vh - 24px); overflow: auto; padding: 18px; border: 1px solid #dce4ee; border-radius: 12px; background: #fff; color: #344258; box-shadow: 0 12px 36px #263b6026; font-size: 12px; }
+.inline-tag-head, .inline-tag-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.inline-tag-head strong { font-size: 14px; }
+.inline-tag-panel button { border: 0; border-radius: 5px; padding: 5px 8px; background: transparent; color: #2874cf; }
+.inline-tag-head button { font-size: 21px; color: #8391a4; }
+.inline-tag-panel p, .inline-tag-foot span { color: #8593a6; font-size: 11px; line-height: 1.6; }
+.inline-tag-chips { display: flex; flex-wrap: wrap; gap: 5px; margin: 14px 0; }
+.inline-tag-chips button { background: #eaf3ff; max-width: 100%; overflow-wrap: anywhere; }
+.inline-tag-chips > span { color: #8593a6; }
+.inline-tag-panel input[type=search] { width: 100%; height: 36px; padding: 7px 10px; border: 1px solid #d5dfec; border-radius: 6px; background: #fff; }
+.inline-tag-options { max-height: 190px; overflow-y: auto; }
+.inline-tag-options label { display: flex; align-items: center; gap: 9px; padding: 8px 0; cursor: pointer; }
+.inline-tag-options input { margin: 0; accent-color: #2874cf; }
+.inline-tag-options span { overflow-wrap: anywhere; min-width: 0; }
+.inline-tag-panel [data-create-tag] { border-top: 1px solid #e5ebf3; border-radius: 0; margin-top: 12px; padding: 12px 0; width: 100%; text-align: left; overflow-wrap: anywhere; }
+.inline-tag-panel button:disabled { color: #99a5b5; cursor: default; }
+.inline-tag-foot { margin-top: 12px; }
+.inline-tag-foot button { background: #2874cf; color: #fff; padding: 8px 17px; }
+.inline-tag-panel :is(button,input):focus-visible { outline: 2px solid #8eb8ec; outline-offset: 2px; }
+
+/* Reserve the right edge for preview, copy, tags and delete, including wrapped cards. */
+.clean-note-editor[data-editor-mode="card"] #inlineMarkdownNoteContent { padding-right: 140px; }
+.clean-note-editor[data-editor-mode="card"] .inline-card-row-delete:hover,
+.clean-note-editor[data-editor-mode="card"] .inline-card-row-delete:focus-visible { color: #c24d47; background: #fff0ee; }
+
+/* Compact mode palette; names appear on hover or keyboard focus. */
+.note-view-menu { position:fixed; inset:auto; margin:0; width:max-content; overflow:visible; padding:6px; border:1px solid #dce3eb; border-radius:10px; background:#fff; box-shadow:0 8px 28px #20334f1c; }
+.note-view-menu:popover-open { display:flex; gap:4px; }
+.note-view-menu button { position:relative; display:grid; place-items:center; width:38px; height:38px; padding:0; border:0; border-radius:7px; background:transparent; color:#65758a; }
+.note-view-menu button svg { width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+.note-view-menu button:hover,.note-view-menu button:focus-visible { background:#edf4fc; color:#287aca; outline:none; }
+.note-view-menu button[aria-checked=true] { background:#e7f1ff; color:#287aca; }
+.note-view-menu button:focus-visible { outline:2px solid #8eb8ec; outline-offset:1px; }
+.note-view-menu button::after { content:attr(data-tooltip); position:absolute; bottom:calc(100% + 14px); left:0; width:max-content; padding:7px 10px; border:1px solid #dce3eb; border-radius:6px; background:#fff; color:#35465b; box-shadow:0 4px 14px #20334f14; font-size:12px; font-weight:400; line-height:1.4; opacity:0; visibility:hidden; pointer-events:none; }
+.note-view-menu button:hover::after,.note-view-menu button:focus-visible::after { opacity:1; visibility:visible; }
+.note-window .clean-note-editor .card-editor-immersive-toggle { display:inline-flex; }
+#librariesView.note-reading .note-rich-toolbar,
+#librariesView.note-reading .note-editor-toolbar,
+#librariesView.note-reading .note-image-tools,
+#librariesView.note-reading .note-image-context-menu,
+#librariesView.note-reading .note-rich-selection-card-button,
+#librariesView.note-reading .note-table-edit-actions { display:none!important; }
+#librariesView.note-reading #noteRichEditor .ql-editor { cursor:text; }
+#librariesView.note-reading #inlineMarkdownNoteTitle { pointer-events:none; }
+#librariesView.note-eye-mode { background:#f2efe3; --card-editor-paper:#f2efe3; --card-editor-chrome:#eeeadd; --card-editor-line:#dcd8c8; }
+#librariesView.note-eye-mode .clean-note-editor,
+#librariesView.note-eye-mode .note-rich-editor-column,
+#librariesView.note-eye-mode #noteRichEditor,
+#librariesView.note-eye-mode #noteRichEditor .ql-editor,
+#librariesView.note-eye-mode .note-editor-textarea,
+#librariesView.note-eye-mode .card-editor-footer { background:#f2efe3!important; color:#454b3e; }
+#librariesView.note-eye-mode .note-rich-toolbar,
+#librariesView.note-eye-mode .note-editor-toolbar,
+#librariesView.note-eye-mode .note-tabs-bar { background:#eeeadd!important; border-color:#dcd8c8; }
+#librariesView.note-eye-mode .note-rich-editor-pane,
+#librariesView.note-eye-mode .note-rich-workspace,
+#librariesView.note-eye-mode .note-editor-canvas { background:#f2efe3!important; }
+#librariesView.note-reading #createRichCardFromSelection,
+#librariesView.note-reading .note-code-copy-layer { display:none!important; }
+#librariesView.note-reading #saveNoteButton { display:none!important; }
+
+#librariesView.note-eye-mode .note-outline-panel { background:#efecdf; border-color:#dcd8c8; box-shadow:0 5px 18px #4c513410; }
+#librariesView.note-eye-mode .note-outline-header { border-color:#dedbcd; }
+#librariesView.note-eye-mode .note-outline-title,
+#librariesView.note-eye-mode .note-outline-item { color:#555d4c; }
+#librariesView.note-eye-mode .note-outline-item:is(:hover,.active),
+#librariesView.note-eye-mode .note-outline-pin:is(:hover,:focus-visible,.active) { background:#e0e6d4; color:#536e41; }
+#librariesView.note-eye-mode .note-outline-item.active::before { background:#7a9364; }
+#librariesView.note-eye-mode .note-outline-list { scrollbar-color:#c9ccba transparent; }
+#librariesView.note-eye-mode .note-outline-hover-target::before { background:linear-gradient(90deg,transparent,#efecdf); }
+#librariesView.note-eye-mode .note-view-menu { background:#f5f2e8; border-color:#dcd8c8; }
+#librariesView.note-eye-mode .note-view-menu button { color:#626c56; }
+#librariesView.note-eye-mode .note-view-menu button:is(:hover,[aria-checked=true]) { background:#e0e6d4; color:#536e41; }

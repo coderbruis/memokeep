@@ -1,0 +1,30 @@
+/* UI typography is shared by both editions; authored note and code formats keep their own styles. */
+:root {
+  --ui-font: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --ui-weight-regular: 400;
+  --ui-weight-medium: 500;
+  --ui-weight-heading: 600;
+}
+html body { font-family: var(--ui-font); font-weight: var(--ui-weight-regular); letter-spacing: normal; }
+html .shell :is(button, select) { font-family: var(--ui-font); font-weight: var(--ui-weight-regular); }
+html .shell > header :is(.nav, .nav.active, .tree-library, .tree-document, .tree-document.active, .card-tree-label, .sidebar-more-button) {
+  font-family: var(--ui-font);
+  font-size: 13px;
+  font-weight: var(--ui-weight-regular);
+  letter-spacing: normal;
+}
+html .shell > header .brand { font-family: var(--ui-font); font-weight: var(--ui-weight-heading); letter-spacing: -.02em; }
+html :is(.settings-navigation button, .appearance-theme, .appearance-segments button, .note-tab-select, .tag, .badge) { font-weight: var(--ui-weight-regular); }
+html :is(.appearance-heading h3, .appearance-mode strong, .appearance-preview-nav > strong, .settings-card > label, .library-settings-fields label, .note-directory-results-heading) { font-weight: var(--ui-weight-medium); }
+html :is(.section-title h1, .hero h1, .settings-navigation h1, .appearance-panel h2, .settings-card > h2, .dialog-head h2, .library-settings-head h2, .note-directory-title h2) {
+  font-family: var(--ui-font);
+  font-weight: var(--ui-weight-heading);
+  letter-spacing: -.015em;
+}
+html .appearance-panel h2 { font-size: 24px; line-height: 1.4; }
+html :is(.section-title h1, .hero h1, .note-directory-title h2) { font-size: 28px; line-height: 1.35; }
+html .settings-navigation h1 { font-size: 18px; }
+html .note-title-input { font-family: var(--ui-font); font-weight: var(--ui-weight-heading); }
+html :is(.document-summary h3, .memo-item-title strong, .sidebar-search-results strong) { font-weight: var(--ui-weight-medium); }
+html #cardsView :is(.card-notebook-copy strong, .card-content-cell strong, .card-notebook-heading h2) { font-weight: var(--ui-weight-medium); }
+html #cardsView :is(.card-filter-chips button[aria-pressed=true], .card-pagination button[aria-current=page]) { font-weight: var(--ui-weight-regular); }

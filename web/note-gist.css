@@ -1,0 +1,125 @@
+/* 要点块和速览（design/prototype/knowledge-skim-20261109.md）。块的形状由 note-gist.js 生成的 nth-child 规则画出，
+   颜色和圆角来自下面的变量；html[data-gist-style] 切换四种样式（默认「浅蓝」）。复习弹窗里的要点也用这些变量。 */
+:root, html[data-gist-style="tint"] {
+  --gist-bg: color-mix(in srgb, var(--blue, #3659d9) 6%, var(--canvas, #fff));
+  --gist-line: color-mix(in srgb, var(--blue, #3659d9) 55%, var(--canvas, #fff));
+  --gist-ink: var(--blue, #3659d9); --gist-radius: 8px; --gist-rule: 3px;
+}
+/* 题目行的颜色：避开蓝（要点、操作）、黄（到期、暂停）、红绿（复习结果）；四种样式共用。 */
+:root { --gist-question: #6a3fd0; }
+html[data-appearance="dark"] { --gist-question: #c3a6ff; }
+html[data-gist-style="line"] { --gist-bg: transparent; --gist-line: color-mix(in srgb, var(--blue, #3659d9) 70%, var(--canvas, #fff)); --gist-ink: var(--blue, #3659d9); --gist-radius: 0px; --gist-rule: 2px; }
+html[data-gist-style="paper"] { --gist-bg: #f6f2e6; --gist-line: #e4d9b8; --gist-ink: #6b5418; --gist-radius: 10px; --gist-rule: 3px; }
+html[data-gist-style="paper"][data-appearance="dark"] { --gist-bg: #26231a; --gist-line: #4a4128; --gist-ink: #e8d49a; }
+html[data-gist-style="plain"] { --gist-bg: var(--hover, #f1f3f7); --gist-line: var(--hover, #f1f3f7); --gist-ink: var(--muted, #626b79); --gist-radius: 8px; --gist-rule: 0px; }
+
+.note-gist-layer { position: absolute; inset: 0 auto auto 0; width: 0; height: 0; z-index: 4; pointer-events: none; }
+.note-gist-button { position: absolute; display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 8px; border: 0; border-radius: 7px; background: transparent; color: var(--muted); font: 500 12.5px/1 -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif; white-space: nowrap; cursor: pointer; pointer-events: auto; }
+.note-gist-button[hidden] { display: none; }
+.note-gist-button svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.note-gist-button small { color: var(--muted); font-size: 12px; opacity: .8; }
+.note-gist-button:focus-visible { outline: 2px solid var(--blue); outline-offset: 1px; }
+
+/* 悬停才出现：写要点、样式、删除、收起详细（收起后的「展开详细」一直显示，免得以为内容没了）。 */
+.note-gist-button:is(.write, .style, .delete, .fold, .ask, .hint) { opacity: 0; visibility: hidden; transition: opacity .12s ease, visibility 0s linear .12s; }
+.note-gist-button:is(.write, .style, .delete, .fold, .ask, .hint):is(.is-shown, :focus-visible), .note-gist-button.fold.is-closed { opacity: 1; visibility: visible; transition: opacity .12s ease; }
+/* 写题目：用题目色；「题目用标题」只是说明，不能点 */
+.note-gist-button.ask { color: var(--gist-question); font-size: 12px; font-weight: 600; }
+.note-gist-button.ask:hover { background: color-mix(in srgb, var(--gist-question) 10%, transparent); }
+.note-gist-button.hint { height: 22px; padding: 0; font-size: 12px; font-weight: 400; cursor: default; pointer-events: none; }
+
+/* 写要点：标题文字后面的轻量文字按钮 */
+.note-gist-button.write { height: 24px; padding: 0 8px 0 6px; gap: 3px; color: var(--gist-ink); font-weight: 600; }
+.note-gist-button.write svg { width: 12px; height: 12px; stroke-width: 2.1; }
+.note-gist-button.write:hover { background: color-mix(in srgb, var(--gist-ink) 10%, transparent); }
+/* 要点块右上角的工具 */
+.note-gist-button:is(.style, .delete) { width: 26px; padding: 0; justify-content: center; }
+.note-gist-button:is(.style, .delete, .fold):hover { background: color-mix(in srgb, var(--ink) 7%, transparent); color: var(--ink); }
+.note-gist-button.delete:hover { background: color-mix(in srgb, #c8433a 12%, transparent); color: #c8433a; }
+html[data-appearance="dark"] .note-gist-button.delete:hover { color: #f08a80; }
+.note-gist-button.fold { font-size: 12px; }
+.note-gist-button.fold.is-closed { color: var(--gist-ink); font-weight: 600; background: color-mix(in srgb, var(--gist-ink) 9%, transparent); }
+
+/* 样式菜单 */
+.note-gist-style-menu { position: absolute; width: 196px; padding: 6px; border-radius: 12px; background: var(--canvas); box-shadow: 0 0 0 1px color-mix(in srgb, var(--ink) 9%, transparent), 0 12px 30px rgb(20 24 32 / 16%); pointer-events: auto; }
+.note-gist-style-menu p { margin: 2px 8px 6px; color: var(--muted); font-size: 11.5px; }
+.note-gist-style-menu button { display: flex; align-items: center; gap: 10px; width: 100%; height: 34px; padding: 0 8px; border: 0; border-radius: 8px; background: none; color: var(--ink); font-size: 13px; text-align: left; cursor: pointer; }
+.note-gist-style-menu button:is(:hover, :focus-visible) { background: var(--hover); outline: none; }
+.note-gist-style-menu button[aria-checked="true"] { font-weight: 600; }
+.note-gist-style-menu button[aria-checked="true"]::after { content: ""; width: 8px; height: 4px; margin-left: auto; border-left: 2px solid var(--blue); border-bottom: 2px solid var(--blue); transform: translateY(-2px) rotate(-45deg); }
+/* 每个选项一个小样张：用那种样式自己的变量画 */
+.note-gist-swatch { display: grid; align-content: center; gap: 3px; width: 34px; height: 22px; padding: 0 5px; border-radius: var(--gist-radius); background: var(--gist-bg); border-left: var(--gist-rule) solid var(--gist-line); box-sizing: border-box; }
+.note-gist-swatch i { display: block; height: 3px; border-radius: 2px; background: color-mix(in srgb, var(--ink) 35%, transparent); }
+.note-gist-swatch i:first-child { width: 60%; background: var(--gist-ink); }
+.note-gist-swatch[data-swatch="tint"] { --gist-bg: color-mix(in srgb, var(--blue) 8%, var(--canvas)); --gist-line: color-mix(in srgb, var(--blue) 55%, var(--canvas)); --gist-ink: var(--blue); --gist-radius: 4px; --gist-rule: 3px; }
+.note-gist-swatch[data-swatch="line"] { --gist-bg: transparent; --gist-line: color-mix(in srgb, var(--blue) 70%, var(--canvas)); --gist-ink: var(--blue); --gist-radius: 0px; --gist-rule: 2px; }
+.note-gist-swatch[data-swatch="paper"] { --gist-bg: #f6f2e6; --gist-line: #e4d9b8; --gist-ink: #6b5418; --gist-radius: 4px; --gist-rule: 3px; }
+html[data-appearance="dark"] .note-gist-swatch[data-swatch="paper"] { --gist-bg: #26231a; --gist-line: #4a4128; --gist-ink: #e8d49a; }
+.note-gist-swatch[data-swatch="plain"] { --gist-bg: var(--hover); --gist-line: var(--hover); --gist-ink: var(--muted); --gist-radius: 4px; --gist-rule: 0px; }
+
+/* 速览：要点下面的「看详细」 */
+.note-gist-button.detail { box-shadow: inset 0 0 0 1px var(--line); background: var(--canvas); height: 30px; padding: 0 10px; }
+.note-gist-button.detail:hover { background: var(--hover); color: var(--ink); }
+.note-gist-button.detail svg { transition: transform .15s ease; }
+.note-gist-button.detail[aria-expanded="true"] svg { transform: rotate(90deg); }
+.note-skim #noteRichEditor .ql-editor { cursor: default; }
+.note-skim #noteRichEditor .ql-editor :is(h1, h2, h3, h4) { margin-top: 1.1em; }
+/* 笔记工具栏的「速览 / 全文」 */
+#noteSkimButton[hidden] { display: none !important; }
+#librariesView .note-toolbar-actions #noteSkimButton { display: inline-flex; align-items: center; gap: 6px; height: 30px; margin: 0 4px 0 0; padding: 0 9px; border: 0; border-radius: 7px; background: transparent; box-shadow: inset 0 0 0 1px var(--line); color: var(--ink); font-size: 13px; font-weight: 500; white-space: nowrap; cursor: pointer; }
+#librariesView .note-toolbar-actions #noteSkimButton:hover { background: var(--hover); }
+#librariesView .note-toolbar-actions #noteSkimButton svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
+#librariesView .note-toolbar-actions #noteSkimButton[aria-pressed="true"] { background: var(--gist-bg); box-shadow: inset 0 0 0 1px var(--gist-line); color: var(--gist-ink); }
+@media (prefers-reduced-motion: reduce) { .note-gist-button, .note-gist-button svg { transition: none !important; } }
+/* 图标按钮悬停时的中文名称 */
+.note-gist-button[data-tooltip]::after { content: attr(data-tooltip); position: absolute; top: calc(100% + 6px); left: 50%; padding: 4px 8px; border-radius: 6px; background: color-mix(in srgb, var(--ink) 92%, transparent); color: var(--canvas); font-size: 12px; font-weight: 500; line-height: 1.4; white-space: nowrap; transform: translateX(-50%); opacity: 0; pointer-events: none; transition: opacity .12s ease .25s; }
+.note-gist-button.delete[data-tooltip]::after { left: auto; right: 0; transform: none; }
+.note-gist-button[data-tooltip]:is(:hover, :focus-visible)::after { opacity: 1; }
+.note-gist-style-menu:not(:empty) ~ .note-gist-button.style::after { display: none; }
+
+/* 要点上的复习开关：一直显示，紧跟「要点」标签 */
+.note-gist-button.review { height: 22px; padding: 0 8px 0 6px; gap: 4px; border-radius: 11px; font-size: 11.5px; font-weight: 600; }
+.note-gist-button.review svg { width: 11px; height: 11px; stroke-width: 2.2; }
+.note-gist-button.review .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.note-gist-button.review[data-state="off"] { color: var(--muted); background: var(--canvas); box-shadow: inset 0 0 0 1px var(--line); }
+.note-gist-button.review[data-state="off"]:hover { color: var(--blue); box-shadow: inset 0 0 0 1px var(--gist-line); }
+.note-gist-button.review[data-state="on"] { color: var(--blue); background: color-mix(in srgb, var(--blue) 13%, var(--canvas)); }
+.note-gist-button.review[data-state="paused"] { color: #b26a00; background: color-mix(in srgb, #b26a00 12%, var(--canvas)); }
+html[data-appearance="dark"] .note-gist-button.review[data-state="paused"] { color: #f2c46b; }
+.note-gist-review-pop { position: absolute; width: 300px; padding: 14px 16px 12px; border-radius: 12px; background: var(--canvas); box-shadow: 0 0 0 1px color-mix(in srgb, var(--ink) 9%, transparent), 0 12px 30px rgb(20 24 32 / 16%); color: var(--ink); font-size: 13px; pointer-events: auto; }
+.note-gist-review-pop .pop-head { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.note-gist-review-pop h4 { flex: 1; min-width: 0; margin: 0; overflow: hidden; font-size: 14px; font-weight: 650; line-height: 20px; text-overflow: ellipsis; white-space: nowrap; }
+.note-gist-review-pop .state { flex: none; display: inline-flex; align-items: center; gap: 5px; height: 20px; padding: 0 8px; border-radius: 10px; font-size: 12px; font-weight: 600; color: var(--blue); background: color-mix(in srgb, var(--blue) 12%, var(--canvas)); }
+.note-gist-review-pop .state::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.note-gist-review-pop .state[data-state="paused"] { color: #9a5a00; background: color-mix(in srgb, #b26a00 12%, var(--canvas)); }
+html[data-appearance="dark"] .note-gist-review-pop .state[data-state="paused"] { color: #f2c46b; }
+.note-gist-review-pop dl { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 0 0 12px; padding: 10px 0; border-radius: 8px; background: color-mix(in srgb, var(--ink) 4%, var(--canvas)); }
+.note-gist-review-pop dl > div { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 0; }
+.note-gist-review-pop dl > div + div { border-left: 1px solid color-mix(in srgb, var(--ink) 8%, transparent); }
+.note-gist-review-pop dt { order: 2; font-size: 12px; color: color-mix(in srgb, var(--ink) 66%, var(--canvas)); }
+.note-gist-review-pop dd { order: 1; margin: 0; font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.note-gist-review-pop .row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.note-gist-review-pop button { height: 32px; min-height: 0; padding: 0 10px; border: 0; border-radius: 8px; background: var(--canvas); box-shadow: inset 0 0 0 1px var(--line); color: var(--ink); font-size: 13px; font-weight: 500; cursor: pointer; }
+.note-gist-review-pop button:hover { background: var(--hover); }
+.note-gist-review-pop button:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+.note-gist-review-pop button.primary { background: var(--blue); box-shadow: none; color: #fff; font-weight: 600; }
+.note-gist-review-pop button.primary:hover { background: color-mix(in srgb, var(--blue) 88%, var(--ink)); }
+html[data-appearance="dark"] .note-gist-review-pop button.primary { color: #10162b; }
+.note-gist-review-pop .pop-foot { display: flex; align-items: center; gap: 8px; margin-top: 10px; padding-top: 8px; border-top: 1px solid color-mix(in srgb, var(--ink) 8%, transparent); font-size: 12px; color: color-mix(in srgb, var(--ink) 60%, var(--canvas)); }
+.note-gist-review-pop button.quiet { height: 26px; margin-left: -8px; padding: 0 8px; box-shadow: none; background: transparent; color: color-mix(in srgb, var(--ink) 72%, var(--canvas)); font-size: 12px; }
+.note-gist-review-pop button.quiet:hover { background: color-mix(in srgb, #b26a00 10%, var(--canvas)); color: #9a5a00; }
+html[data-appearance="dark"] .note-gist-review-pop button.quiet:hover { color: #f2c46b; }
+.note-gist-toast { position: fixed; left: 50%; bottom: 28px; z-index: 300; display: flex; align-items: center; gap: 12px; padding: 9px 10px 9px 14px; border-radius: 10px; background: var(--ink); color: var(--canvas); font-size: 13px; box-shadow: 0 12px 30px rgb(20 24 32 / 24%); transform: translateX(-50%); }
+.note-gist-toast button { height: 26px; padding: 0 8px; border: 0; border-radius: 6px; background: transparent; color: color-mix(in srgb, var(--blue) 45%, var(--canvas)); font-size: 13px; font-weight: 600; cursor: pointer; }
+.note-gist-toast button:hover { background: color-mix(in srgb, var(--canvas) 12%, transparent); }
+/* 卡片列表里的知识点 */
+.card-point-badge { display: inline-flex; align-items: center; height: 19px; margin-right: 6px; padding: 0 6px; border-radius: 5px; background: var(--gist-bg); box-shadow: inset 0 0 0 1px var(--gist-line); color: var(--gist-ink); font-size: 11px; font-weight: 600; vertical-align: 2px; }
+#noteGistReviewAll[hidden], #noteGistPauseAll[hidden] { display: none !important; }
+.checkbox-row .settings-hint { display: block; margin-top: 2px; color: var(--muted); font-size: 12px; font-weight: 400; line-height: 1.5; }
+
+/* 一键收起 / 展开全部详细：和「速览」同样的样式 */
+#noteGistDetailsAll[hidden] { display: none !important; }
+#noteTabsBar #noteGistDetailsAll { display: inline-flex; align-items: center; gap: 6px; height: 34px; margin: 0 6px 0 0; padding: 0 12px; border: 0; border-radius: 9px; background: transparent; box-shadow: inset 0 0 0 1px var(--line); color: var(--ink); font-size: 13px; font-weight: 500; white-space: nowrap; cursor: pointer; }
+#noteTabsBar #noteGistDetailsAll:hover { background: var(--hover); }
+#noteTabsBar #noteGistDetailsAll svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
+#noteTabsBar #noteGistDetailsAll[aria-pressed="true"] { background: var(--gist-bg); box-shadow: inset 0 0 0 1px var(--gist-line); color: var(--gist-ink); }

@@ -1,0 +1,99 @@
+/* Settings, plugins and notes share one ordered, horizontally scrolling list. */
+#workspacePageTabs { display: none !important; }
+.workspace-page-tab {
+  --page-tab-corner: var(--note-tab-corner, 10px);
+  --page-tab-surface: var(--note-tab-surface, var(--canvas));
+  position: relative;
+  display: flex;
+  flex: 0 1 auto;
+  align-items: center;
+  min-width: 96px;
+  max-width: 220px;
+  height: 38px;
+  color: var(--muted);
+  border-radius: var(--page-tab-corner) var(--page-tab-corner) 0 0;
+  -webkit-app-region: no-drag;
+}
+.workspace-page-tab > * { position: relative; z-index: 1; }
+.workspace-page-tab::before, .workspace-page-tab::after { content: ''; position: absolute; pointer-events: none; }
+.workspace-page-tab:not(.is-active)::before { inset: 4px 2px 5px; border-radius: 7px; }
+.workspace-page-tab:not(.is-active)::after { left: -.5px; top: 50%; width: 1px; height: 14px; margin-top: -7px; background: var(--line); }
+.workspace-page-tab:first-child:not(.is-active)::after,
+:is(.workspace-page-tab, .note-tab).is-active + .workspace-page-tab::after,
+#noteTabsBar .workspace-page-tab.is-active + .note-tab::after,
+.workspace-page-tab.is-active + .workspace-open-tab::after { content: none; }
+.workspace-page-tab:is(:hover, :focus-within) { color: var(--ink); }
+.workspace-page-tab:not(.is-active):is(:hover, :focus-within)::before { background: var(--hover); }
+.workspace-page-tab.is-active { z-index: 2; height: 39px; border: 1px solid var(--line); border-bottom: 0; background: var(--page-tab-surface); color: var(--ink); }
+.workspace-page-tab.is-active::before, .workspace-page-tab.is-active::after { bottom: 0; width: var(--page-tab-corner); height: var(--page-tab-corner); }
+.workspace-page-tab.is-active::before { left: calc(-1 * var(--page-tab-corner)); background: radial-gradient(circle at 0 0, transparent calc(var(--page-tab-corner) - 1.25px), var(--line) calc(var(--page-tab-corner) - .75px), var(--line) calc(var(--page-tab-corner) - .25px), var(--page-tab-surface) calc(var(--page-tab-corner) + .25px)); }
+.workspace-page-tab.is-active::after { right: calc(-1 * var(--page-tab-corner)); background: radial-gradient(circle at 100% 0, transparent calc(var(--page-tab-corner) - 1.25px), var(--line) calc(var(--page-tab-corner) - .75px), var(--line) calc(var(--page-tab-corner) - .25px), var(--page-tab-surface) calc(var(--page-tab-corner) + .25px)); }
+.workspace-page-tab .workspace-page-tab-select {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  height: 100%;
+  min-height: 0;
+  margin: 0;
+  padding: 0 2px 0 12px;
+  border: 0;
+  border-radius: 8px 8px 0 0;
+  background: transparent;
+  box-shadow: none;
+  color: inherit;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 400;
+  text-align: left;
+  transform: none;
+  cursor: pointer;
+}
+.workspace-page-tab.is-active .workspace-page-tab-select { font-weight: 600; }
+.workspace-page-tab-select > svg { width: 15px; height: 15px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.workspace-page-tab-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.workspace-page-tab-state { flex: none; color: var(--muted); font-size: 11px; font-weight: 400; white-space: nowrap; }
+.workspace-page-tab.is-unavailable .workspace-page-tab-select > svg { opacity: .6; }
+.workspace-page-tab .workspace-page-tab-close {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 24px;
+  height: 24px;
+  min-height: 0;
+  margin: 0 4px 0 2px;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  box-shadow: none;
+  color: var(--muted);
+  opacity: 0;
+  transform: none;
+  cursor: pointer;
+}
+.workspace-page-tab-close > svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.workspace-page-tab:is(.is-active, :hover, :focus-within) .workspace-page-tab-close { opacity: 1; }
+.workspace-page-tab .workspace-page-tab-close:hover { background: color-mix(in srgb, var(--ink) 8%, transparent); color: var(--ink); }
+.workspace-page-tab button:focus-visible { outline: 2px solid var(--blue); outline-offset: -3px; }
+.workspace-page-tab button:disabled { cursor: wait; opacity: .55; }
+
+:is(#noteTabsBar, #workspaceOpenTabs) [data-workspace-tab-key][draggable="true"],
+:is(#noteTabsBar, #workspaceOpenTabs) [data-workspace-tab-key][draggable="true"] > :is(.note-tab-select, .workspace-page-tab-select, [data-open-tab]) { cursor: grab; }
+:is(#noteTabsBar, #workspaceOpenTabs) [data-workspace-tab-key][draggable="true"]:active,
+:is(#noteTabsBar, #workspaceOpenTabs) [data-workspace-tab-key][draggable="true"] > :is(.note-tab-select, .workspace-page-tab-select, [data-open-tab]):active { cursor: grabbing; }
+:is(#noteTabsBar, #workspaceOpenTabs) [data-workspace-tab-key].is-workspace-tab-drop-target { box-shadow: inset 2px 0 var(--blue); }
+:is(#noteTabsBar, #workspaceOpenTabs) [data-workspace-tab-key].is-workspace-tab-drop-after { box-shadow: inset -2px 0 var(--blue); }
+
+@media (min-width: 681px) {
+  html .shell[data-page-tab-active] > .window-toolbar .workspace-titlebar { display: none; }
+  #workspaceOpenTabs.has-page-tabs { margin-bottom: -1px; }
+  .shell[data-page-tab-active] #workspaceOpenTabs.has-page-tabs { margin-left: var(--window-controls-width); }
+  html:not(.note-window) .shell[data-page-tab-active]:not(.sidebar-collapsed):not(:has(.card-editor-immersive:not(.hidden))) #workspaceOpenTabs.has-page-tabs { margin-left: max(var(--window-controls-width), calc(var(--workspace-sidebar-width) - var(--note-tab-corner))); }
+  .shell[data-page-tab-active="settings"] .workspace-page-tab.is-active { --page-tab-surface: var(--workspace-surface); }
+  #noteTabsBar .workspace-page-tab.is-active { margin-bottom: -1px; }
+  html:not(.note-window) .shell:not(.sidebar-collapsed):not(:has(.card-editor-immersive:not(.hidden))) #workspaceOpenTabs.has-page-tabs .workspace-page-tab.is-active:first-child::before { content: none; }
+}
+@media (max-width: 680px) { .workspace-page-tab { display: none; } }
+@media (hover: none) { .workspace-page-tab .workspace-page-tab-close { opacity: 1; } }

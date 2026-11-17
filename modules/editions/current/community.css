@@ -1,0 +1,14 @@
+/* Absent services have no action entry in the Community UI. */
+[data-view="freeReview"], [data-view="statistics"], #chooseKnowledgeStorageBtn, #knowledgeStoragePath,
+#knowledgeSyncHint, .settings-card:has(#chooseKnowledgeStorageBtn),
+#captureNoteScreenshot, #captureCardScreenshot,
+[data-tree-action="open-window"], [data-card-menu-action="open-window"],
+[data-table-floating-action="fitTableWidth"] { display: none !important; }
+.mermaid-source-dialog { width: min(800px, 90vw); max-height: 85vh; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 12px; padding: 24px; }
+.mermaid-source-dialog textarea { display: block; width: 100%; height: 48vh; resize: vertical; font-family: monospace; }
+.mermaid-source-dialog footer { display: flex; justify-content: flex-end; gap: 12px; margin-top: 16px; }
+
+/* Saved fold metadata remains intact; Community always lets readers access code. */
+#noteRichEditor .ql-editor .ql-code-block-container[data-code-collapsed="true"] { height: auto; min-height: 0; padding: 48px 16px 16px; overflow-x: auto; }
+#noteRichEditor .ql-editor .ql-code-block-container[data-code-collapsed="true"] > .ql-code-block { display: block; }
+#noteRichEditor .ql-editor .ql-code-block-container[data-code-title]::before { content: attr(data-code-title); padding: 0 12px; color: var(--code-muted); font: 11px/35px system-ui, sans-serif; }

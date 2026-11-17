@@ -1,0 +1,146 @@
+/* 记忆卡片列表（design/prototype/card-list-20261112.md，舒适版）：状态胶囊 + 一行工具栏 + 好扫的行 + 底部批量操作条。 */
+:root {
+  --cl-due: #b26a00; --cl-due-soft: #fff3dd; --cl-new: #3453c7; --cl-new-soft: #eaeefc; --cl-learn: #8e4ec6; --cl-learn-soft: #f3eafb;
+  --cl-good: #2e8b57; --cl-good-soft: #e3f3e9; --cl-pause: #8a92a0; --cl-pause-soft: #eef0f3; --cl-row-line: color-mix(in srgb, var(--line) 65%, transparent);
+}
+html[data-appearance="dark"] {
+  --cl-due: #f2c46b; --cl-due-soft: #3a3120; --cl-new: #a8bcff; --cl-new-soft: #232c4a; --cl-learn: #c99bf0; --cl-learn-soft: #2f2440;
+  --cl-good: #6fcf97; --cl-good-soft: #1c3327; --cl-pause: #8c94a3; --cl-pause-soft: #252932;
+}
+
+/* ① 工具栏：左边状态，右边搜索 / 排序 / 筛选，同一行 */
+:root:root #cardsView .card-manager-toolbar { display: flex; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 10px 12px; margin: 0 0 12px; padding: 0; border: 0; background: none; box-shadow: none; }
+:root:root #cardsView #cardFilterChips { display: flex; width: auto; max-width: 100%; overflow: visible; flex-wrap: wrap; gap: 4px; min-width: 0; margin: 0; padding: 0; border: 0; box-shadow: none; }
+:root:root #cardsView #cardFilterChips button { display: inline-flex; align-items: center; gap: 6px; height: 32px; min-height: 0; margin: 0; padding: 0 11px; border: 0; border-radius: 8px; background: none; box-shadow: none; color: var(--muted); font-size: 13px; font-weight: 500; transform: none; }
+:root:root #cardsView #cardFilterChips button::after { content: none; }
+:root:root #cardsView #cardFilterChips button:hover { background: var(--hover); color: var(--ink); }
+:root:root #cardsView #cardFilterChips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); font-weight: 600; }
+:root:root #cardsView #cardFilterChips button[aria-pressed="true"] > span { opacity: .8; }
+:root:root #cardsView #cardFilterChips button > span { margin: 0; padding: 0; background: none; color: inherit; font-size: 12px; font-variant-numeric: tabular-nums; opacity: .72; }
+:root:root #cardsView #cardFilterChips button.is-empty:not([aria-pressed="true"]) { color: color-mix(in srgb, var(--muted) 70%, transparent); }
+:root:root #cardsView #cardFilterChips button.is-empty > span { display: none; }
+.card-filter-dot { width: 7px; height: 7px; flex: none; border-radius: 50%; }
+.card-filter-dot.due { background: var(--cl-due); } .card-filter-dot.new { background: var(--cl-new); } .card-filter-dot.learning { background: var(--cl-learn); }
+.card-filter-dot.mastered { background: var(--cl-good); } .card-filter-dot.paused { background: var(--cl-pause); }
+
+:root:root #cardsView .card-manager-tools { display: flex; flex-wrap: nowrap; justify-content: flex-end; align-items: center; gap: 8px; width: auto; min-width: 0; margin-left: auto; padding: 0; }
+:root:root #cardsView .card-search-field { position: relative; display: flex; flex: none; align-items: center; width: 240px; min-width: 0; max-width: 100%; height: 32px; min-height: 0; margin: 0; padding: 0 8px 0 30px; border: 1px solid var(--line); border-radius: 8px; background: var(--canvas); box-shadow: none; transition: width .2s ease, border-color .15s; }
+:root:root #cardsView .card-search-field:focus-within { width: 320px; border-color: var(--blue); box-shadow: none; }
+:root:root #cardsView .card-search-field > svg { position: absolute; left: 9px; width: 14px; height: 14px; color: var(--muted); }
+:root:root #cardsView #cardSearch { flex: 1; min-width: 0; height: 100%; min-height: 0; margin: 0; padding: 0; border: 0; outline: 0; background: none; box-shadow: none; font-size: 12.5px; }
+.card-search-key { flex: none; padding: 0 5px; border-radius: 4px; background: var(--hover); color: var(--muted); font: 11px/18px inherit; }
+:root:root #cardsView .card-search-field:focus-within .card-search-key { display: none; }
+:root:root #cardsView #cardSort, :root:root #cardsView .card-advanced-filters > summary { display: inline-flex; align-items: center; gap: 5px; width: auto; height: 32px; min-height: 0; margin: 0; padding: 0 10px; border: 1px solid var(--line); border-radius: 8px; background-color: var(--canvas); box-shadow: none; color: var(--muted); font-size: 12.5px; white-space: nowrap; }
+:root:root #cardsView #cardSort { padding-right: 26px; }
+:root:root #cardsView #cardSort:hover, :root:root #cardsView .card-advanced-filters > summary:hover { color: var(--ink); }
+:root:root #cardsView #cardAdvancedCount:not([hidden]) { display: inline-block; min-width: 16px; height: 16px; padding: 0 4px; border-radius: 8px; background: var(--blue); color: var(--canvas); font-size: 10.5px; font-weight: 700; line-height: 16px; text-align: center; }
+
+/* ② 生效的条件：可以叉掉的小标签 + 结果数 */
+.card-applied-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0 0 10px; }
+.card-applied-row:not(:has(> :not([hidden]))) { display: none; }
+:root:root #cardsView.is-topic-board .card-applied-row { display: none; }
+:root:root #cardsView .card-tag-applied, :root:root #cardsView .card-search-summary { display: contents; margin: 0; padding: 0; border: 0; background: none; }
+:root:root #cardsView :is(.card-tag-applied, .card-search-summary)[hidden] { display: none; }
+.card-applied-chip { display: inline-flex; align-items: center; gap: 4px; height: 24px; padding: 0 4px 0 9px; border-radius: 12px; background: var(--cl-new-soft); color: var(--cl-new); font-size: 12px; font-weight: 500; }
+:root:root #cardsView .card-applied-chip button { display: grid; place-items: center; width: 18px; height: 18px; min-height: 0; margin: 0; padding: 0; border: 0; border-radius: 50%; background: none; box-shadow: none; color: inherit; transform: none; }
+:root:root #cardsView .card-applied-chip button:hover { background: color-mix(in srgb, var(--cl-new) 18%, transparent); }
+.card-applied-chip svg { width: 10px; height: 10px; stroke-width: 2; }
+.card-applied-count { margin-left: 4px; color: var(--muted); font-size: 12px; }
+:root:root #cardsView .card-search-summary [data-card-clear-filters] { height: 24px; min-height: 0; margin: 0; padding: 0 6px; border: 0; background: none; box-shadow: none; color: var(--blue); font-size: 12px; transform: none; }
+
+/* ③ 列表 */
+:root:root #cardsView .card-table-host { margin: 0; }
+:root:root #cardsView .card-table-scroll { border: 0; border-top: 1px solid var(--line); border-radius: 0; background: none; box-shadow: none; overflow: visible; }
+:root:root #cardsView .card-management-table { width: 100%; border-collapse: separate; border-spacing: 0; table-layout: fixed; background: none; }
+:root:root #cardsView #allCards .card-management-table thead th { height: 34px; padding: 0 10px; border: 0; background: none; color: var(--muted); font-size: 11.5px; font-weight: 500; text-align: left; position: static; }
+:root:root #cardsView .card-management-table th.card-select-cell, :root:root #cardsView .card-management-table td.card-select-cell { width: 40px; padding-right: 0; }
+:root:root #cardsView .card-management-table th:nth-child(3) { width: 104px; }
+:root:root #cardsView .card-management-table th:nth-child(4) { width: 112px; }
+:root:root #cardsView .card-management-table th:nth-child(5) { width: 112px; }
+:root:root #cardsView .card-table-row > td { padding: 12px 10px; border: 0; border-top: 1px solid var(--cl-row-line); background: none; vertical-align: middle; }
+:root:root #cardsView .card-table-row:hover > td, :root:root #cardsView .card-table-row:focus-within > td { background: var(--hover); }
+:root:root #cardsView .card-table-row.selected > td { background: color-mix(in srgb, var(--blue) 7%, var(--canvas)); }
+:root:root #cardsView .card-table-row:is(:hover, :focus-within, .selected) > td:first-child { border-radius: 10px 0 0 10px; }
+:root:root #cardsView .card-table-row:is(:hover, :focus-within, .selected) > td:last-child { border-radius: 0 10px 10px 0; }
+:root:root #cardsView .card-table-row:is(:hover, :focus-within, .selected) > td, :root:root #cardsView .card-table-row:is(:hover, :focus-within, .selected) + .card-table-row > td { border-top-color: transparent; }
+:root:root #cardsView .card-table-row:focus-visible { outline: none; }
+:root:root #cardsView .card-table-row:focus-visible > td { box-shadow: inset 0 2px 0 var(--blue), inset 0 -2px 0 var(--blue); }
+
+/* 勾选框：悬停或已经在选的时候才出现 */
+:root:root #cardsView .card-select-cell input { width: 16px; height: 16px; margin: 0; accent-color: var(--blue); opacity: 0; transition: opacity .12s; cursor: pointer; }
+:root:root #cardsView :is(.card-table-row:hover, .card-table-row:focus-within, .card-table-row.selected, thead) .card-select-cell input,
+:root:root #cardsView #allCards.is-selecting .card-select-cell input, :root:root #cardsView .card-select-cell input:focus-visible { opacity: 1; }
+:root:root #cardsView thead .card-select-cell input:not(:checked):not(:indeterminate) { opacity: .55; }
+
+:root:root #cardsView .card-content-cell { min-width: 0; }
+:root:root #cardsView .card-row-question { display: flex; align-items: center; gap: 7px; min-width: 0; color: var(--ink); font-size: 14px; font-weight: 600; line-height: 1.45; }
+.card-row-question-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+:root:root #cardsView .card-point-badge { flex: none; display: inline-flex; align-items: center; height: 19px; margin: 0; padding: 0 6px; border: 0; border-radius: 5px; background: var(--cl-new-soft); color: var(--cl-new); font-size: 11px; font-weight: 600; }
+:root:root #cardsView .card-row-answer { margin-top: 2px; overflow: hidden; color: var(--muted); font-size: 12.5px; line-height: 1.5; text-overflow: ellipsis; white-space: nowrap; }
+:root:root #cardsView .card-row-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; margin-top: 5px; color: var(--muted); font-size: 12px; }
+:root:root #cardsView .card-row-source { display: inline-flex; align-items: center; gap: 4px; min-width: 0; max-width: 100%; margin: 0; padding: 0; background: none; color: inherit; opacity: .85; }
+:root:root #cardsView .card-row-source::before { content: none; }
+:root:root #cardsView .card-row-source svg { width: 12px; height: 12px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+:root:root #cardsView .card-row-tag { height: 20px; min-height: 0; margin: 0; padding: 0 6px; border: 0; border-radius: 4px; background: var(--hover); box-shadow: none; color: var(--muted); font-size: 12px; transform: none; }
+:root:root #cardsView .card-table-row:hover .card-row-tag { background: var(--canvas); }
+:root:root #cardsView .card-row-tag:hover { color: var(--blue); }
+
+/* 状态标签 */
+:root:root #cardsView .card-stage-badge { display: inline-flex; align-items: center; gap: 5px; height: 22px; padding: 0 8px; border: 0; border-radius: 11px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+:root:root #cardsView .card-stage-badge::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+:root:root #cardsView .card-stage-badge .card-stage-dot { display: none; }
+:root:root #cardsView .card-stage-badge.due { background: var(--cl-due-soft); color: var(--cl-due); }
+:root:root #cardsView .card-stage-badge.new { background: var(--cl-new-soft); color: var(--cl-new); }
+:root:root #cardsView .card-stage-badge.learning { background: var(--cl-learn-soft); color: var(--cl-learn); }
+:root:root #cardsView .card-stage-badge.mastered { background: var(--cl-good-soft); color: var(--cl-good); }
+:root:root #cardsView .card-stage-badge.paused { background: var(--cl-pause-soft); color: var(--cl-pause); }
+
+/* 下次复习：相对时间，过期标橙 */
+:root:root #cardsView #allCards .card-due-cell { color: var(--ink); font-size: 12.5px; font-variant-numeric: tabular-nums; line-height: 1.4; }
+:root:root #cardsView #allCards .card-due-cell > span { display: block; }
+:root:root #cardsView #allCards .card-due-cell small { display: block; color: var(--muted); font-size: 11.5px; font-weight: 400; }
+:root:root #cardsView #allCards .card-due-cell.attention { color: var(--cl-due); font-weight: 600; }
+
+/* 行操作：悬停出现 */
+:root:root #cardsView #allCards .card-row-actions { text-align: right; white-space: nowrap; }
+:root:root #cardsView #allCards .card-row-actions button { display: inline-grid; place-items: center; width: 30px; height: 30px; min-height: 0; margin: 0 0 0 2px; padding: 0; border: 0; border-radius: 7px; background: none; box-shadow: none; color: var(--muted); opacity: 0; transform: none; transition: opacity .12s; vertical-align: middle; }
+:root:root #cardsView #allCards .card-row-actions button svg { width: 15px; height: 15px; }
+:root:root #cardsView .card-row-review svg { fill: currentColor; stroke: none; width: 13px; height: 13px; }
+:root:root #cardsView #allCards :is(.card-table-row:hover, .card-table-row:focus-within) .card-row-actions button, :root:root #cardsView #allCards .card-row-actions button:focus-visible, :root:root #cardsView #allCards .card-row-actions button[aria-expanded="true"] { opacity: 1; }
+:root:root #cardsView #allCards .card-row-actions button:hover { background: var(--canvas); box-shadow: 0 0 0 1px var(--line); color: var(--ink); }
+:root:root #cardsView #allCards .card-row-actions .card-row-review:hover { color: var(--blue); }
+
+/* 数量 · 页码 · 翻页 一行 */
+:root:root #cardsView .card-list-footer { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin: 0; padding: 14px 10px 0; border: 0; color: var(--muted); font-size: 12px; }
+:root:root #cardsView #cardPageStatus:empty { display: none; }
+:root:root #cardsView #cardPageStatus::before { content: "·"; margin-right: 12px; }
+:root:root #cardsView .card-pagination { margin-left: auto; }
+:root:root #cardsView .card-list-help:not(:has(p:not([hidden]))) { display: none; }
+
+/* ④ 批量操作条：浮在列表底部 */
+:root:root #cardsView .card-management-summary { position: sticky; bottom: 16px; z-index: 20; display: flex; justify-content: center; width: 100%; margin: 14px 0 0; padding: 0; border: 0; background: none; box-shadow: none; pointer-events: none; }
+:root:root #cardsView .card-management-summary.hidden { display: none; }
+:root:root #cardsView .card-bulk-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; max-width: 100%; padding: 6px 6px 6px 14px; border-radius: 12px; background: var(--ink); box-shadow: 0 10px 30px rgb(20 24 32 / 25%); color: var(--canvas); pointer-events: auto; }
+:root:root #cardsView #selectedCardCount { margin-right: 8px; color: inherit; font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; }
+:root:root #cardsView .card-bulk-actions button { display: inline-flex; align-items: center; gap: 5px; height: 30px; min-height: 0; margin: 0; padding: 0 10px; border: 0; border-radius: 8px; background: none; box-shadow: none; color: inherit; font-size: 12.5px; font-weight: 500; transform: none; }
+:root:root #cardsView .card-bulk-actions button svg { width: 14px; height: 14px; }
+:root:root #cardsView .card-bulk-actions button:hover { background: color-mix(in srgb, var(--canvas) 14%, transparent); }
+:root:root #cardsView .card-bulk-actions .card-bulk-review { background: var(--blue); color: #fff; font-weight: 600; }
+:root:root[data-appearance="dark"] #cardsView .card-bulk-actions .card-bulk-review { color: #10162b; }
+:root:root #cardsView .card-bulk-actions .card-bulk-review:hover { background: color-mix(in srgb, var(--blue) 88%, #fff); }
+:root:root #cardsView .card-bulk-actions button.danger { color: #ff9c94; }
+:root:root[data-appearance="dark"] #cardsView .card-bulk-actions button.danger { color: #c8433a; }
+:root:root #cardsView .card-bulk-actions .card-bulk-clear { width: 30px; padding: 0; justify-content: center; opacity: .7; }
+
+@media (max-width: 760px) {
+  :root:root #cardsView .card-manager-tools { width: 100%; margin-left: 0; }
+  :root:root #cardsView .card-search-field, :root:root #cardsView .card-search-field:focus-within { flex: 1; width: auto; }
+  :root:root #cardsView .card-management-table th:nth-child(4), :root:root #cardsView .card-management-table td:nth-child(4) { display: none; }
+  :root:root #cardsView #allCards .card-row-actions button { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) { :root:root #cardsView :is(.card-search-field, .card-select-cell input, .card-row-actions button) { transition: none; } }
+
+/* 覆盖旧样式的细节 */
+:root:root #cardsView #allCards .card-table-row, :root:root #cardsView #allCards .card-table-row.selected > td:first-child { box-shadow: none; }
+:root:root #cardsView #cardBulkActions { width: fit-content; }
+:root:root #cardsView .card-applied-chip button svg { display: block; width: 10px; height: 10px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }

@@ -1,0 +1,118 @@
+/* 记忆卡片 › 主题看板 / 主题详情（design/prototype/card-topics-20261112.md）。 */
+:root { --ct-1: #3e63dd; --ct-2: #8e4ec6; --ct-3: #12a594; --ct-4: #e5484d; --ct-5: #f76b15; --ct-6: #0090ff;
+  --ct-due: #b26a00; --ct-weak: #c8433a; --ct-weak-soft: #fcebea; --ct-good: #2e8b57; --ct-new: #3e63dd; --ct-learn: #e0a63a; }
+html[data-appearance="dark"] { --ct-1: #849dff; --ct-2: #bf7af0; --ct-3: #0bd8b6; --ct-4: #ff6369; --ct-5: #ff8b3e; --ct-6: #70b8ff;
+  --ct-due: #f2c46b; --ct-weak: #f08a80; --ct-weak-soft: #3a2224; --ct-good: #6fcf97; --ct-new: #849dff; --ct-learn: #c99a3e; }
+.ct-dot { display: inline-block; flex: none; width: 9px; height: 9px; border-radius: 3px; background: var(--ct-1); }
+.c1 { --ct-c: var(--ct-1); } .c2 { --ct-c: var(--ct-2); } .c3 { --ct-c: var(--ct-3); } .c4 { --ct-c: var(--ct-4); } .c5 { --ct-c: var(--ct-5); } .c6 { --ct-c: var(--ct-6); }
+.ct-dot[class*=" c"], .ro-topic-dot[class*=" c"] { background: var(--ct-c); }
+
+/* 视图切换（主题 / 列表） */
+html #cardsView .ct-view-toggle { display: inline-flex; padding: 2px; border-radius: 9px; background: var(--hover); }
+html #cardsView .ct-view-toggle[hidden] { display: none; }
+html #cardsView .ct-view-toggle button { display: inline-flex; align-items: center; gap: 5px; height: 32px; min-height: 0; margin: 0; padding: 0 12px; border: 0; border-radius: 7px; background: none; box-shadow: none; color: var(--muted); font-size: 13px; font-weight: 500; transform: none; }
+html #cardsView .ct-view-toggle button svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+html #cardsView .ct-view-toggle button[aria-pressed="true"] { background: var(--canvas); color: var(--ink); box-shadow: 0 1px 2px rgb(0 0 0 / 10%); }
+
+/* 看板模式：列表相关的部分都收起来 */
+html #cardsView.is-topic-board :is(.card-review-summary, .card-manager-toolbar, #cardSearchSummary, #cardTagApplied, #cardBulkSummary, #allCards, .card-list-footer, .card-list-help, #cardStartReviewBtn) { display: none !important; }
+html #cardsView .ct-board[hidden], html #cardsView .ct-head[hidden] { display: none; }
+
+/* 今日总览 */
+html #cardsView .ct-today { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 22px; margin: 4px 0 0; padding: 16px 18px; border-radius: 14px; background: color-mix(in srgb, var(--blue) 6%, var(--canvas)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--blue) 18%, var(--line)); }
+html #cardsView .ct-big { color: var(--ink); font-size: 28px; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; }
+html #cardsView .ct-big small { margin-left: 6px; color: var(--muted); font-size: 13px; font-weight: 500; }
+html #cardsView .ct-meta { margin-top: 4px; color: var(--muted); font-size: 12.5px; }
+html #cardsView .ct-meta b { color: var(--ink); }
+html #cardsView .ct-review-all { display: inline-flex; align-items: center; gap: 6px; height: 38px; padding: 0 16px; border-radius: 10px; font-weight: 600; white-space: nowrap; }
+html #cardsView .ct-review-all svg { width: 15px; height: 15px; fill: currentColor; }
+html #cardsView .ct-mix { display: flex; height: 7px; overflow: hidden; border-radius: 4px; background: var(--hover); }
+html #cardsView .ct-mix.big { height: 9px; }
+html #cardsView .ct-mix i { display: block; height: 100%; }
+html #cardsView .ct-mix i[class^="c"] { background: var(--ct-c); }
+html #cardsView .ct-mix i.n { background: var(--ct-new); } html #cardsView .ct-mix i.l { background: var(--ct-learn); } html #cardsView .ct-mix i.m { background: var(--ct-good); }
+html #cardsView .ct-legend { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 8px; color: var(--muted); font-size: 12px; }
+html #cardsView .ct-legend span { display: inline-flex; align-items: center; gap: 5px; }
+
+/* 排序 / 分组 */
+html #cardsView .ct-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 22px 0 4px; }
+html #cardsView .ct-bar-title { color: var(--muted); font-size: 12.5px; }
+html #cardsView .ct-grow { flex: 1; }
+html #cardsView .ct-seg { display: inline-flex; padding: 2px; border-radius: 8px; background: var(--hover); }
+html #cardsView .ct-seg button { height: 28px; min-height: 0; margin: 0; padding: 0 10px; border: 0; border-radius: 6px; background: none; box-shadow: none; color: var(--muted); font-size: 12.5px; font-weight: 500; transform: none; }
+html #cardsView .ct-seg button[aria-pressed="true"] { background: var(--canvas); color: var(--ink); box-shadow: 0 1px 2px rgb(0 0 0 / 10%); }
+html #cardsView .ct-group-head { display: flex; align-items: center; gap: 8px; margin: 18px 0 10px; color: var(--ink); font-size: 13px; font-weight: 600; }
+html #cardsView .ct-group-head small { color: var(--muted); font-size: 12px; font-weight: 400; }
+html #cardsView .ct-line { flex: 1; height: 1px; background: var(--line); }
+
+/* 分组并排：每个分组按主题数占宽，4 个以上占整行 */
+html #cardsView .ct-groups { display: flex; flex-wrap: wrap; align-items: flex-start; column-gap: 24px; }
+html #cardsView .ct-group { flex: 0 1 calc(var(--ct-n) * 248px - 12px); max-width: 100%; min-width: 0; }
+html #cardsView .ct-group.is-wide { flex: 1 1 100%; }
+html #cardsView .ct-group:not(.is-wide) .ct-tiles { grid-template-columns: repeat(var(--ct-n), minmax(0, 1fr)); }
+@media (max-width: 760px) { html #cardsView .ct-group { flex-basis: 100%; } html #cardsView .ct-group:not(.is-wide) .ct-tiles { grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr)); } }
+/* 主题卡片 */
+html #cardsView .ct-tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 236px), 1fr)); gap: 12px; }
+html #cardsView .ct-tile { position: relative; display: grid; gap: 9px; padding: 14px 14px 12px; border-radius: 12px; background: var(--canvas); box-shadow: inset 0 0 0 1px var(--line); cursor: pointer; transition: box-shadow .12s ease, transform .12s ease; }
+html #cardsView .ct-tile:hover { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink) 22%, var(--line)), 0 6px 18px rgb(20 24 32 / 7%); }
+html #cardsView .ct-tile:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+html #cardsView .ct-tile.is-selected { background: color-mix(in srgb, var(--blue) 4%, var(--canvas)); box-shadow: inset 0 0 0 1.5px var(--blue); }
+html #cardsView .ct-tile-head { display: flex; align-items: center; gap: 8px; min-width: 0; }
+html #cardsView .ct-tile-head b { min-width: 0; overflow: hidden; color: var(--ink); font-size: 14.5px; text-overflow: ellipsis; white-space: nowrap; }
+html #cardsView .ct-count { flex: none; color: var(--muted); font-size: 12px; }
+html #cardsView .ct-check { flex: none; width: 18px; height: 18px; min-height: 0; margin: 0 0 0 auto; padding: 0; border: 0; border-radius: 5px; background: var(--canvas); box-shadow: inset 0 0 0 1.5px var(--faint, #8a92a0); transform: none; opacity: 0; transition: opacity .12s ease; }
+html #cardsView .ct-tile:is(:hover, :focus-within) .ct-check, html #cardsView .ct-check[aria-checked="true"], html #cardsView .ct-board:has(.is-selected) .ct-check { opacity: 1; }
+html #cardsView .ct-check[aria-checked="true"] { background: var(--blue); box-shadow: none; }
+html #cardsView .ct-check[aria-checked="true"]::after { content: ""; display: block; width: 4px; height: 8px; margin: 3px auto 0; border: solid var(--canvas); border-width: 0 2px 2px 0; transform: rotate(45deg); }
+html #cardsView .ct-check:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; opacity: 1; }
+html #cardsView .ct-tile-row { display: flex; align-items: baseline; gap: 10px; }
+html #cardsView .ct-due { color: var(--ct-due); font-size: 24px; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
+html #cardsView .ct-due small { margin-left: 4px; color: var(--muted); font-size: 12px; font-weight: 500; }
+html #cardsView .ct-due.none { color: var(--ct-good); font-size: 13.5px; font-weight: 600; line-height: 24px; }
+html #cardsView .ct-ret { margin-left: auto; color: var(--muted); font-size: 12px; white-space: nowrap; }
+html #cardsView .ct-ret b { color: var(--ink); font-variant-numeric: tabular-nums; }
+html #cardsView .ct-ret.low b { color: var(--ct-weak); }
+html #cardsView .ct-subs { display: flex; flex-wrap: wrap; gap: 4px; min-height: 20px; }
+html #cardsView .ct-subs span { max-width: 100%; overflow: hidden; padding: 0 7px; border-radius: 10px; background: var(--hover); color: var(--muted); font-size: 11.5px; line-height: 20px; text-overflow: ellipsis; white-space: nowrap; }
+html #cardsView .ct-subs span.w { background: var(--ct-weak-soft); color: var(--ct-weak); }
+html #cardsView .ct-tile-foot { display: flex; align-items: center; gap: 8px; }
+html #cardsView .ct-when { color: var(--muted); font-size: 11.5px; opacity: .85; }
+html #cardsView .ct-go { margin: 0 0 0 auto; height: 28px; min-height: 0; padding: 0 12px; border: 0; border-radius: 7px; background: var(--blue-soft, #eaeefc); box-shadow: none; color: var(--blue); font-size: 12.5px; font-weight: 600; transform: none; }
+html #cardsView .ct-go:hover { background: color-mix(in srgb, var(--blue) 18%, var(--canvas)); }
+html #cardsView .ct-go.muted { background: var(--hover); color: var(--muted); font-weight: 500; }
+
+/* 多选后浮出的操作条 */
+html #cardsView .ct-selbar { position: sticky; bottom: 14px; z-index: 3; display: flex; align-items: center; gap: 12px; margin-top: 18px; padding: 10px 12px 10px 16px; border-radius: 12px; background: var(--ink); color: var(--canvas); box-shadow: 0 10px 30px rgb(20 24 32 / 25%); font-size: 13px; }
+html #cardsView .ct-selbar[hidden] { display: none; }
+html #cardsView .ct-selbar button { display: inline-flex; align-items: center; gap: 6px; height: 32px; min-height: 0; margin: 0; padding: 0 12px; border: 0; border-radius: 8px; background: color-mix(in srgb, var(--canvas) 16%, transparent); box-shadow: none; color: inherit; font-size: 13px; transform: none; }
+html #cardsView .ct-selbar .ct-sel-go { background: var(--canvas); color: var(--ink); font-weight: 600; }
+html #cardsView .ct-selbar svg { width: 14px; height: 14px; fill: currentColor; }
+
+/* 主题详情 */
+html #cardsView .ct-head { margin: 0 0 6px; }
+html #cardsView .ct-back { display: inline-flex; align-items: center; gap: 4px; height: 26px; min-height: 0; margin: 0 0 10px; padding: 0 8px 0 4px; border: 0; border-radius: 7px; background: none; box-shadow: none; color: var(--muted); font-size: 12.5px; transform: none; }
+html #cardsView .ct-back:hover { background: var(--hover); color: var(--ink); }
+html #cardsView .ct-back svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+html #cardsView .ct-stats { display: flex; flex-wrap: wrap; gap: 8px 28px; }
+html #cardsView .ct-stats b { display: block; color: var(--ink); font-size: 20px; line-height: 1.25; font-variant-numeric: tabular-nums; }
+html #cardsView .ct-stats small { color: var(--muted); font-size: 12px; }
+html #cardsView .ct-stats .due b { color: var(--ct-due); } html #cardsView .ct-stats .weak b { color: var(--ct-weak); } html #cardsView .ct-stats .good b { color: var(--ct-good); }
+html #cardsView .ct-points { display: flex; flex-wrap: wrap; gap: 6px; margin: 16px 0 4px; }
+html #cardsView .ct-point { display: inline-flex; align-items: center; gap: 6px; height: 30px; min-height: 0; margin: 0; padding: 0 12px; border: 0; border-radius: 15px; background: var(--canvas); box-shadow: inset 0 0 0 1px var(--line); color: var(--ink); font-size: 12.5px; font-weight: 500; transform: none; }
+html #cardsView .ct-point:hover { background: var(--hover); }
+html #cardsView .ct-point em { color: var(--ct-due); font-style: normal; font-weight: 600; font-variant-numeric: tabular-nums; }
+html #cardsView .ct-point.is-active { background: var(--blue-soft, #eaeefc); box-shadow: inset 0 0 0 1.5px var(--blue); color: var(--blue); font-weight: 600; }
+html #cardsView .ct-point.is-active em { color: inherit; }
+
+/* 复习结束：接着复习 */
+.ro-next-topics { margin: 16px auto 0; max-width: 560px; padding-top: 14px; border-top: 1px solid var(--line); text-align: center; }
+.ro-next-topics.hidden { display: none; }
+.ro-next-topics h3 { margin: 0 0 10px; text-align: center; color: var(--muted); font-size: 12.5px; font-weight: 600; }
+.ro-next-list { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.ro-next-list button { display: inline-flex; align-items: center; gap: 6px; }
+.ro-topic-dot { display: inline-block; width: 8px; height: 8px; border-radius: 3px; background: var(--ct-1); }
+
+@media (max-width: 760px) { html #cardsView .ct-today { grid-template-columns: 1fr; gap: 12px; } html #cardsView .ct-review-all { justify-self: start; } }
+@media (prefers-reduced-motion: reduce) { html #cardsView :is(.ct-tile, .ct-check) { transition: none; } }
+#reviewOutcomeHost .ro-next-topics { margin-bottom: 20px; }
+#reviewOutcomeHost .ro-next-topics h3 { text-align: center; }

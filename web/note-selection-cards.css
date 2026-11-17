@@ -1,0 +1,36 @@
+.note-selection-card-toolbar { position: fixed; inset: auto; margin: 0; display: flex; align-items: center; gap: 2px; height: 36px; max-width: calc(100vw - 24px); padding: 3px; border: 1px solid #44474d; border-radius: 8px; background: #26282d; color: #fff; box-shadow: 0 7px 22px rgb(24 29 36 / 22%); }
+.note-selection-card-toolbar:not(:popover-open) { display: none; }
+.note-selection-card-toolbar button, .note-selection-card-toolbar #createRichCardFromSelection { position: static; display: inline-flex; align-items: center; justify-content: center; flex: none; gap: 7px; width: 28px; height: 28px; margin: 0; padding: 0; border: 0; border-radius: 4px; background: transparent; color: #e8ebef; box-shadow: none; font-size: 12px; transform: none; }
+.note-selection-card-toolbar #createRichCardFromSelection { width: auto; min-width: 142px; padding: 0 9px; color: #fff; font-weight: 600; }
+.note-selection-card-toolbar button:hover, .note-selection-card-toolbar button[aria-expanded="true"] { background: #3b3f46; transform: none; }
+.note-selection-card-toolbar button:focus-visible { outline: 2px solid #93c5fd; outline-offset: -2px; }
+.note-selection-card-toolbar svg { display: block; flex: none; width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.note-selection-card-toolbar #createRichCardFromSelection svg { width: 18px; height: 18px; }
+.note-selection-divider { width: 1px; height: 16px; margin: 0 2px; background: #555a63; }
+.note-selection-popup-menu { position: fixed; inset: auto; margin: 0; min-width: 168px; max-width: calc(100vw - 24px); padding: 5px; border: 1px solid var(--line); border-radius: 8px; background: var(--canvas); color: var(--ink); box-shadow: 0 8px 28px rgb(24 39 59 / 16%); }
+.note-selection-popup-menu:not(:popover-open) { display: none; }
+.note-selection-popup-menu button { display: flex; align-items: center; gap: 9px; width: 100%; min-height: 32px; padding: 6px 9px; border: 0; border-radius: 4px; background: transparent; color: var(--ink); text-align: left; font-size: 12px; }
+.note-selection-popup-menu button:hover, .note-selection-popup-menu button:focus-visible { background: var(--selected); color: var(--blue); outline: none; }
+.note-selection-popup-menu svg { display: block; width: 16px; height: 16px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.note-selection-popup-menu [role="separator"] { height: 1px; margin: 4px 3px; background: var(--line); }
+.note-reading .note-selection-card-toolbar { display: none !important; }
+.note-editing-settings h2 { margin: 0 0 36px; font-size: 26px; }
+.note-editing-settings h3 { margin: 0 0 14px; font-size: 16px; font-weight: 600; }
+.note-selection-preference-row { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 20px; border: 1px solid var(--line); border-radius: 8px; }
+.note-selection-preference-copy label { margin: 0; color: var(--ink); font-size: 14px; font-weight: 600; cursor: pointer; }
+.note-selection-preference-copy p { margin: 8px 0 0; color: var(--muted); font-size: 12px; line-height: 1.6; }
+.note-selection-preference-control { display: flex; flex: none; flex-direction: column; align-items: center; gap: 7px; min-width: 52px; }
+.note-selection-preference-control > span { color: var(--muted); font-size: 11px; }
+.note-selection-preference-switch { position: relative; display: block; width: 38px; height: 22px; margin: 0; cursor: pointer; }
+.note-selection-preference-switch input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.note-selection-preference-switch > span { display: block; width: 100%; height: 100%; border-radius: 12px; background: #8a929d; pointer-events: none; }
+.note-selection-preference-switch > span::after { content: ''; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: #fff; }
+.note-selection-preference-switch input:checked + span { background: var(--blue); }
+.note-selection-preference-switch input:checked + span::after { transform: translateX(16px); }
+.note-selection-preference-switch input:focus-visible + span { outline: 2px solid var(--blue); outline-offset: 3px; }
+.note-selection-preference-switch input:disabled + span { opacity: .5; }
+.note-editing-settings .note-selection-preference-help { margin: 13px 0 0; color: var(--muted); font-size: 12px; line-height: 1.6; }
+.note-editing-settings .note-selection-preference-footer { margin: 56px 0 0; color: var(--muted); font-size: 11px; }
+#toast .note-selection-toast-settings { margin-left: 14px; padding: 2px 0; border: 0; background: transparent; color: #a4ceff; font-size: inherit; }
+#toast .note-selection-toast-settings:focus-visible { outline: 2px solid #a4ceff; outline-offset: 3px; }
+@media (max-width: 560px) { .note-selection-preference-row { gap: 12px; padding: 15px; } .note-selection-preference-copy label { font-size: 13px; } }

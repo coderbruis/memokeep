@@ -1,0 +1,111 @@
+/* 侧栏底部与「更多」菜单（design/prototype/sidebar-more-menu-20261109.md）。
+   底部一行：工作空间（备份状态，点开菜单）· 设置；收起侧栏时换成 设置 · 更多。菜单分「内容 / 偏好 / 帮助」三组。 */
+html .shell > header .sidebar-footer { position: relative; display: block; margin-top: auto; padding: 8px 0 0; border-top: 1px solid var(--line); }
+html .shell > header .sidebar-foot-row { display: flex; align-items: center; gap: 2px; }
+html .shell > header .sidebar-workspace { display: flex; align-items: center; gap: 9px; flex: 1; min-width: 0; height: 40px; padding: 0 8px; border: 0; border-radius: 8px; background: transparent; color: var(--ink); text-align: left; cursor: pointer; }
+html .shell > header .sidebar-workspace:hover, html .shell > header .sidebar-workspace[aria-expanded="true"] { background: var(--hover); }
+html .shell > header .sidebar-workspace:focus-visible, html .shell > header .sidebar-foot-icon:focus-visible { outline: 2px solid var(--blue); outline-offset: 1px; }
+/* 「设置这一块太乱」：底部只留「工作空间（点开菜单）」和「设置」两个入口。
+   备份状态用灰字，过期时只在图标角上亮一个小圆点，不再整行橙色。 */
+.sidebar-workspace-icon { position: relative; display: grid; place-items: center; width: 28px; height: 28px; flex: none; border-radius: 8px; background: var(--hover); color: var(--muted); }
+.sidebar-workspace-icon svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.sidebar-workspace.is-stale .sidebar-workspace-icon::after { content: ""; position: absolute; top: -2px; right: -2px; width: 7px; height: 7px; border: 2px solid var(--sidebar, var(--canvas)); border-radius: 50%; background: #c47f17; }
+html[data-appearance="dark"] .sidebar-workspace.is-stale .sidebar-workspace-icon::after { background: #f2c46b; }
+html .shell > header .sidebar-workspace:hover .sidebar-workspace-icon, html .shell > header .sidebar-workspace[aria-expanded="true"] .sidebar-workspace-icon { background: var(--canvas); color: var(--ink); }
+.sidebar-workspace-chevron { width: 13px; height: 13px; flex: none; margin-left: auto; fill: none; stroke: var(--muted); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; opacity: .7; }
+html .shell > header .sidebar-workspace:hover .sidebar-workspace-chevron { opacity: 1; }
+html .shell:not(.sidebar-collapsed) > header .sidebar-workspace { gap: 7px; padding: 0 6px; }
+/* 展开的侧栏里工作空间已经能打开同一个菜单，「…」就不重复出现了；收起和窄窗口时由「…」负责。 */
+html .shell:not(.sidebar-collapsed) > header .sidebar-foot-row #sidebarMoreBtn { display: none; }
+.sidebar-workspace-text { display: grid; min-width: 0; line-height: 1.3; }
+.sidebar-workspace-text b { overflow: hidden; font-size: 12.5px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.sidebar-workspace-text small, .sidebar-menu-workspace small { overflow: hidden; color: var(--muted); font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+.sidebar-menu-workspace small.is-stale { color: #a8670f; }
+html[data-appearance="dark"] .sidebar-menu-workspace small.is-stale { color: #f2c46b; }
+html .shell > header .sidebar-foot-icon { display: grid; place-items: center; flex: none; width: 34px; min-width: 34px; height: 34px; min-height: 34px; margin: 0; padding: 0; border: 0; border-radius: 8px; background: transparent; color: var(--muted); cursor: pointer; }
+html .shell > header .sidebar-foot-icon:hover { background: var(--hover); color: var(--ink); }
+html .shell > header .sidebar-foot-icon[aria-expanded="true"] { background: var(--selected); color: var(--blue); }
+html .shell > header .sidebar-foot-icon svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+
+/* 菜单 */
+html .shell > header .sidebar-more-menu { position: absolute; z-index: 150; left: 0; right: auto; top: auto; bottom: calc(100% + 6px); width: 280px; max-height: calc(100dvh - 130px); overflow-y: auto; overscroll-behavior: contain; padding: 6px; border: 0; border-radius: 14px; background: var(--canvas); color: var(--ink); box-shadow: 0 0 0 1px color-mix(in srgb, var(--ink) 9%, transparent), 0 12px 32px rgb(20 24 32 / 16%); }
+html .shell > header .sidebar-more-menu.hidden { display: none; }
+.sidebar-menu-head { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; padding: 8px 6px 10px 8px; border-bottom: 1px solid var(--line); }
+.sidebar-menu-avatar { display: grid; place-items: center; width: 34px; height: 34px; flex: none; border-radius: 10px; background: var(--selected); color: var(--blue); }
+.sidebar-menu-avatar svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.sidebar-menu-workspace { display: grid; flex: 1; min-width: 0; line-height: 1.35; }
+.sidebar-menu-workspace b { font-size: 13px; }
+html .shell > header .sidebar-more-menu .sidebar-menu-head button { width: auto; min-height: 28px; flex: none; padding: 0 8px; border-radius: 6px; color: var(--blue); font-size: 12px; font-weight: 500; }
+html .shell > header .sidebar-more-menu .sidebar-menu-head button:is(:hover, :focus-visible) { background: var(--selected); color: var(--blue); }
+.sidebar-menu-group { padding: 2px 0; }
+.sidebar-menu-group + .sidebar-menu-group { margin-top: 4px; padding-top: 6px; border-top: 1px solid var(--line); }
+html .shell > header .sidebar-more-menu button { display: flex; align-items: center; gap: 11px; width: 100%; min-height: 36px; padding: 0 10px; border: 0; border-radius: 8px; background: transparent; color: var(--ink); font-size: 13.5px; font-weight: 400; text-align: left; transform: none; }
+html .shell > header .sidebar-more-menu button:is(:hover, :focus-visible) { background: var(--hover); color: var(--ink); }
+html .shell > header .sidebar-more-menu button:focus-visible { outline: 2px solid var(--blue); outline-offset: -2px; }
+html .shell > header .sidebar-more-menu button > svg { width: 17px; height: 17px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; color: var(--muted); }
+.sidebar-menu-badge { min-width: 20px; height: 18px; margin-left: auto; padding: 0 6px; border-radius: 9px; background: var(--hover); color: var(--muted); font-size: 11px; font-style: normal; line-height: 18px; text-align: center; }
+.sidebar-menu-badge[hidden] { display: none; }
+.sidebar-more-menu button:hover .sidebar-menu-badge { background: var(--canvas); }
+/* 外观：文字打开外观设置，右侧三个按钮直接切换 */
+.sidebar-menu-appearance { display: flex; align-items: center; gap: 6px; padding-right: 6px; }
+html .shell > header .sidebar-more-menu .sidebar-menu-appearance > button { flex: 1; width: auto; }
+.sidebar-appearance-modes { display: inline-flex; flex: none; padding: 2px; border-radius: 8px; background: var(--hover); }
+html .shell > header .sidebar-more-menu .sidebar-appearance-modes button { display: grid; place-items: center; width: 30px; min-height: 24px; height: 24px; padding: 0; border-radius: 6px; color: var(--muted); }
+html .shell > header .sidebar-more-menu .sidebar-appearance-modes button:hover { background: transparent; color: var(--ink); }
+html .shell > header .sidebar-more-menu .sidebar-appearance-modes button[aria-pressed="true"] { background: var(--canvas); color: var(--ink); box-shadow: 0 1px 2px rgb(0 0 0 / 12%); }
+.sidebar-appearance-modes svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+/* Pro */
+html .shell > header .sidebar-more-menu .sidebar-menu-pro { gap: 10px; min-height: 52px; margin-top: 6px; padding: 8px 10px; border-radius: 10px; background: color-mix(in srgb, var(--blue) 7%, var(--canvas)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--blue) 18%, transparent); }
+html .shell > header .sidebar-more-menu .sidebar-menu-pro:is(:hover, :focus-visible) { background: color-mix(in srgb, var(--blue) 12%, var(--canvas)); }
+html .shell > header .sidebar-more-menu .sidebar-menu-pro > svg { color: var(--blue); }
+.sidebar-menu-pro-copy { display: grid; min-width: 0; line-height: 1.35; }
+.sidebar-menu-pro-copy b { color: var(--blue); font-size: 13px; }
+.sidebar-menu-pro-copy small { color: var(--muted); font-size: 11.5px; white-space: nowrap; }
+.sidebar-menu-pro-go { margin-left: auto; color: var(--blue); font-size: 12px; font-weight: 600; }
+
+/* 收起的侧栏：底部竖排「设置」「更多」两个图标，菜单从右侧弹出 */
+html .shell.sidebar-collapsed > header .sidebar-footer { padding-top: 8px; }
+html .shell.sidebar-collapsed > header .sidebar-foot-row { flex-direction: column; gap: 4px; }
+html .shell.sidebar-collapsed > header .sidebar-workspace { display: none; }
+html .shell.sidebar-collapsed > header .sidebar-more-menu { position: fixed; left: 72px; bottom: 12px; }
+
+/* 窄窗口（侧栏变成顶栏）：只留「更多」 */
+@media (max-width: 680px) {
+  html:not(.note-window) .shell > header .sidebar-footer { padding: 0; border: 0; }
+  html:not(.note-window) .shell > header :is(.sidebar-workspace, #sidebarFootSettings) { display: none; }
+  html:not(.note-window) .shell > header .sidebar-more-menu { position: fixed; left: auto; right: 12px; top: 56px; bottom: auto; max-height: calc(100dvh - 72px); overflow: auto; }
+}
+/* 矮窗口：行距收紧、Pro 只留一行，整个菜单不用滚动 */
+@media (max-height: 640px) {
+  html .shell > header .sidebar-more-menu button { min-height: 30px; }
+  html .shell > header .sidebar-more-menu .sidebar-menu-pro { min-height: 36px; }
+  .sidebar-menu-pro-copy small { display: none; }
+  .sidebar-menu-head { padding: 4px 6px 6px 8px; }
+  .sidebar-menu-avatar { width: 28px; height: 28px; }
+  .sidebar-menu-group + .sidebar-menu-group { margin-top: 2px; padding-top: 3px; }
+}
+@media (prefers-reduced-motion: reduce) { html .shell > header .sidebar-more-menu button { transition: none; } }
+/* 旧的 CSS「更多」提示会压在打开的菜单上；收起状态的提示由侧栏统一的浮动提示负责。 */
+html .shell.sidebar-collapsed > header .sidebar-more-button::after { content: none; }
+
+/* 侧栏可展开的项（知识库 / 标签 / 计划 / 记忆卡片）：design/prototype/sidebar-trailing-icons-20261111.md。
+   左侧图标固定不变；右侧固定一个展开箭头（点它只展开 / 收起），展开时转 90°；悬停这一行时箭头左边出现「+」。 */
+html .shell > header nav .nav-heading { position: relative; }
+html .shell > header nav .nav-twisty { display: grid; flex: none; place-items: center; width: 24px; height: 24px; margin: 0 -4px 0 auto; border-radius: 6px; color: var(--muted); cursor: pointer; }
+html .shell > header nav .plan-nav-meta + .nav-twisty { margin-left: 4px; }
+html .shell > header nav .nav-twisty svg { width: 14px !important; height: 14px !important; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; transition: transform .15s ease; }
+html .shell > header nav .nav-twisty:hover { background: color-mix(in srgb, var(--ink) 9%, transparent); color: var(--ink); }
+html .shell > header nav :is(.knowledge-nav-group:not(.collapsed), .card-nav-group:not(.tree-collapsed)) .nav-twisty svg,
+html .shell > header nav :is(#noteTagsNav[aria-expanded="true"], .plan-nav-heading.expanded .nav) .nav-twisty svg { transform: rotate(90deg); }
+html .shell > header nav .card-nav-group.is-empty .nav-twisty, html .shell > header nav .card-nav-group.is-empty .card-tree-content { display: none; }
+/* 「+」：在箭头左边，只在悬停 / 聚焦这一行时出现，没有描边框 */
+html .shell > header nav .nav-add { position: absolute; top: 50%; right: 32px; display: grid; place-items: center; width: 24px; height: 24px; min-height: 24px; margin: 0; padding: 0; border: 0; border-radius: 6px; background: transparent; box-shadow: none; color: var(--muted); opacity: 0; transform: translateY(-50%); cursor: pointer; transition: opacity .12s ease; }
+html .shell > header nav .card-nav-group.is-empty .nav-add { right: 6px; }
+html .shell > header nav .nav-add svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; }
+html .shell > header nav .nav-add:hover { background: color-mix(in srgb, var(--ink) 9%, transparent); color: var(--ink); }
+html .shell > header nav .nav-add:focus-visible { opacity: 1; outline: 2px solid var(--blue); outline-offset: -2px; }
+html .shell > header nav .nav-heading:is(:hover, :focus-within) .nav-add { opacity: 1; }
+html .shell > header nav .plan-nav-heading:is(:hover, :focus-within) .plan-nav-meta { opacity: 0; }
+/* 侧栏收起：只留图标 */
+html .shell.sidebar-collapsed > header nav .nav-add, html .shell.sidebar-collapsed > header nav .nav-twisty { display: none !important; }
+@media (prefers-reduced-motion: reduce) { html .shell > header nav :is(.nav-twisty svg, .nav-add) { transition: none; } }

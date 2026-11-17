@@ -1,0 +1,52 @@
+/* Quiet memo list, shared by both editions. */
+#memosView { --memo-width: 1080px; padding: 44px clamp(24px, 5vw, 76px); }
+#memosView .memo-page-head, #memosView .memo-controls, #memosView .memo-list { width: 100%; max-width: var(--memo-width); margin-left: auto; margin-right: auto; box-sizing: border-box; }
+#memosView .memo-page-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
+#memosView .memo-page-head h1 { margin: 0; color: var(--ink); font-size: 25px; line-height: 1.4; font-weight: 600; }
+#memosView .memo-new-button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 34px; padding: 7px 14px; border: 1px solid var(--ink); border-radius: 7px; background: var(--ink); color: var(--canvas); font-size: 13px; font-weight: 500; box-shadow: none; }
+#memosView .memo-new-button svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.7; }
+#memosView .memo-controls { align-items: center; flex-direction: row; padding-bottom: 0; gap: 18px; border-bottom: 1px solid var(--line); }
+#memosView .memo-filter-chips { display: flex; flex-shrink: 0; gap: 22px; }
+#memosView .memo-filter-chips button { display: inline-flex; align-items: center; gap: 5px; min-height: 42px; padding: 0 0 10px; border: 0; border-bottom: 2px solid transparent; border-radius: 0; background: transparent; color: var(--muted); font-size: 13px; font-weight: 400; }
+#memosView .memo-filter-chips button.active { background: transparent; color: var(--ink); border-bottom-color: var(--ink); }
+#memosView .memo-filter-chips button:hover { background: transparent; color: var(--ink); }
+#memosView [data-memo-count] { font-size: 12px; font-variant-numeric: tabular-nums; }
+#memosView [hidden] { display: none !important; }
+#memosView .memo-search { width: min(230px, 35%); min-height: 30px; margin-bottom: 10px; border-radius: 6px; border-color: var(--line); background: var(--sidebar); padding: 0 9px; }
+#memosView .memo-search:focus-within { border-color: var(--muted); box-shadow: none; }
+#memosView .memo-search input { background: transparent; color: var(--ink); font-size: 12px; }
+#memosView .memo-search svg { width: 14px; height: 14px; stroke: var(--muted); }
+#memosView .memo-list { padding-top: 4px; }
+#memosView .memo-group { margin-top: 24px; }
+#memosView .memo-group-title { padding: 0; margin-bottom: 8px; }
+#memosView .memo-group-title h2, #memosView .memo-group.overdue .memo-group-title h2 { color: var(--muted); font-size: 12px; font-weight: 400; }
+#memosView .memo-group-title > span { display: none; }
+#memosView .memo-group-items { overflow: visible; border: 0; border-radius: 0; background: transparent; }
+#memosView .memo-item { grid-template-columns: 30px minmax(0, 1fr) auto 32px; gap: 6px; min-height: 50px; padding: 0 8px; border-bottom: 1px solid var(--line); border-radius: 0; background: transparent; }
+#memosView .memo-item:hover { background: var(--hover); border-radius: 6px; }
+#memosView .memo-check { width: 17px; height: 17px; margin: 0; border: 1px solid var(--muted); border-radius: 4px; background: var(--canvas); color: transparent; }
+#memosView .memo-check:hover { border-color: var(--ink); color: var(--muted); }
+#memosView .memo-item.completed .memo-check { background: var(--ink); border-color: var(--ink); color: var(--canvas); }
+#memosView .memo-item-main { display: block; min-width: 0; padding: 12px 0; }
+#memosView .memo-item-title { display: flex; align-items: center; gap: 9px; }
+#memosView .memo-item-title strong { min-width: 0; font-size: 14px; font-weight: 400; color: var(--ink); }
+#memosView .memo-item.completed .memo-item-title strong { color: var(--muted); }
+#memosView .memo-tag { max-width: 100px; flex-shrink: 0; padding: 2px 6px; font-size: 11px; font-weight: 400; background: var(--sidebar); color: var(--muted); }
+#memosView .memo-row-repeat { width: 13px; height: 13px; flex-shrink: 0; fill: none; stroke: var(--muted); stroke-width: 1.5; }
+#memosView .memo-time { display: inline-flex; align-items: center; gap: 7px; padding-left: 12px; white-space: nowrap; color: var(--muted); font-size: 12px; font-weight: 400; font-variant-numeric: tabular-nums; }
+#memosView .memo-time svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+#memosView .memo-time.overdue { color: #b95f53; font-weight: 400; }
+#memosView .memo-more { display: grid; place-items: center; width: 28px; height: 28px; padding: 4px; border: 0; border-radius: 5px; background: transparent; color: var(--muted); }
+#memosView .memo-more:hover, #memosView .memo-more[aria-expanded="true"] { background: var(--selected); color: var(--ink); }
+#memosView .memo-more svg { width: 18px; height: 18px; fill: currentColor; }
+#memosView .memo-empty { padding: clamp(70px, 16vh, 160px) 16px 40px; text-align: center; }
+#memosView .memo-empty > svg { width: 44px; height: 44px; margin-bottom: 14px; fill: none; stroke: var(--muted); opacity: .45; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+#memosView .memo-empty h2 { margin: 0; font-size: 14px; font-weight: 400; color: var(--muted); }
+#memoRowMenu { position: fixed; inset: auto; margin: 0; box-sizing: border-box; width: 170px; padding: 5px; border: 1px solid var(--line); border-radius: 8px; background: var(--canvas); color: var(--ink); box-shadow: 0 5px 20px #00000018; }
+#memoRowMenu:popover-open { display: flex; flex-direction: column; gap: 2px; }
+#memoRowMenu button { padding: 8px 10px; border: 0; border-radius: 5px; background: transparent; color: inherit; text-align: left; font: inherit; font-size: 13px; }
+#memoRowMenu button:hover, #memoRowMenu button:focus-visible { background: var(--selected); }
+#memoRowMenu .delete { color: #b95f53; }
+#memosView button:focus-visible, #memoRowMenu button:focus-visible { outline: 2px solid var(--muted); outline-offset: 2px; }
+@media (max-width: 760px) { #memosView { padding: 28px 20px; } #memosView .memo-controls { flex-wrap: wrap; gap: 6px 18px; } #memosView .memo-search { width: 200px; } #memosView .memo-filter-chips { gap: 16px; } }
+@media (max-width: 520px) { #memosView .memo-search { width: 100%; } #memosView .memo-item { grid-template-columns: 24px minmax(0, 1fr) 28px; gap: 4px; padding: 6px 0; } #memosView .memo-item-main { grid-column: 2; grid-row: 1; padding: 6px 0; } #memosView .memo-time { grid-column: 2; grid-row: 2; padding: 0 0 6px; } #memosView .memo-more { grid-column: 3; grid-row: 1; } #memosView .memo-check { grid-column: 1; grid-row: 1; } #memosView .memo-tag { max-width: 65px; } }

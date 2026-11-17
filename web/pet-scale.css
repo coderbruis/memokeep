@@ -1,0 +1,64 @@
+/* The window follows the display work area; keep the reminder readable at every size. */
+.drag { padding-top: 0; }
+
+.bubble {
+  z-index: 2;
+  right: 12px;
+  top: 8px;
+  width: calc(100% - 24px);
+  min-width: 0;
+  max-width: 230px;
+  padding: 8px 24px 8px 10px;
+  border-radius: 10px 10px 4px 10px;
+  background: #fff;
+  color: #303640;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: 0 4px 12px rgba(40, 64, 89, .12);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 18px;
+}
+
+.bubble::after { right: 44px; bottom: -6px; border-width: 6px; border-bottom: 0; }
+.pet-actions { gap: 6px; margin-top: 6px; }
+.pet-actions button {
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 18px;
+  color: #424b57;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.pet-actions button:first-child { background: #1677df; color: #fff; }
+
+.reference-pet {
+  left: 32px;
+  top: auto;
+  bottom: 14px;
+  width: calc(100% - 64px);
+  height: auto;
+  aspect-ratio: 1254 / 760;
+}
+
+.reference-pet .reference-cat {
+  /* Frame the cat inside the square source image's transparent vertical margins. */
+  object-fit: cover;
+  object-position: center 54%;
+  filter: drop-shadow(0 5px 5px rgba(38, 44, 51, .14));
+}
+
+#close { right: 6px; top: 2px; width: 22px; height: 22px; padding: 0; }
+#close svg { width: 12px; height: 12px; }
+.drag:focus-within #close, #close:focus-visible { opacity: 1; }
+.pet:focus-visible, .pet-actions button:focus-visible, #close:focus-visible {
+  outline: 2px solid #1677df;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pet { animation: none; }
+}

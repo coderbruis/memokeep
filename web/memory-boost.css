@@ -1,0 +1,155 @@
+/* 记得更牢（design/prototype/memory-boost-20261112.md）：先作答、按要点评分、再练一轮、要点统计、制卡提示。 */
+:root { --mb-got: #2e8b57; --mb-got-soft: #e3f3e9; --mb-miss: #b26a00; --mb-miss-soft: #fff3dd; --mb-last: #c8433a; --mb-last-soft: #fcebea; --mb-idea: #3453c7; --mb-idea-soft: #eaeefc; --mb-practice: #0e7c86; --mb-practice-soft: #e0f4f5; }
+html[data-appearance="dark"] { --mb-got: #6fcf97; --mb-got-soft: #1c3327; --mb-miss: #f2c46b; --mb-miss-soft: #3a3120; --mb-last: #f08a80; --mb-last-soft: #3a2224; --mb-idea: #a8bcff; --mb-idea-soft: #232c4a; --mb-practice: #5ed3db; --mb-practice-soft: #173236; }
+
+/* ① 先作答 */
+html #reviewDialog .rv-voice.is-compose { padding: 0; border: 1px solid var(--line); border-radius: 12px; background: var(--canvas); overflow: hidden; }
+html #reviewDialog .rv-voice.is-compose:focus-within { border-color: var(--blue); box-shadow: 0 0 0 3px color-mix(in srgb, var(--blue) 16%, transparent); }
+html #reviewDialog .rv-voice.is-compose .rv-voice-head { margin: 0; padding: 10px 14px 0; }
+html #reviewDialog .rv-voice.is-compose .rv-voice-input { min-height: 84px; margin: 0; padding: 8px 14px; border: 0; border-radius: 0; background: none; box-shadow: none; outline: 0; font-size: 15px; line-height: 1.6; resize: vertical; }
+.rv-compose-missed { padding: 0 7px; border-radius: 5px; background: var(--mb-last-soft); color: var(--mb-last); font-size: 11.5px; font-style: normal; font-weight: 600; }
+html #reviewDialog .rv-compose-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0; padding: 6px 8px 8px 10px; }
+html #reviewDialog .rv-compose-tools button { display: inline-flex; align-items: center; gap: 6px; height: 32px; min-height: 0; margin: 0; padding: 0 12px; border: 0; border-radius: 8px; background: none; box-shadow: none; color: var(--muted); font-size: 13px; font-weight: 500; transform: none; }
+html #reviewDialog .rv-compose-tools button:hover { background: var(--hover); color: var(--ink); }
+html #reviewDialog .rv-compose-tools button svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+html #reviewDialog .rv-compose-tools button.rv-compose-go { background: var(--blue); color: #fff; font-weight: 600; }
+html[data-appearance="dark"] #reviewDialog .rv-compose-tools button.rv-compose-go { color: #10162b; }
+html #reviewDialog .rv-compose-tools button.rv-compose-go:hover { background: color-mix(in srgb, var(--blue) 88%, #000); color: #fff; }
+html #reviewDialog .rv-compose-tools kbd { margin: 0; padding: 0 5px; border-radius: 4px; background: color-mix(in srgb, currentColor 14%, transparent); color: inherit; font-size: 11px; line-height: 18px; opacity: .8; }
+
+/* ② 按要点评分 */
+html #reviewDialog .rv-grade-head { flex-wrap: wrap; }
+html #reviewDialog .rv-grade-head strong { color: var(--ink); font-size: 13.5px; }
+.rv-grade-hint { color: var(--muted); font-size: 12px; }
+html #reviewDialog .rv-grade-head .rv-voice-score { margin-left: auto; color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+.rv-grade-list { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.rv-grade { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 8px 8px 8px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--canvas); color: var(--ink); font-size: 14.5px; line-height: 1.6; }
+.rv-grade.is-got { border-color: color-mix(in srgb, var(--mb-got) 45%, var(--line)); background: color-mix(in srgb, var(--mb-got-soft) 60%, var(--canvas)); }
+.rv-grade.is-miss { border-style: dashed; border-color: color-mix(in srgb, var(--mb-miss) 55%, var(--line)); background: color-mix(in srgb, var(--mb-miss-soft) 55%, var(--canvas)); }
+.rv-grade-text { min-width: 0; overflow-wrap: anywhere; }
+.rv-grade-last { display: inline-flex; margin-left: 8px; padding: 0 6px; border-radius: 4px; background: var(--mb-last-soft); color: var(--mb-last); font-size: 11.5px; font-style: normal; font-weight: 600; vertical-align: 1px; }
+.rv-grade-seg { display: inline-flex; padding: 2px; border-radius: 8px; background: var(--hover); }
+html #reviewDialog .rv-grade-seg button { height: 28px; min-height: 0; margin: 0; padding: 0 10px; border: 0; border-radius: 6px; background: none; box-shadow: none; color: var(--muted); font-size: 12.5px; font-weight: 500; transform: none; }
+html #reviewDialog .rv-grade-seg button[aria-pressed="true"].is-yes { background: var(--mb-got); color: var(--canvas); }
+html #reviewDialog .rv-grade-seg button[aria-pressed="true"].is-no { background: var(--mb-miss); color: var(--canvas); }
+html #reviewDialog .rv-grade-more { margin-top: 8px; height: 28px; min-height: 0; padding: 0 10px; border: 0; border-radius: 7px; background: var(--hover); box-shadow: none; color: var(--muted); font-size: 12.5px; transform: none; }
+
+/* ④ 再练 */
+.rv-practice-badge { display: inline-flex; align-items: center; height: 20px; margin-left: 8px; padding: 0 7px; border-radius: 5px; background: var(--mb-practice-soft); color: var(--mb-practice); font-size: 11.5px; font-weight: 700; }
+.ro-weak-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin: -10px 0 22px; }
+.ro-weak-actions[hidden] { display: none; }
+.ro-weak-actions span { color: var(--muted); font-size: 12px; }
+.ro-weak-actions [hidden] { display: none; }
+
+/* ⑤ 要点统计：卡片详情 */
+.card-detail-recall { grid-column: 1 / -1; display: grid; gap: 8px; margin-top: 6px; padding: 12px 14px; border-radius: 12px; background: var(--hover); }
+.cdr-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px; color: var(--muted); font-size: 12.5px; }
+.cdr-head h3 { margin: 0 auto 0 0; color: var(--ink); font-size: 14px; }
+.cdr-head b { color: var(--ink); font-variant-numeric: tabular-nums; }
+.cdr-head .cdr-weak { color: var(--mb-miss); }
+.cdr-table { display: grid; }
+.cdr-row { display: grid; grid-template-columns: minmax(0, 1fr) 124px 64px; gap: 12px; align-items: center; padding: 8px 2px; border-top: 1px solid var(--line); font-size: 13px; }
+.cdr-th { padding-block: 4px; border-top: 0; color: var(--muted); font-size: 11.5px; }
+.cdr-text { min-width: 0; color: var(--ink); overflow-wrap: anywhere; }
+.cdr-text small { display: block; color: var(--mb-last); font-size: 11.5px; }
+.cdr-row.is-weak .cdr-text { color: var(--mb-miss); font-weight: 600; }
+.cdr-dots { display: flex; gap: 4px; }
+.cdr-dots i { display: grid; place-items: center; width: 18px; height: 18px; border-radius: 5px; font-size: 11px; font-style: normal; font-weight: 700; }
+.cdr-dots i.y { background: var(--mb-got-soft); color: var(--mb-got); }
+.cdr-dots i.n { background: var(--mb-miss-soft); color: var(--mb-miss); }
+.cdr-rate { position: relative; padding-bottom: 6px; text-align: right; color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+.cdr-rate i { position: absolute; right: 0; bottom: 0; left: 0; height: 3px; border-radius: 2px; background: linear-gradient(90deg, var(--mb-got) var(--rate), color-mix(in srgb, var(--muted) 20%, transparent) var(--rate)); }
+.cdr-row.is-weak .cdr-rate { color: var(--mb-miss); }
+.cdr-row.is-weak .cdr-rate i { background: linear-gradient(90deg, var(--mb-miss) var(--rate), color-mix(in srgb, var(--muted) 20%, transparent) var(--rate)); }
+.cdr-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.cdr-actions:empty { display: none; }
+.cdr-actions button { height: 30px; min-height: 0; padding: 0 12px; font-size: 12.5px; }
+@media (max-width: 560px) { .cdr-row { grid-template-columns: minmax(0, 1fr) 56px; } .cdr-row > :nth-child(2) { display: none; } }
+
+/* ⑤ 要点统计：主题详情 */
+.ct-weak-points { display: grid; gap: 8px; margin: 14px 0 4px; padding: 14px 16px; border: 1px solid color-mix(in srgb, var(--mb-miss) 35%, var(--line)); border-radius: 12px; background: color-mix(in srgb, var(--mb-miss-soft) 45%, var(--canvas)); }
+.ct-weak-points h3 { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; margin: 0; font-size: 14px; }
+.ct-weak-points h3 small { color: var(--muted); font-size: 12px; font-weight: 400; }
+.ct-weak-points ul { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.ct-weak-points li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 8px 12px; border-radius: 9px; background: var(--canvas); font-size: 13px; }
+.ct-weak-points li .t { min-width: 0; overflow-wrap: anywhere; }
+.ct-weak-points li small { display: block; color: var(--muted); font-size: 11.5px; }
+.ct-weak-points li .n { color: var(--mb-miss); font-weight: 600; font-size: 12.5px; white-space: nowrap; }
+.ct-weak-points > button { justify-self: start; height: 32px; min-height: 0; padding: 0 14px; font-size: 13px; }
+.ct-weak-more, .ct-weak-note { margin: 0; color: var(--muted); font-size: 12px; }
+
+/* ⑤ 要点统计：卡片列表 */
+:root:root #cardsView .card-row-weak { height: 20px; min-height: 0; margin: 0; padding: 0 7px; border: 0; border-radius: 4px; background: var(--mb-miss-soft); box-shadow: none; color: var(--mb-miss); font-size: 12px; font-weight: 600; transform: none; }
+:root:root #cardsView .card-row-weak:hover { background: color-mix(in srgb, var(--mb-miss) 18%, var(--mb-miss-soft)); }
+
+/* ③ 制卡提示 */
+.ce-split-hint { display: grid; gap: 10px; margin: 2px 0 12px; }
+.ce-split-hint[hidden] { display: none; }
+.ce-hint-box { display: grid; gap: 6px; padding: 12px 14px; border-radius: 11px; background: var(--mb-miss-soft); }
+.ce-hint-box.is-idea { background: var(--mb-idea-soft); }
+.ce-hint-box h4 { display: flex; align-items: center; gap: 7px; margin: 0; color: var(--ink); font-size: 13.5px; }
+.ce-hint-box h4 svg { width: 15px; height: 15px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.ce-hint-box.is-warn h4 svg { color: var(--mb-miss); }
+.ce-hint-box.is-idea h4 svg { color: var(--mb-idea); }
+.ce-hint-box p { margin: 0; color: var(--muted); font-size: 12.5px; }
+.ce-hint-row { display: flex; flex-wrap: wrap; gap: 6px; }
+.ce-hint-row button { height: 28px; min-height: 0; margin: 0; padding: 0 10px; font-size: 12.5px; }
+.ce-template { border: 1px dashed color-mix(in srgb, var(--mb-idea) 55%, var(--line)); border-radius: 8px; background: var(--canvas); box-shadow: none; color: var(--mb-idea); }
+.ce-split-preview { display: grid; gap: 6px; padding: 12px; border: 1px solid var(--line); border-radius: 11px; }
+.ce-split-title { margin: 0 0 2px; color: var(--muted); font-size: 12.5px; }
+.ce-split-row { display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: 8px; align-items: start; padding: 8px 10px; border-radius: 9px; background: var(--hover); }
+.ce-split-row input[type="checkbox"] { margin-top: 6px; accent-color: var(--blue); }
+.ce-split-row input[type="text"] { width: 100%; height: 28px; padding: 0 8px; border: 1px solid transparent; border-radius: 6px; background: var(--canvas); color: var(--ink); font-weight: 600; }
+.ce-split-row input[type="text"]:focus { border-color: var(--blue); outline: 0; }
+.ce-split-row p { margin: 3px 8px 0; color: var(--muted); font-size: 12.5px; overflow-wrap: anywhere; }
+.ce-split-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-top: 4px; color: var(--muted); font-size: 12.5px; }
+.ce-split-foot label { display: inline-flex; align-items: center; gap: 6px; }
+.ce-split-foot .ce-grow { flex: 1; }
+.ce-split-foot button { height: 30px; min-height: 0; padding: 0 12px; font-size: 12.5px; }
+.ce-split-error { margin: 0; color: var(--mb-last); font-size: 12.5px; }
+@media (prefers-reduced-motion: reduce) { .rv-grade, .rv-grade-seg button { transition: none; } }
+
+/* 判断项（design/prototype/check-items-20261112.md） */
+:root { --mb-item: #8e4ec6; --mb-item-soft: #f3eafb; }
+html[data-appearance="dark"] { --mb-item: #c99bf0; --mb-item-soft: #2f2440; }
+html #reviewDialog .rv-grade-context { margin: 0 0 14px; color: var(--muted); font-size: 14.5px; line-height: 1.7; }
+html #reviewDialog .rv-grade-context p { margin: 0; padding: 0; color: var(--muted); font-size: 14.5px; font-weight: 400; letter-spacing: 0; line-height: 1.7; text-transform: none; }
+#cardDialog section[data-card-field="answer"] { position: relative; }
+#cardDialog .ce-rich-editor.has-item-gutter { padding-left: 54px; }
+.ce-item-gutter { position: absolute; inset: 0 auto 0 0; width: 0; pointer-events: none; }
+.ce-item-gutter[hidden] { display: none; }
+.ce-item-gutter span { position: absolute; left: 9px; transform: translateY(-50%); padding: 0 5px; border-radius: 4px; background: var(--mb-item-soft); color: var(--mb-item); font-size: 11px; font-weight: 700; line-height: 18px; white-space: nowrap; }
+.ce-item-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 8px 0 12px; }
+.ce-item-tools[hidden] { display: none; }
+#cardDialog .ce-item-btn { display: inline-flex; flex-wrap: nowrap; align-items: center; justify-content: center; gap: 6px; height: 30px; min-height: 0; margin: 0; padding: 0 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--canvas); box-shadow: none; color: var(--ink); font-size: 12.5px; font-weight: 500; line-height: 1; white-space: nowrap; transform: none; }
+#cardDialog .ce-item-btn:hover { background: var(--hover); }
+#cardDialog .ce-item-btn.is-mark { border-color: color-mix(in srgb, var(--mb-item) 45%, var(--line)); color: var(--mb-item); }
+#cardDialog .ce-item-btn svg { width: 14px; height: 14px; flex: none; margin: 0; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.ce-item-key { color: var(--muted); font-size: 12px; }
+.ce-item-key kbd { padding: 0 5px; border-radius: 4px; background: var(--hover); color: var(--muted); font-size: 11px; line-height: 18px; }
+.ce-item-count { margin-left: auto; color: var(--muted); font-size: 12px; }
+.ce-item-count b { color: var(--mb-item); }
+.ce-hint-box.is-item { background: var(--mb-item-soft); }
+
+/* 复习时编辑：来源面板的「去笔记里编辑」、笔记页右下角的「继续复习」 */
+html #reviewDialog .review-source-drawer-head { display: flex; align-items: center; gap: 8px; }
+html #reviewDialog .review-source-drawer-head > div { flex: 1; min-width: 0; }
+html #reviewDialog .rv-source-edit { display: inline-flex; align-items: center; gap: 6px; height: 30px; min-height: 0; margin: 0; padding: 0 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--canvas); box-shadow: none; color: var(--blue); font-size: 12.5px; font-weight: 600; white-space: nowrap; transform: none; }
+html #reviewDialog .rv-source-edit:hover { background: var(--hover); }
+html #reviewDialog .rv-source-edit[hidden] { display: none; }
+html #reviewDialog .rv-source-edit svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.rv-resume { position: fixed; right: max(20px, env(safe-area-inset-right, 0px)); bottom: max(20px, env(safe-area-inset-bottom, 0px)); z-index: 900; display: flex; align-items: center; gap: 8px; padding: 6px 6px 6px 14px; border-radius: 12px; background: var(--ink); box-shadow: 0 10px 30px rgb(20 24 32 / 25%); color: var(--canvas); font-size: 12.5px; }
+.rv-resume[hidden] { display: none; }
+.rv-resume-text { opacity: .75; }
+.rv-resume .rv-resume-go { height: 30px; min-height: 0; margin: 0; padding: 0 12px; border: 0; border-radius: 8px; background: var(--blue); box-shadow: none; color: #fff; font-size: 13px; font-weight: 600; transform: none; }
+html[data-appearance="dark"] .rv-resume .rv-resume-go { color: #10162b; }
+.rv-resume .rv-resume-close { width: 28px; height: 28px; min-height: 0; margin: 0; padding: 0; border: 0; border-radius: 7px; background: none; box-shadow: none; color: inherit; font-size: 16px; opacity: .7; transform: none; }
+.rv-resume .rv-resume-close:hover { background: color-mix(in srgb, var(--canvas) 14%, transparent); opacity: 1; }
+
+/* 语音作答回放：「你的回答」标题栏里的「听录音」 */
+html #reviewDialog .rv-voice-play-slot { display: inline-flex; }
+html #reviewDialog .rv-voice-play-slot:empty { display: none; }
+html #reviewDialog.rv2 .rv-voice-head button.rv-voice-play { padding: 0 8px; background: var(--blue-soft, color-mix(in srgb, var(--blue) 12%, transparent)); color: var(--blue); font-weight: 600; }
+html #reviewDialog.rv2 .rv-voice-head button.rv-voice-play svg { fill: currentColor; stroke: none; }
+html #reviewDialog.rv2 .rv-voice-head button.rv-voice-play.is-playing { background: var(--blue); color: #fff; }
+html[data-appearance="dark"] #reviewDialog.rv2 .rv-voice-head button.rv-voice-play.is-playing { color: #10162b; }

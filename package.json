@@ -1,0 +1,96 @@
+{
+  "name": "memokeep-community",
+  "version": "1.0.1",
+  "private": true,
+  "author": "MemoKeep",
+  "description": "Local-first personal knowledge base and long-term memory companion.",
+  "main": "electron/main.cjs",
+  "scripts": {
+    "start": "electron .",
+    "web": "node scripts/serve.cjs",
+    "check": "node scripts/check.cjs",
+    "test": "node --test scripts/*.test.cjs",
+    "verify:source": "node scripts/verify-source.cjs",
+    "test:desktop": "electron scripts/smoke.electron.cjs",
+    "stage:community": "node scripts/build-edition.cjs community stage",
+    "pack:mac": "node scripts/build-edition.cjs community dir",
+    "dist:mac": "node scripts/build-edition.cjs community dmg"
+  },
+  "devDependencies": {
+    "electron": "^38.0.0",
+    "electron-builder": "^26.0.12",
+    "esbuild": "0.28.2"
+  },
+  "build": {
+    "appId": "com.memokeep.community",
+    "productName": "MemoKeep Community",
+    "artifactName": "MemoKeep-Community-${version}-${arch}.${ext}",
+    "files": [
+      "electron/**/*",
+      "modules/**/*",
+      "web/**/*",
+      "package.json"
+    ],
+    "fileAssociations": [
+      {
+        "ext": [
+          "md",
+          "markdown"
+        ],
+        "name": "Markdown 文档",
+        "role": "Editor",
+        "rank": "Alternate"
+      },
+      {
+        "ext": "txt",
+        "name": "纯文本文档",
+        "role": "Editor",
+        "rank": "Alternate"
+      }
+    ],
+    "mac": {
+      "icon": "build/icon.icns",
+      "category": "public.app-category.education",
+      "target": [
+        "dmg",
+        "dir"
+      ]
+    },
+    "dmg": {
+      "title": "MemoKeep ${version}",
+      "window": {
+        "width": 540,
+        "height": 380
+      },
+      "contents": [
+        {
+          "x": 140,
+          "y": 190,
+          "type": "file"
+        },
+        {
+          "x": 400,
+          "y": 190,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    }
+  },
+  "allowScripts": {
+    "electron@38.8.6": true
+  },
+  "dependencies": {
+    "@mixmark-io/domino": "^2.2.0",
+    "choices.js": "^11.2.3",
+    "quill": "^2.0.3",
+    "ts-fsrs": "5.4.2",
+    "turndown": "^7.2.4"
+  },
+  "productName": "MemoKeep Community",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/coderbruis/memokeep.git"
+  }
+}

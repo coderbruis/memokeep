@@ -1,0 +1,30 @@
+.note-find-bar {
+  position: fixed;
+  z-index: 180;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  max-width: calc(100vw - 24px);
+  padding: 7px 8px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--canvas);
+  color: var(--ink);
+  box-shadow: 0 6px 24px rgb(25 40 65 / 14%);
+  -webkit-app-region: no-drag;
+}
+.note-find-bar[hidden] { display: none; }
+.note-find-bar svg { width: 16px; height: 16px; flex-shrink: 0; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.note-find-icon { margin-inline: 3px; color: var(--muted); }
+.note-find-bar #noteFindInput { flex: 1; min-width: 40px; width: 100%; height: 32px; margin: 0; padding: 4px 6px; border: 1px solid transparent; border-radius: 4px; background: transparent; color: var(--ink); box-shadow: none; font: inherit; font-size: 13px; }
+.note-find-bar #noteFindInput::placeholder { color: var(--muted); }
+.note-find-bar #noteFindCount { flex-shrink: 0; min-width: 34px; padding-inline: 4px; color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.note-find-bar.has-no-results #noteFindCount { color: var(--ink); }
+.note-find-bar button { display: grid; place-items: center; flex: 0 0 30px; min-width: 30px; width: 30px; height: 32px; padding: 0; border: 0; border-radius: 5px; background: transparent; color: var(--ink); }
+.note-find-bar button:hover:not(:disabled) { background: var(--hover); }
+.note-find-bar button:disabled { opacity: .35; cursor: default; }
+.note-find-bar :is(button, #noteFindInput):focus-visible { outline: 2px solid var(--blue); outline-offset: -2px; }
+::highlight(note-find-matches) { background-color: #f9e6a0; color: #392c12; }
+::highlight(note-find-active) { background-color: #edb858; color: #2c210d; }
+.note-find-text-mirror { position: fixed; top: 0; left: -100000px; visibility: hidden; pointer-events: none; margin: 0; border-style: solid; }
+@media (max-width: 500px) { .note-find-bar { gap: 2px; padding-inline: 5px; } .note-find-icon { display: none; } }

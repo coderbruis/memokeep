@@ -1,0 +1,11 @@
+node_modules/
+dist/
+build/speech/
+.DS_Store
+npm-debug.log*
+.env
+.env.*
+/yes
+/yes.pub
+*.p12
+*.pfx

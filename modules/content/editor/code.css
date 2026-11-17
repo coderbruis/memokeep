@@ -1,0 +1,32 @@
+/* Shared palette variables also style copied/saved blocks in note previews. */
+[data-code-theme] { --code-bg: #252a31; --code-fg: #edf1f7; --code-bar: #2d333c; --code-muted: #a4afbd; --code-line: #414955; --code-keyword: #73b7ff; --code-string: #8cdbb6; --code-number: #d9acff; }
+[data-code-theme="light"], [data-code-theme="auto"] { --code-bg: #f6f8fb; --code-fg: #29384a; --code-bar: #edf2f8; --code-muted: #687a91; --code-line: #d9e2ed; --code-keyword: #236aca; --code-string: #267b54; --code-number: #9256af; }
+[data-code-theme="warm"] { --code-bg: #f4f1eb; --code-fg: #484239; --code-bar: #ece7df; --code-muted: #7d7365; --code-line: #d9d1c5; --code-keyword: #326784; --code-string: #56723e; --code-number: #955b40; }
+html[data-appearance="dark"] [data-code-theme="auto"] { --code-bg: #252a31; --code-fg: #edf1f7; --code-bar: #2d333c; --code-muted: #a4afbd; --code-line: #414955; --code-keyword: #73b7ff; --code-string: #8cdbb6; --code-number: #d9acff; }
+.ql-code-block-container[data-code-theme] { --code-size: 14px; --code-leading: 1.6; --code-font: ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
+.ql-code-block-container[data-code-font="menlo"] { --code-font: Menlo, Monaco, ui-monospace, monospace; }
+.ql-code-block-container[data-code-font="consolas"] { --code-font: Consolas, "Liberation Mono", ui-monospace, monospace; }
+.ql-code-block-container[data-code-size="12"] { --code-size: 12px; } .ql-code-block-container[data-code-size="13"] { --code-size: 13px; } .ql-code-block-container[data-code-size="15"] { --code-size: 15px; } .ql-code-block-container[data-code-size="16"] { --code-size: 16px; } .ql-code-block-container[data-code-size="17"] { --code-size: 17px; } .ql-code-block-container[data-code-size="18"] { --code-size: 18px; } .ql-code-block-container[data-code-size="19"] { --code-size: 19px; } .ql-code-block-container[data-code-size="20"] { --code-size: 20px; }
+.ql-code-block-container[data-code-line-height="1.4"] { --code-leading: 1.4; } .ql-code-block-container[data-code-line-height="1.8"] { --code-leading: 1.8; } .ql-code-block-container[data-code-line-height="2"] { --code-leading: 2; }
+#noteRichEditor .ql-editor .ql-code-block-container[data-code-theme], .ql-code-block-container[data-code-theme] { position: relative; max-width: 100%; margin: 16px 0; border: 1px solid transparent; border-radius: 8px; padding: 48px 16px 16px; overflow-x: auto; background: var(--code-bg); color: var(--code-fg); font-family: var(--code-font); font-size: var(--code-size); line-height: var(--code-leading); counter-reset: note-code-line; }
+.ql-code-block-container[data-code-theme]::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 35px; border-bottom: 1px solid var(--code-line); background: var(--code-bar); pointer-events: none; }
+#noteRichEditor .ql-editor .ql-code-block-container[data-code-appearance="border"], .ql-code-block-container[data-code-appearance="border"] { border-color: var(--code-line); }
+#noteRichEditor .ql-editor .ql-code-block-container[data-code-appearance="raised"], .ql-code-block-container[data-code-appearance="raised"] { border-color: var(--code-line); box-shadow: 0 5px 15px rgb(26 42 62 / 12%); }
+.ql-code-block-container[data-code-theme] > .ql-code-block { position: relative; min-height: calc(var(--code-size) * var(--code-leading)); min-width: 100%; width: max-content; padding: 0; white-space: pre; overflow-wrap: normal; word-break: normal; font-family: inherit; font-size: inherit; line-height: inherit; }
+.ql-code-block-container[data-code-line-numbers="true"] > .ql-code-block { padding-left: 36px; counter-increment: note-code-line; }
+.ql-code-block-container[data-code-line-numbers="true"] > .ql-code-block::before { content: counter(note-code-line); position: absolute; left: 0; top: 0; width: 22px; text-align: right; color: var(--code-muted); font-size: .86em; user-select: none; }
+.ql-code-block-container[data-code-wrap="true"] > .ql-code-block { width: auto; white-space: pre-wrap; overflow-wrap: anywhere; }
+.ql-code-block-container[data-code-theme] > .ql-ui { display: none; }
+::highlight(note-code-keyword) { color: var(--code-keyword, #73b7ff); }
+::highlight(note-code-string) { color: var(--code-string, #8cdbb6); }
+::highlight(note-code-comment) { color: var(--code-muted, #a4afbd); }
+::highlight(note-code-number) { color: var(--code-number, #d9acff); }
+.note-diagram-toggle-host .note-diagram-toggle { top: 5px; height: 26px; font-size: 11px; }
+.note-diagram-toggle-host .note-diagram-edit { top: 5px; min-height: 26px; height: 26px; padding: 3px 9px; font-size: 11px; }
+#noteRichEditor .ql-editor .ql-code-block-container[data-code-collapsed="true"] { height: 36px; min-height: 36px; padding: 0; overflow: hidden; }
+#noteRichEditor .ql-editor .ql-code-block-container[data-code-collapsed="true"] > .ql-code-block { display: none; }
+/* Reading mode has no edit toolbar, so show the saved title and keep source readable. */
+.note-reading #noteRichEditor .ql-editor .ql-code-block-container[data-code-collapsed="true"] { height: auto; min-height: 0; padding: 48px 16px 16px; overflow-x: auto; }
+.note-reading #noteRichEditor .ql-editor .ql-code-block-container[data-code-collapsed="true"] > .ql-code-block { display: block; }
+.note-reading #noteRichEditor .ql-editor .ql-code-block-container[data-code-title]::before { content: attr(data-code-title); padding: 0 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--code-muted); font: 11px/35px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif; }
+.note-diagram-toggle-host .note-diagram-inline-preview { inset: 36px 0 0; padding-top: 8px; border-top-left-radius: 0; border-top-right-radius: 0; }

@@ -1,0 +1,67 @@
+/* 笔记里的制卡标记（design/prototype/note-card-marks-20261112.md）。 */
+:root { --ncm: #3e63dd; --ncm-bg: rgb(62 99 221 / 8%); --ncm-line: rgb(62 99 221 / 45%); --ncm-soft: #eaeefc; --ncm-warn: #b26a00; --ncm-warn-bg: rgb(242 196 107 / 18%); --ncm-warn-soft: #fff3dd; }
+html[data-appearance="dark"] { --ncm: #849dff; --ncm-bg: rgb(132 157 255 / 11%); --ncm-line: rgb(132 157 255 / 55%); --ncm-soft: #232c4a; --ncm-warn: #f2c46b; --ncm-warn-bg: rgb(242 196 107 / 14%); --ncm-warn-soft: #3a3120; }
+
+.note-card-marks-layer { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+.note-skim .note-card-marks-layer { display: none; }
+.note-card-mark { position: absolute; border-radius: 2px; background: var(--ncm-bg); box-shadow: inset 0 -1.5px 0 var(--ncm-line); pointer-events: none; transition: background .3s ease; }
+.note-card-mark.is-stale { background: var(--ncm-warn-bg); box-shadow: inset 0 -1.5px 0 var(--ncm-warn); }
+.note-card-mark.is-flash { background: color-mix(in srgb, var(--ncm) 30%, transparent); }
+.note-card-badge { position: absolute; display: inline-flex; align-items: center; gap: 3px; height: 22px; min-height: 0; margin: 0; padding: 0 6px; border: 0; border-radius: 11px; background: var(--ncm-soft); box-shadow: none; color: var(--ncm); font-size: 11.5px; font-weight: 700; line-height: 1; pointer-events: auto; cursor: pointer; transform: none; }
+.note-card-badge svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.note-card-badge:hover { background: color-mix(in srgb, var(--ncm) 18%, var(--ncm-soft)); }
+.note-card-badge:focus-visible { outline: 2px solid var(--ncm); outline-offset: 2px; }
+.note-card-badge.is-stale { background: var(--ncm-warn-soft); color: var(--ncm-warn); }
+
+/* 点小标：这一段的卡片 */
+.note-card-pop { position: absolute; z-index: 5; width: 340px; max-width: calc(100% - 16px); padding: 8px; border-radius: 12px; background: var(--canvas); box-shadow: 0 0 0 1px var(--line), 0 12px 32px rgb(20 24 32 / 16%); color: var(--ink); font-size: 13px; line-height: 1.5; pointer-events: auto; }
+.note-card-pop-head { display: flex; align-items: center; gap: 6px; margin: 0; padding: 2px 4px 6px 6px; color: var(--muted); font-size: 12px; font-weight: 600; }
+.note-card-pop-head span { flex: 1; }
+.note-card-pop-head button { width: 24px; height: 24px; min-height: 0; margin: 0; padding: 0; border: 0; border-radius: 6px; background: none; box-shadow: none; color: var(--muted); font-size: 16px; transform: none; }
+.note-card-pop-head button:hover { background: var(--hover); color: var(--ink); }
+.note-card-pop-warn { margin: 0 4px 6px; padding: 6px 8px; border-radius: 8px; background: var(--ncm-warn-soft); color: var(--ncm-warn); font-size: 12px; }
+.note-card-pop-item { display: grid; gap: 3px; padding: 8px 8px; border-radius: 9px; }
+.note-card-pop-item + .note-card-pop-item { border-top: 1px solid var(--line); border-radius: 0; }
+.note-card-pop-item b { font-size: 13.5px; font-weight: 600; }
+.note-card-pop-item .meta { display: flex; flex-wrap: wrap; gap: 4px 10px; color: var(--muted); font-size: 12px; }
+.note-card-pop-item .st { display: inline-flex; align-items: center; gap: 4px; font-weight: 600; }
+.note-card-pop-item .st::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.note-card-pop-item .st.due { color: #b26a00; } .note-card-pop-item .st.new { color: var(--ncm); } .note-card-pop-item .st.mastered { color: #2e8b57; }
+html[data-appearance="dark"] .note-card-pop-item .st.due { color: #f2c46b; } html[data-appearance="dark"] .note-card-pop-item .st.mastered { color: #6fcf97; }
+.note-card-pop-item .stale { color: var(--ncm-warn); font-weight: 600; }
+.note-card-pop-item .acts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.note-card-pop-item .acts button, .note-card-pop-foot button { height: 28px; min-height: 0; margin: 0; padding: 0 10px; border: 0; border-radius: 7px; background: var(--hover); box-shadow: none; color: var(--ink); font-size: 12.5px; font-weight: 500; transform: none; }
+.note-card-pop-item .acts button:hover, .note-card-pop-foot button:hover { background: color-mix(in srgb, var(--ink) 9%, var(--hover)); }
+.note-card-pop-item .acts button.ghost { background: none; color: var(--muted); }
+.note-card-pop-foot { margin: 4px 0 0; padding: 6px 8px 2px; border-top: 1px solid var(--line); }
+.note-card-pop-foot button { background: none; color: var(--ncm); font-weight: 600; padding: 0 4px; }
+
+/* 大纲：每节卡片数 */
+.note-outline-cards { display: inline-flex; flex: none; align-items: center; gap: 2px; margin-left: auto; padding-left: 6px; color: var(--ncm); font-size: 11px; font-weight: 600; }
+.note-outline-cards svg { width: 11px; height: 11px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* 划词浮层：已制过 N 张 + 确认 */
+.note-selection-card-warn { display: inline-flex; align-items: center; gap: 4px; height: 22px; margin: 0 2px 0 0; padding: 0 8px; border-radius: 11px; background: rgb(242 196 107 / 22%); color: #f2c46b; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.note-selection-card-warn[hidden] { display: none; }
+.note-selection-card-warn svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.note-selection-duplicate { position: fixed; inset: auto; width: min(360px, calc(100vw - 24px)); margin: 0; padding: 14px; border: 0; border-radius: 12px; background: var(--canvas); box-shadow: 0 0 0 1px var(--line), 0 12px 32px rgb(20 24 32 / 18%); color: var(--ink); }
+.note-selection-duplicate h4 { margin: 0 0 4px; font-size: 14px; }
+.note-selection-duplicate p { margin: 0 0 8px; color: var(--muted); font-size: 12.5px; }
+.note-selection-duplicate .q { margin: 0 0 6px; padding: 7px 10px; border-radius: 8px; background: var(--hover); font-size: 13px; }
+.note-selection-duplicate .row { display: flex; justify-content: flex-end; gap: 8px; margin-top: 10px; }
+.note-selection-duplicate .row button { height: 32px; min-height: 0; margin: 0; padding: 0 12px; border: 0; border-radius: 8px; background: var(--hover); box-shadow: none; color: var(--ink); font-size: 13px; transform: none; }
+.note-selection-duplicate .row button.primary { background: var(--blue); color: #fff; font-weight: 600; }
+html[data-appearance="dark"] .note-selection-duplicate .row button.primary { color: #10162b; }
+
+/* 卡片详情：来自哪一段 */
+.card-detail-anchor { display: flex; align-items: center; gap: 8px; grid-column: 1 / -1; margin-top: 4px; padding: 9px 12px; border-radius: 10px; background: var(--hover); color: var(--muted); font-size: 12.5px; }
+.card-detail-anchor > span { flex: 1; min-width: 0; }
+.card-detail-anchor b { color: var(--ink); font-weight: 600; }
+.card-detail-anchor em { margin-left: 8px; color: var(--ncm-warn); font-style: normal; font-weight: 600; }
+.card-detail-anchor svg { width: 15px; height: 15px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.card-detail-anchor button { height: 28px; min-height: 0; padding: 0 10px; font-size: 12.5px; }
+.card-detail-anchor.is-missing { background: var(--ncm-warn-soft); color: var(--ncm-warn); }
+
+/* 「更多」里的开关 */
+#noteCardMarksToggle[aria-checked="true"]::after { content: "✓"; margin-left: auto; color: var(--blue); font-weight: 700; }
+@media (prefers-reduced-motion: reduce) { .note-card-mark { transition: none; } }

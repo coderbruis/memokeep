@@ -1,0 +1,129 @@
+/* Native dragging is provided only by .note-window-drag-space, outside controls. */
+#librariesView.has-note-tabs { --note-tabs-height: 48px; }
+.note-tabs-bar { position: sticky; top: 0; z-index: 150; display: flex; align-items: stretch; height: var(--note-tabs-height); min-width: 0; padding: 0 12px; background: #f5f6f8; box-shadow: inset 0 -1px #e1e5ea; -webkit-app-region: no-drag; }
+.note-tabs-bar[hidden] { display: none; }
+.note-tab-filename { display:inline-flex;align-items:baseline;min-width:0; }
+.note-tab-title { min-width:0;overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.note-tabs-bar svg { width: 15px; height: 15px; flex-shrink: 0; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.note-tab-close, .note-tab-add { display: grid; place-items: center; flex-shrink: 0; width: 22px; height: 22px; padding: 0; margin: 0 6px 0 0; border: 0; border-radius: 50%; background: transparent; color: #969aa1; cursor: pointer; transition: background-color .14s, color .14s, opacity .14s; -webkit-app-region: no-drag; }
+.note-tab-add { width: 28px; height: 28px; align-self: center; margin: 4px 8px 0; color: #7b8796; }
+.note-tab-add svg { width: 16px; height: 16px; }
+.note-tab-close:hover, .note-tab-add:hover { background: #e8eaed; color: #656b74; }
+.note-tab-close:active, .note-tab-add:active { background: #dfe2e6; color: #484e57; }
+.note-tabs-bar button:focus-visible { outline: 2px solid #7e9dbd; outline-offset: -2px; }
+.note-tabs-bar button:disabled { cursor: wait; }
+#librariesView.has-note-tabs .note-rich-toolbar, #librariesView.has-note-tabs .clean-note-editor[data-editor-mode="card"] > .note-editor-toolbar { top: var(--note-tabs-height); }
+.note-tab-navigation, .note-tab-actions { display: flex; align-items: center; flex-shrink: 0; gap: 5px; -webkit-app-region: no-drag; }
+.note-tab-navigation:empty, .note-tab-actions:empty { display: none; }
+.note-tab-navigation { margin-right: 10px; padding-right: 10px; position: relative; }
+.note-tab-navigation::after { content: ''; position: absolute; right: 0; height: 18px; width: 1px; background: #dfe4ea; }
+.note-tabs-bar .note-back-button { min-width: 30px; width: 30px; height: 30px; padding: 0; }
+.note-tabs-bar .note-back-button span, .note-tab-actions .card-editor-only, .note-tab-actions .note-save-button span { display: none; }
+.note-tab-actions { margin-left: auto; padding-left: 12px; }
+.note-tab-actions .note-save-status { display: inline-flex; align-items: center; gap: 5px; min-width: 0; padding: 0 7px; color: #81909f; font-size: 11px; white-space: nowrap; }
+.note-tab-actions .note-save-status:not(.is-dirty)::before { content: '✓'; font-size: 14px; }
+.note-tab-actions .note-save-status.is-dirty { color: #8b795d; }
+.note-tab-actions :is(.note-save-button, .note-toolbar-icon-button) { display: grid; place-items: center; min-width: 30px; width: 30px; height: 30px; margin: 0; padding: 0; border: 0; border-radius: 6px; background: transparent; color: #657283; }
+.note-tab-actions :is(.note-save-button, .note-toolbar-icon-button) svg { width: 17px; height: 17px; }
+.note-tab-actions button:disabled { cursor: default; opacity: .4; }
+.note-tab-actions button:hover:not(:disabled), .note-tabs-bar .note-back-button:hover { background: #e8ecf1; }
+.note-tab-actions .note-history-control { position: relative; }
+.note-tab-actions .note-history-menu { top: calc(100% + 8px); }
+#librariesView.has-note-tabs .clean-note-editor[data-editor-mode="note"] > .note-editor-toolbar { display: none; }
+#librariesView.has-note-tabs .note-rich-toolbar.ql-toolbar.ql-snow { background: #fff; border-bottom-color: #e5e9ee; box-shadow: none; padding-left: 18px; }
+#librariesView.has-note-tabs .note-rich-toolbar .ql-formats { position: relative; border-right: 0; }
+#librariesView.has-note-tabs .note-rich-toolbar .ql-formats:not(:last-child)::after { content: ''; position: absolute; right: 0; top: 6px; bottom: 6px; width: 1px; background: #e4e8ed; }
+.note-window .note-tab-navigation { display: none; }
+.note-tab-context-menu { position: fixed; inset: auto; margin: 0; min-width: 156px; padding: 5px; border: 1px solid #dfe4eb; border-radius: 9px; background: #fff; color: #394453; box-shadow: 0 6px 24px rgb(41 55 75 / 14%); -webkit-app-region: no-drag; }
+.note-tab-context-menu button { display: block; width: 100%; height: 32px; padding: 0 12px; border: 0; border-radius: 5px; background: transparent; color: inherit; font: inherit; font-size: 12px; font-weight: 450; text-align: left; cursor: pointer; }
+.note-tab-context-menu button:hover:not(:disabled), .note-tab-context-menu button:focus-visible { background: #edf2f8; outline: none; color: #2d5683; }
+.note-tab-context-menu button:disabled { color: #aab2bc; cursor: default; }
+.note-window-mac .note-tabs-bar, #librariesView.card-editor-immersive:has(.card-editor-mac) .note-tabs-bar { padding-left: 96px; }
+@media (max-width: 600px) { .note-tabs-bar { padding-right: 6px; padding-left: 6px; } .note-tab-actions { padding-left: 0; gap: 1px; } .note-tab-actions .note-save-status { display: none; } .note-tab-navigation { padding-right: 4px; margin-right: 4px; } .note-tab-add { margin-inline: 3px; } }
+@media (prefers-reduced-motion: reduce) { #noteTabsBar .note-tab, #noteTabsBar .note-tab::before, .note-tab-close, .note-tab-add { transition: none; } }
+
+/* 标签：当前标签和编辑区同色、连成一片，两个下角用圆弧过渡；其他标签只有文字。
+   原型 design/prototype/note-tabs-no-save-block-20261113.html。 */
+#noteTabsBar { --note-tab-surface: var(--canvas); --note-tab-corner: 10px; --note-tab-faint: #8a92a0; --note-tab-unsaved: #b26a00; }
+html[data-appearance="dark"] #noteTabsBar { --note-tab-faint: #737b89; --note-tab-unsaved: #f2c46b; }
+#noteTabsBar .note-tab-list { display: flex; flex: 0 1 auto; align-items: flex-end; min-width: 0; padding: 10px var(--note-tab-corner) 0; overflow-x: auto; scrollbar-width: none; -webkit-app-region: no-drag; }
+#noteTabsBar .note-tab-list::-webkit-scrollbar { display: none; }
+#noteTabsBar .note-tab { position: relative; display: flex; flex: 0 1 auto; align-items: center; min-width: 96px; max-width: 220px; height: 38px; margin: 0; border: 0; border-radius: var(--note-tab-corner) var(--note-tab-corner) 0 0; background: transparent; box-shadow: none; color: var(--muted); transition: color .14s; }
+#noteTabsBar .note-tab > * { position: relative; z-index: 1; }
+#noteTabsBar .note-tab::before, #noteTabsBar .note-tab::after { content: ''; position: absolute; pointer-events: none; }
+/* 其他标签：鼠标移上去才有浅灰底；标签之间一条细竖线，当前标签两侧不画 */
+#noteTabsBar .note-tab:not(.is-active)::before { inset: 4px 2px 5px; border-radius: 7px; transition: background-color .14s; }
+#noteTabsBar .note-tab:not(.is-active):hover { color: var(--ink); }
+#noteTabsBar .note-tab:not(.is-active):hover::before { background: var(--hover); }
+#noteTabsBar .note-tab:not(.is-active)::after { left: -.5px; top: 50%; width: 1px; height: 14px; margin-top: -7px; background: var(--line); }
+#noteTabsBar .note-tab:first-child:not(.is-active)::after, #noteTabsBar .note-tab.is-active + .note-tab::after { content: none; }
+/* 当前标签：一圈细线从编辑区的边线接上来，沿左边、顶上、右边绕一圈，再顺着外弧接回编辑区顶线。 */
+#noteTabsBar .note-tab.is-active { z-index: 2; height: 39px; margin-bottom: -1px; border: 1px solid var(--line); border-bottom: 0; background: var(--note-tab-surface); color: var(--ink); }
+#noteTabsBar .note-tab.is-active::before, #noteTabsBar .note-tab.is-active::after { bottom: 0; width: var(--note-tab-corner); height: var(--note-tab-corner); }
+#noteTabsBar .note-tab.is-active::before { left: calc(-1 * var(--note-tab-corner)); background: radial-gradient(circle at 0 0, transparent calc(var(--note-tab-corner) - 1.25px), var(--line) calc(var(--note-tab-corner) - .75px), var(--line) calc(var(--note-tab-corner) - .25px), var(--note-tab-surface) calc(var(--note-tab-corner) + .25px)); }
+#noteTabsBar .note-tab.is-active::after { right: calc(-1 * var(--note-tab-corner)); background: radial-gradient(circle at 100% 0, transparent calc(var(--note-tab-corner) - 1.25px), var(--line) calc(var(--note-tab-corner) - .75px), var(--line) calc(var(--note-tab-corner) - .25px), var(--note-tab-surface) calc(var(--note-tab-corner) + .25px)); }
+#noteTabsBar .note-tab-select { display: flex; align-items: center; flex: 1; gap: 0; min-width: 0; height: 100%; padding: 0 2px 0 12px; border: 0; border-radius: 8px 8px 0 0; background: transparent; color: inherit; font-size: 13px; font-weight: 400; text-align: left; cursor: pointer; }
+#noteTabsBar .note-tab.is-active .note-tab-select { font-weight: 600; }
+#noteTabsBar .note-tab-dirty { flex: none; width: 6px; height: 6px; margin-right: 7px; border-radius: 50%; background: var(--note-tab-faint); }
+#noteTabsBar .note-tab.is-active .note-tab-dirty { background: var(--note-tab-unsaved); }
+#noteTabsBar .note-tab .note-tab-dirty.is-save-error { background: var(--danger, #c2362b); }
+#noteTabsBar .note-tab-add { align-self: flex-end; width: 30px; height: 30px; margin: 0 0 4px 6px; border-radius: 7px; }
+#noteTabsBar .note-tab-close { width: 24px; height: 24px; margin: 0 4px 0 2px; border-radius: 6px; color: var(--muted); opacity: 0; }
+#noteTabsBar .note-tab-close svg { width: 13px; height: 13px; stroke-width: 1.7; }
+#noteTabsBar .note-tab:is(.is-active, :hover, :focus-within) .note-tab-close { opacity: 1; }
+#noteTabsBar .note-tab-close:hover { background: var(--hover); color: var(--ink); }
+#noteTabsBar .note-tab.is-active .note-tab-close:hover { background: color-mix(in srgb, var(--ink) 8%, transparent); }
+#noteTabsBar .note-tab.is-tab-drop-target { box-shadow: inset 3px 0 var(--blue); }
+#noteTabsBar .note-tab.is-tab-drop-after { box-shadow: inset -3px 0 var(--blue); }
+/* 窄窗口下工具栏原来是侧栏的灰底，当前标签接不上；统一成和宽窗口一样的编辑区底色 */
+html #librariesView.has-note-tabs #noteRichToolbar.ql-toolbar.ql-snow { background: var(--canvas); }
+/* 护眼模式：工具栏是 #eeeadd，标签栏压深一点，当前标签才接得上 */
+#librariesView.note-eye-mode .note-tabs-bar { --note-tab-surface: #eeeadd; background: #e5e1d2 !important; }
+@media (max-width: 600px) { #noteTabsBar .note-tab { min-width: 84px; max-width: 170px; } #noteTabsBar .note-tab-close { opacity: 1; } }
+
+.note-window-drag-space { position: fixed; z-index: 151; -webkit-app-region: drag; user-select: none; }
+.note-window-drag-space[hidden] { display: none; }
+
+.note-tab[draggable=true]{cursor:grab}.note-tab[draggable=true]:active{cursor:grabbing}
+
+/* 顶部标题行：离开笔记后仍能看到已打开的标签，点一下回去。 */
+/* 页面自己是选中的标签（workspace-design.css 的 .workspace-titlebar），笔记标签排在它后面、都不选中：只有文字，上次编辑的那篇字色深一点并带「上次编辑」标记。
+   原型 design/prototype/titlebar-open-notes-20261116.html（方案 A）。 */
+.workspace-open-tabs { --note-tab-corner: 10px; --note-tab-unsaved: #b26a00; display: flex; flex: 1 1 auto; align-items: flex-end; align-self: stretch; min-width: 0; padding-right: 12px; }
+html[data-appearance="dark"] .workspace-open-tabs { --note-tab-unsaved: #f2c46b; }
+.workspace-open-tabs[hidden] { display: none; }
+.workspace-open-tabs-list { display: flex; align-items: flex-end; min-width: 0; padding: 0 2px 0 var(--note-tab-corner); overflow-x: auto; scrollbar-width: none; }
+.workspace-open-tabs-list::-webkit-scrollbar { display: none; }
+.workspace-open-tab { position: relative; display: flex; flex: 0 1 auto; align-items: center; min-width: 96px; max-width: 220px; height: 38px; color: var(--muted); -webkit-app-region: no-drag; transition: color .14s; }
+.workspace-open-tab > * { position: relative; z-index: 1; }
+.workspace-open-tab::before, .workspace-open-tab::after { content: ''; position: absolute; pointer-events: none; }
+.workspace-open-tab::before { inset: 4px 2px 5px; border-radius: 7px; transition: background-color .14s; }
+.workspace-open-tab:is(:hover, :focus-within), .workspace-open-tab.is-recent { color: var(--ink); }
+.workspace-open-tab:is(:hover, :focus-within)::before { background: var(--hover); }
+.workspace-open-tab::after { left: -.5px; top: 50%; width: 1px; height: 14px; margin-top: -7px; background: var(--line); }
+.workspace-open-tab:first-child::after { content: none; }
+.workspace-open-tab > button { display: flex; align-items: center; flex: 1; gap: 0; min-width: 0; height: 100%; min-height: 0; margin: 0; padding: 0 2px 0 12px; border: 0; border-radius: 7px; background: none; box-shadow: none; color: inherit; font-size: 13px; font-weight: 400; text-align: left; transform: none; cursor: pointer; }
+.workspace-open-tab > button > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.workspace-open-tab > [data-open-tab] > svg { display: none; }
+.workspace-open-tab.is-recent > [data-open-tab]::after { content: '上次编辑'; flex: none; margin-left: 8px; padding: 0 5px; border-radius: 4px; background: color-mix(in srgb, var(--ink) 7%, transparent); color: var(--muted); font-size: 11px; line-height: 17px; }
+.workspace-open-tab .note-tab-dirty { order: -1; flex: none; width: 6px; height: 6px; margin-right: 7px; border-radius: 50%; background: var(--note-tab-unsaved); }
+.workspace-open-tab > .workspace-open-tab-close { display: grid; place-items: center; flex: none; width: 24px; height: 24px; margin: 0 4px 0 2px; padding: 0; border-radius: 6px; color: var(--muted); opacity: 0; transition: background-color .14s, color .14s, opacity .14s; }
+.workspace-open-tab-close svg, .workspace-open-tab-add svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.workspace-open-tab:is(:hover, :focus-within) .workspace-open-tab-close { opacity: 1; }
+.workspace-open-tab-close:hover { background: color-mix(in srgb, var(--ink) 10%, transparent); color: var(--ink); }
+.workspace-open-tabs .workspace-open-tab-add { display: grid; place-items: center; flex: none; width: 30px; height: 30px; min-height: 0; margin: 0 0 4px 4px; padding: 0; border: 0; border-radius: 7px; background: transparent; box-shadow: none; color: var(--muted); transform: none; cursor: pointer; -webkit-app-region: no-drag; }
+.workspace-open-tab-add svg { width: 16px; height: 16px; }
+.workspace-open-tab-add:hover { background: var(--hover); color: var(--ink); }
+.workspace-open-tabs button:focus-visible { outline: 2px solid var(--blue); outline-offset: -3px; }
+@media (prefers-reduced-motion: reduce) { .workspace-open-tab, .workspace-open-tab::before, .workspace-open-tab-close { transition: none; } }
+/* 侧栏展开时，返回按钮留在侧栏上方，标签从编辑区左边开始：第一个标签的左边和编辑区左边对齐成一条直线。
+   它是当前标签时不画左下外弧，编辑区左上角补成直角；切到别的标签时编辑区恢复圆角。
+   原型 design/prototype/note-tabs-first-corner-20261113.html（方案 A）。拖动侧栏时 sidebar-layout.js 在标签栏上临时覆盖 --workspace-sidebar-width。 */
+@media (min-width: 681px) {
+  html:not(.note-window) .shell:not(.sidebar-collapsed):not(:has(.card-editor-immersive:not(.hidden))) #noteTabsBar { --note-tab-edge: max(40px, calc(var(--workspace-sidebar-width) - var(--window-controls-width))); }
+  html:not(.note-window) .shell:not(.sidebar-collapsed):not(:has(.card-editor-immersive:not(.hidden))) #noteTabsBar .note-tab-navigation:not(:empty) { box-sizing: border-box; flex: none; width: var(--note-tab-edge); margin-right: 0; padding-right: 0; }
+  html:not(.note-window) .shell:not(.sidebar-collapsed):not(:has(.card-editor-immersive:not(.hidden))) #noteTabsBar .note-tab-navigation:not(:empty)::after { content: none; }
+  html:not(.note-window) .shell:not(.sidebar-collapsed):not(:has(.card-editor-immersive:not(.hidden))) #noteTabsBar .note-tab-navigation:not(:empty) + .note-tab-list { padding-left: 0; }
+  html:not(.note-window) .shell:not(.sidebar-collapsed):not(:has(.card-editor-immersive:not(.hidden))) #noteTabsBar .note-tab-navigation:not(:empty) + .note-tab-list > .note-tab.is-active:first-child::before { content: none; }
+  html:not(.note-window) .shell:not(.sidebar-collapsed):not(:has(.card-editor-immersive:not(.hidden))) #noteTabsBar:has(.note-tab-navigation:not(:empty) + .note-tab-list > .note-tab.is-active:first-child)::before { content: ''; position: absolute; top: 100%; left: calc(var(--workspace-sidebar-width) - var(--window-controls-width)); width: var(--workspace-content-radius); height: var(--workspace-content-radius); background: var(--note-tab-surface); box-shadow: inset 1px 0 var(--line); pointer-events: none; }
+}

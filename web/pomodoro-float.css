@@ -1,0 +1,84 @@
+/* 固定在桌面的番茄钟悬浮窗。窗口本身透明，内容四周留 8px 给阴影。 */
+:root {
+  color-scheme: light dark;
+  --surface: rgb(255 255 255 / 92%); --ink: #20232b; --muted: #626b79; --faint: #8a92a0; --line: rgb(32 35 43 / 10%);
+  --hover: rgb(32 35 43 / 7%); --tomato: #d9544a; --teal: #1f8a84; --track: rgb(32 35 43 / 9%); --on-primary: #fff;
+}
+/* 背景颜色（design/prototype/pomodoro-float-colors-20261116.html）：一种颜色 = 一整组变量。「默认」跟随系统深浅色，其余固定。 */
+:root[data-color="ink"] { --surface: rgb(30 33 41 / 94%); --ink: #e6e8ee; --muted: #9aa2b1; --faint: #737b89; --line: rgb(230 232 238 / 12%);
+  --hover: rgb(230 232 238 / 10%); --tomato: #f08a80; --teal: #6fd0c8; --track: rgb(230 232 238 / 13%); --on-primary: #1e2129; }
+:root[data-color="tomato"] { --surface: rgb(196 66 56 / 96%); --ink: #fff; --muted: rgb(255 255 255 / 84%); --faint: rgb(255 255 255 / 60%); --line: rgb(255 255 255 / 18%);
+  --hover: rgb(255 255 255 / 16%); --tomato: #fff; --teal: #c9f3e6; --track: rgb(255 255 255 / 24%); --on-primary: #c44238; }
+:root[data-color="mint"] { --surface: rgb(224 243 236 / 95%); --ink: #14372f; --muted: #47695f; --faint: #7d9a91; --line: rgb(20 55 47 / 12%);
+  --hover: rgb(20 55 47 / 8%); --tomato: #c4473c; --teal: #14776d; --track: rgb(20 55 47 / 11%); }
+:root[data-color="sky"] { --surface: rgb(226 236 253 / 95%); --ink: #18274a; --muted: #4d5d85; --faint: #8492b5; --line: rgb(24 39 74 / 12%);
+  --hover: rgb(24 39 74 / 8%); --tomato: #c4473c; --teal: #2f57c9; --track: rgb(24 39 74 / 11%); }
+:root[data-color="apricot"] { --surface: rgb(251 237 216 / 95%); --ink: #402b15; --muted: #755c40; --faint: #a58d70; --line: rgb(64 43 21 / 13%);
+  --hover: rgb(64 43 21 / 8%); --tomato: #c4473c; --teal: #1c7d74; --track: rgb(64 43 21 / 11%); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-color]), :root[data-color="auto"] { --on-primary: #1e2129; --surface: rgb(30 33 41 / 92%); --ink: #e6e8ee; --muted: #9aa2b1; --faint: #737b89; --line: rgb(230 232 238 / 12%);
+    --hover: rgb(230 232 238 / 9%); --tomato: #f08a80; --teal: #6fd0c8; --track: rgb(230 232 238 / 12%); }
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: transparent; color: var(--ink); font: 13px/1.4 -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif; -webkit-font-smoothing: antialiased; user-select: none; }
+button { font: inherit; color: inherit; border: 0; background: none; padding: 0; cursor: pointer; }
+button:focus-visible { outline: 2px solid var(--tomato); outline-offset: 1px; }
+.i { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.float { position: absolute; inset: 8px; cursor: grab; touch-action: none; }
+.float.dragging { cursor: grabbing; }
+.float.dragging .shell { box-shadow: 0 0 0 1px var(--line), 0 10px 26px rgb(0 0 0 / 26%); }
+.float.idle .shell { opacity: .82; transition: opacity .15s ease; }
+.float.idle:hover .shell { opacity: 1; }
+.shell { width: 100%; height: 100%; color: var(--ink); background: var(--surface); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); box-shadow: 0 0 0 1px var(--line), 0 6px 18px rgb(0 0 0 / 18%); }
+.ib { display: grid; place-items: center; width: 30px; height: 30px; flex: none; border-radius: 50%; color: var(--muted); }
+.ib:hover { background: var(--hover); color: var(--ink); }
+.ib.pin { color: var(--tomato); }
+.ib.on { background: var(--hover); color: var(--ink); }
+/* 选背景颜色：胶囊里原地换成一排色块，卡片里换掉底部那一行；窗口大小不变。 */
+.sw { position: relative; width: 24px; height: 24px; flex: none; border-radius: 50%; background: var(--c); box-shadow: inset 0 0 0 1px rgb(0 0 0 / 14%); transition: transform .12s ease; }
+.sw:hover { transform: scale(1.1); }
+.sw[aria-checked="true"] { box-shadow: inset 0 0 0 1px rgb(0 0 0 / 14%), 0 0 0 2px var(--surface), 0 0 0 4px var(--ink); }
+.sw[data-color="auto"] { background: linear-gradient(135deg, #fff 50%, #1e2129 50%); }
+.swatches { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; }
+.swatches .name { margin-left: auto; font-size: 12px; color: var(--muted); white-space: nowrap; }
+.pill .swatches { margin-left: 5px; }
+.card .swatches { flex: none; margin-top: auto; padding: 9px 2px 1px; border-top: 1px solid var(--line); }
+.grip { width: 14px; height: 14px; flex: none; color: var(--faint); }
+.ring { position: relative; flex: none; }
+.ring svg { position: absolute; inset: 0; transform: rotate(-90deg); }
+.ring circle { fill: none; }
+.ring .bg { stroke: var(--track); }
+.ring .fg { stroke: var(--tomato); stroke-linecap: round; transition: stroke-dashoffset .5s linear; }
+.break .ring .fg { stroke: var(--teal); }
+.time { font-variant-numeric: tabular-nums; font-weight: 600; letter-spacing: -.3px; }
+
+/* 胶囊 */
+.pill { display: flex; align-items: center; gap: 7px; padding: 0 6px 0 8px; border-radius: 25px; }
+.pill .ring { width: 32px; height: 32px; }
+.pill .ring svg { width: 32px; height: 32px; }
+.pill .time { font-size: 17px; }
+.pill .label { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; color: var(--muted); }
+
+/* 卡片 */
+.card { display: flex; flex-direction: column; padding: 12px 14px 12px; border-radius: 18px; }
+.card.finished { box-shadow: 0 0 0 3px var(--tomato), 0 6px 18px rgb(0 0 0 / 18%); }
+.card .top { display: flex; align-items: center; gap: 4px; }
+.card .top .phase { flex: 1; min-width: 0; margin-left: 4px; font-size: 12px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.card .body { display: flex; align-items: center; gap: 14px; margin-top: 6px; }
+.card .ring { width: 88px; height: 88px; display: grid; place-items: center; }
+.card .ring svg { width: 88px; height: 88px; }
+.card .ring .time { position: relative; font-size: 21px; }
+.card .meta { min-width: 0; }
+.card .meta b { display: block; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.card .meta span { display: block; margin-top: 2px; font-size: 12px; color: var(--muted); }
+.card .acts { display: flex; gap: 6px; margin-top: 12px; }
+.card .acts button { flex: 1; height: 32px; border-radius: 8px; background: var(--hover); font-size: 12.5px; font-weight: 500; }
+.card .acts button:hover { background: color-mix(in srgb, var(--ink) 12%, transparent); }
+.card .acts button.primary { background: var(--tomato); color: var(--on-primary); }
+.card .foot { display: flex; justify-content: space-between; gap: 8px; margin-top: auto; padding-top: 8px; border-top: 1px solid var(--line); font-size: 11.5px; color: var(--muted); }
+.card .foot span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (prefers-reduced-motion: reduce) { .ring .fg, .float.idle .shell, .sw { transition: none; } }
+
+/* 按钮提示（悬浮窗不会激活应用，系统提示出不来，自己画） */
+.tip { position: fixed; z-index: 10; max-width: calc(100% - 8px); padding: 3px 8px; border-radius: 6px; background: var(--ink); color: var(--surface); font-size: 12px; font-weight: 500; line-height: 18px; white-space: nowrap; pointer-events: none; box-shadow: 0 2px 8px rgb(0 0 0 / 18%); }
+.tip[hidden] { display: none; }

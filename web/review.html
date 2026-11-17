@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="zh-CN" class="review-window">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MemoKeep</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon.png">
+  <link rel="stylesheet" href="review.css">
+  <link rel="stylesheet" href="review-presentation.css">
+  <link rel="stylesheet" href="review-outcome.css">
+  <link rel="stylesheet" href="product-design.css">
+  <link rel="stylesheet" href="card-formats-editor.css">
+  <link rel="stylesheet" href="typography.css">
+  <script src="appearance.js"></script>
+</head>
+<body>
+  <svg class="review-icon-sprite" aria-hidden="true">
+    <symbol id="review-icon-layers" viewBox="0 0 24 24">
+      <path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"/><path d="m22 12.5-9.17 4.17a2 2 0 0 1-1.66 0L2 12.5"/><path d="m22 17.5-9.17 4.17a2 2 0 0 1-1.66 0L2 17.5"/>
+    </symbol>
+    <symbol id="review-icon-help" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="9"/><path d="M9.1 9a3 3 0 1 1 5.8 1c-.8 1-2.9 1.4-2.9 3"/><path d="M12 17h.01"/>
+    </symbol>
+    <symbol id="review-icon-eye" viewBox="0 0 24 24">
+      <path d="M2.1 12.3a1 1 0 0 1 0-.6 10.7 10.7 0 0 1 19.8 0 1 1 0 0 1 0 .6 10.7 10.7 0 0 1-19.8 0"/><circle cx="12" cy="12" r="3"/>
+    </symbol>
+    <symbol id="review-icon-clock" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>
+    </symbol>
+    <symbol id="review-icon-rotate" viewBox="0 0 24 24">
+      <path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/>
+    </symbol>
+    <symbol id="review-icon-alert" viewBox="0 0 24 24">
+      <path d="m21.73 18-8-14a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/>
+    </symbol>
+    <symbol id="review-icon-check" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="9"/><path d="m9 12 2 2 4-4"/>
+    </symbol>
+    <symbol id="review-icon-sparkles" viewBox="0 0 24 24">
+      <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/><path d="M5 3v4"/><path d="M3 5h4"/><path d="M19 17v4"/><path d="M17 19h4"/>
+    </symbol>
+    <symbol id="review-icon-book" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2"/></symbol>
+    <symbol id="review-icon-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+    <symbol id="review-icon-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+  </svg>
+  <main class="review-shell">
+    <div class="review-primary">
+    <header class="review-head">
+      <div class="review-title">
+        <strong>今日复习</strong>
+        <span id="reviewProgress" class="review-progress">快速复习</span>
+      </div>
+      <button id="closeReview" class="close-button" type="button" aria-label="关闭复习"></button>
+    </header>
+    <div class="review-progress-track" aria-hidden="true"><span id="reviewProgressBar"></span></div>
+
+    <section id="reviewCard" class="review-card">
+      <div class="review-content">
+        <button id="previousReviewCard" class="review-navigation previous" type="button" aria-label="前一个" title="前一个"><svg aria-hidden="true"><use href="#review-icon-left"></use></svg></button>
+        <button id="nextReviewCard" class="review-navigation next" type="button" aria-label="后一个" title="后一个"><svg aria-hidden="true"><use href="#review-icon-right"></use></svg></button>
+        <div class="review-reading-area">
+          <p class="review-label">试着回忆</p>
+          <div class="review-question-row">
+            <h1 id="reviewQuestion"></h1>
+            <span id="reviewAnswerPreview" class="review-answer-preview hidden">?</span>
+          </div>
+          <p id="reviewSource" class="review-source"></p>
+          <div id="answerArea" class="answer-area hidden">
+            <span>参考答案</span>
+            <div id="reviewAnswer"></div>
+          </div>
+        </div>
+        <button id="revealAnswer" class="primary-action" type="button"><span>显示答案</span><kbd>Space</kbd></button>
+        <div id="ratingActions" class="rating-actions hidden">
+          <button type="button" class="rating-option later" data-defer="later"><svg aria-hidden="true"><use href="#review-icon-clock"></use></svg><span>稍后</span><small>1 小时后</small></button>
+          <button type="button" class="rating-option again" data-rating="again"><svg aria-hidden="true"><use href="#review-icon-rotate"></use></svg><span>忘记</span><small>10 分钟后</small></button>
+          <button type="button" class="rating-option hard" data-rating="hard"><svg aria-hidden="true"><use href="#review-icon-alert"></use></svg><span>有点难</span><small>1 天后</small></button>
+          <button type="button" class="rating-option good" data-rating="good"><svg aria-hidden="true"><use href="#review-icon-check"></use></svg><span>记住</span><small>3 天后</small></button>
+          <button type="button" class="rating-option easy" data-rating="easy"><svg aria-hidden="true"><use href="#review-icon-sparkles"></use></svg><span>很简单</span><small>7 天后</small></button>
+        </div>
+        <button id="reviewContinue" type="button" class="primary-action review-continue hidden">下一张 →</button>
+        <footer class="review-footer"><button id="openReviewSource" class="source-button hidden" type="button"><svg aria-hidden="true"><use href="#review-icon-book"></use></svg><span>查看来源笔记</span></button><span>Space 显示答案 · 1–4 评分 · L 稍后</span></footer>
+      </div>
+    </section>
+
+    <section id="reviewEmpty" class="review-outcome hidden"></section>
+    </div>
+    <aside id="reviewSourceDrawer" class="source-drawer hidden" aria-label="来源笔记预览">
+      <header class="source-drawer-head"><div><span>来源笔记</span><strong id="reviewSourceTitle"></strong></div><button id="closeReviewSource" class="close-button" type="button" aria-label="关闭来源笔记"></button></header>
+      <article id="reviewSourceContent" class="source-content"></article>
+    </aside>
+  </main>
+  <script src="shortcut-settings.js"></script>
+  <script src="review-session.js"></script>
+  <script src="review-outcome.js"></script>
+  <script src="vendor/ts-fsrs/index.umd.js"></script>
+  <script src="fsrs-scheduler.js"></script>
+  <script src="domain/card-formats.js"></script>
+  <script src="domain/engagement.js"></script>
+  <script src="review-presentation.js"></script>
+  <script src="review.js"></script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+/* Compact memo composition, shared by Community and Pro. */
+#memoDialog { width: min(600px, 94vw); max-height: 92dvh; padding: 0; border: 1px solid var(--line); border-radius: 14px; background: var(--canvas); color: var(--ink); }
+#memoDialog [hidden] { display: none !important; }
+#memoDialog #memoForm { box-sizing: border-box; width: 100%; padding: 24px; }
+#memoDialog .memo-dialog-head { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+#memoDialog .memo-dialog-head h2 { flex: 1; margin: 0; font-size: 18px; font-weight: 600; }
+#memoDialog .memo-dialog-head button { min-height: 30px; padding: 4px 9px; border: 1px solid var(--line); border-radius: 7px; background: var(--sidebar); color: var(--muted); }
+#memoDialog .memo-dialog-head .icon-btn { font-size: 20px; background: transparent; border-color: transparent; }
+#memoDialog #memoTitle { box-sizing: border-box; width: 100%; margin: 0; padding: 10px 12px; border: 1px solid var(--line); border-radius: 7px; font-family: inherit; font-size: 18px; font-weight: 500; box-shadow: none; }
+#memoDialog .memo-content-field { margin: 12px 0 16px; }
+#memoDialog .memo-rich-editor-shell { border-color: var(--line); border-radius: 8px; background: var(--canvas); }
+#memoDialog .memo-rich-editor-shell:focus-within { border-color: var(--muted); box-shadow: none; }
+#memoDialog #memoContentEditor .ql-editor { min-height: 180px; max-height: min(320px, 38dvh); padding: 12px; font-size: 14px; line-height: 1.7; color: var(--ink); }
+#memoDialog .memo-rich-toolbar { background: var(--sidebar); border-bottom-color: var(--line); flex-wrap: wrap; }
+#memoDialog .memo-editor-actions { display: flex; align-items: center; justify-content: space-between; padding: 4px 10px 8px; }
+#memoDialog .memo-editor-actions button { display: inline-flex; align-items: center; gap: 6px; padding: 4px; border: 0; background: transparent; color: var(--muted); font-size: 12px; font-weight: 400; }
+#memoDialog .memo-editor-actions svg, #memoDialog .memo-compose-meta > svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.6; flex-shrink: 0; }
+#memoDialog .memo-compose-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; min-height: 32px; font-size: 12px; color: var(--muted); }
+#memoDialog .memo-reminder-pill { display: inline-flex; align-items: center; border-radius: 7px; background: var(--sidebar); max-width: 100%; }
+#memoDialog .memo-reminder-pill button { display: inline-flex; align-items: center; gap: 8px; padding: 6px 8px; border: 0; background: transparent; color: var(--ink); font-size: 12px; font-weight: 400; }
+#memoDialog #memoClearTime { padding-left: 0; color: var(--muted); }
+#memoDialog #memoTagsButton { min-width: 0; max-width: 230px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; border: 0; background: transparent; padding: 6px 8px; color: var(--muted); font-size: 12px; font-weight: 400; }
+#memoDialog .dialog-actions { border-top: 1px solid var(--line); margin-top: 20px; padding-top: 14px; gap: 8px; }
+#memoDialog .dialog-actions button { min-height: 34px; padding: 7px 16px; font-size: 13px; border-radius: 7px; font-weight: 500; }
+#memoDialog .memo-save-button { background: var(--ink); border: 1px solid var(--ink); color: var(--canvas); }
+#memoDialog button:focus-visible, #memoDialog input:focus-visible { outline: 2px solid var(--muted); outline-offset: 2px; }
+#memoDialog .memo-compose-popover { position: fixed; inset: auto; margin: 0; box-sizing: border-box; padding: 9px; max-height: calc(100dvh - 24px); overflow-y: auto; border: 1px solid var(--line); border-radius: 9px; background: var(--canvas); color: var(--ink); box-shadow: 0 8px 28px #00000018; }
+#memoDialog .memo-compose-popover:popover-open { display: flex; flex-direction: column; gap: 5px; }
+#memoDialog .memo-compose-popover label { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin: 0; padding: 5px 4px; font-size: 13px; font-weight: 400; }
+#memoDialog .memo-compose-popover select { width: 125px; padding: 6px 8px; border-radius: 6px; font-size: 12px; }
+#memoDialog .memo-compose-popover > button { text-align: left; border: 0; background: transparent; color: var(--ink); padding: 8px 10px; border-radius: 6px; font: inherit; font-size: 13px; }
+#memoDialog .memo-compose-popover > button:hover { background: var(--selected); }
+#memoDialog #memoTimePopover [data-memo-preset="clear"] { border-top: 1px solid var(--line); border-radius: 0; margin-top: 3px; }
+#memoDialog #memoCustomTimeField { display: block; padding: 6px; }
+#memoDialog #memoRemindAt { margin-top: 6px; padding: 7px; font-size: 12px; }
+#memoDialog #memoTags { padding: 8px; font-size: 13px; }
+@media (max-width: 520px) { #memoDialog #memoForm { padding: 18px; } #memoDialog #memoTagsButton { max-width: 150px; } }
+
+/* One quiet reminder control with consistent vector strokes. */
+#memoDialog .memo-reminder-pill { background: transparent; border: 1px solid transparent; border-radius: 6px; }
+#memoDialog .memo-reminder-pill:hover, #memoDialog .memo-reminder-pill:has([aria-expanded="true"]) { background: var(--sidebar); }
+#memoDialog #memoTimeButton { gap: 7px; padding: 5px 7px; color: var(--muted); }
+#memoDialog #memoTimeButton svg { display: block; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+#memoDialog .memo-reminder-bell { width: 16px; height: 16px; stroke-width: 1.6; }
+#memoDialog .memo-reminder-chevron { width: 12px; height: 12px; stroke-width: 1.5; }
+#memoDialog #memoTimeButton:hover, #memoDialog #memoTimeButton[aria-expanded="true"] { color: var(--ink); }

@@ -1,0 +1,86 @@
+/* 等待和本轮完成（design/prototype/review-unified-20261109.md）：主窗口复习弹窗和快速复习窗口共用。 */
+:root { --rv-again: #c8433a; --rv-hard: #b26a00; --rv-good: #2b6cc4; --rv-easy: #2e8b57; }
+html[data-appearance="dark"] { --rv-again: #f08a80; --rv-hard: #f2c46b; --rv-good: #8db8f5; --rv-easy: #6fcf97; }
+#reviewResultDialog { width: min(760px, 94vw); max-height: 90vh; padding: 0; border: 0; border-radius: 16px; background: var(--canvas, #fff); }
+.ro { box-sizing: border-box; width: 100%; color: var(--ink, #20232b); background: var(--canvas, #fff); text-align: left; font-size: 14px; }
+#reviewEmpty.ro { display: block; height: calc(100% - 82px); margin: 0; padding: 0; border-radius: 0; overflow-y: auto; }
+.ro .hidden, .ro [hidden] { display: none !important; }
+.ro button { margin: 0; border: 0; background: transparent; color: inherit; font: inherit; cursor: pointer; }
+.ro button:disabled { opacity: .45; cursor: default; }
+.ro button:focus-visible { outline: 2px solid var(--blue, #3659d9); outline-offset: 2px; }
+.ro-head { display: flex; align-items: center; gap: 12px; height: 56px; padding: 0 14px 0 26px; }
+.ro-head strong { flex: 1; font-size: 14px; }
+.ro .ro-close { display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border-radius: 8px; color: var(--muted, #626b79); }
+.ro .ro-close:hover { background: var(--hover, #f1f3f7); color: var(--ink, #20232b); }
+.ro-close svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
+.ro h2 { margin: 0; color: var(--ink, #20232b); font-size: 20px; font-weight: 650; letter-spacing: -.01em; }
+.ro-copy { margin: 6px 0 0; color: var(--muted, #626b79); }
+.ro .ro-primary { display: inline-flex; align-items: center; justify-content: center; height: 38px; padding: 0 18px; border-radius: 9px; background: var(--blue, #3659d9); color: #fff; font-weight: 600; }
+.ro .ro-primary:hover:not(:disabled) { filter: brightness(1.06); }
+html[data-appearance="dark"] .ro .ro-primary { color: #10162b; }
+.ro .ro-secondary { height: 38px; padding: 0 16px; border-radius: 9px; box-shadow: inset 0 0 0 1px var(--line, #e3e6ec); color: var(--ink, #20232b); font-weight: 500; }
+.ro .ro-secondary:hover { background: var(--hover, #f1f3f7); }
+.ro .ro-text { height: 34px; padding: 0 10px; border-radius: 8px; color: var(--muted, #626b79); }
+.ro .ro-text:hover:not(:disabled) { background: var(--hover, #f1f3f7); color: var(--ink, #20232b); }
+.ro .ro-link { padding: 0 2px; color: var(--blue, #3659d9); font-size: inherit; font-weight: 500; }
+.ro .ro-link:hover:not(:disabled) { text-decoration: underline; }
+.ro-actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+.ro-actions.start { justify-content: flex-start; align-items: center; }
+.ro-kind { flex: none; display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 6px; background: color-mix(in srgb, var(--blue, #3659d9) 11%, transparent); color: var(--blue, #3659d9); font-size: 11.5px; font-weight: 600; }
+.ro-rating { flex: none; font-size: 12px; font-weight: 600; }
+.ro-rating.again { color: var(--rv-again); } .ro-rating.hard { color: var(--rv-hard); }
+.ro-hidden { display: none; }
+.ro-error { margin: 0; padding: 0 26px 16px; color: var(--rv-again); font-size: 13px; }
+.ro-error:empty { display: none; }
+
+/* 等待 */
+.ro-wait { max-width: 520px; margin: 0 auto; padding: 18px 26px 30px; text-align: center; }
+.ro-ring { position: relative; width: 116px; height: 116px; margin: 0 auto 18px; }
+.ro-ring svg { width: 116px; height: 116px; transform: rotate(-90deg); }
+.ro-ring circle { fill: none; stroke-width: 6; }
+.ro-ring-bg { stroke: var(--line, #e3e6ec); }
+.ro-ring-fg { stroke: var(--blue, #3659d9); stroke-linecap: round; transition: stroke-dashoffset .9s linear; }
+.ro-ring strong { position: absolute; inset: 0; display: grid; place-items: center; font-size: 24px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.ro-next { display: flex; align-items: center; gap: 10px; margin: 20px 0 0; padding: 12px 14px; border-radius: 12px; background: var(--hover, #f1f3f7); text-align: left; }
+.ro-next strong { flex: 1; min-width: 0; overflow: hidden; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.ro-foot { margin: 14px 0 0; color: var(--muted, #626b79); font-size: 12px; }
+.ro-foot:empty { display: none; }
+.ro-reminder { margin-top: 6px; color: var(--faint, var(--muted, #8a92a0)); }
+
+/* 本轮完成 */
+.ro-summary { padding: 6px 40px 30px; }
+.ro-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 22px 0 24px; }
+.ro-stats > div { display: grid; gap: 2px; padding-right: 14px; }
+.ro-stats > div + div { padding-left: 16px; border-left: 1px solid var(--line, #e3e6ec); }
+.ro-stats strong { font-size: 26px; font-weight: 650; line-height: 1.2; font-variant-numeric: tabular-nums; }
+.ro-stats span { color: var(--muted, #626b79); font-size: 12.5px; }
+.ro h3 { display: flex; align-items: baseline; gap: 8px; margin: 0 0 8px; color: var(--ink, #20232b); font-size: 13.5px; font-weight: 600; }
+.ro h3 small { color: var(--muted, #626b79); font-size: 12px; font-weight: 400; }
+.ro-bar { display: flex; gap: 2px; height: 10px; overflow: hidden; border-radius: 5px; background: var(--hover, #f1f3f7); }
+.ro-segment { display: block; min-width: 6px; }
+.ro-segment.again { background: var(--rv-again); } .ro-segment.hard { background: var(--rv-hard); } .ro-segment.good { background: var(--rv-good); } .ro-segment.easy { background: var(--rv-easy); }
+.ro-legend { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 8px 0 22px; color: var(--muted, #626b79); font-size: 12.5px; font-variant-numeric: tabular-nums; }
+.ro-legend-item { display: inline-flex; align-items: center; gap: 6px; }
+.ro-legend-item::before { content: ""; width: 8px; height: 8px; border-radius: 2px; background: currentColor; }
+.ro-legend-item.again::before { background: var(--rv-again); } .ro-legend-item.hard::before { background: var(--rv-hard); } .ro-legend-item.good::before { background: var(--rv-good); } .ro-legend-item.easy::before { background: var(--rv-easy); }
+.ro-weak { margin: 0 0 22px; padding: 0; list-style: none; border-radius: 12px; box-shadow: inset 0 0 0 1px var(--line, #e3e6ec); }
+.ro-weak li { display: flex; align-items: center; gap: 10px; min-height: 42px; padding: 6px 14px; font-size: 13.5px; }
+.ro-weak li + li { border-top: 1px solid var(--line, #e3e6ec); }
+.ro-q { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ro-upcoming { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 12px; background: var(--hover, #f1f3f7); color: var(--muted, #626b79); font-size: 13px; }
+.ro-upcoming svg { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; }
+.ro-upcoming p { flex: 1; margin: 0; }
+.ro-upcoming b { color: var(--ink, #20232b); font-weight: 600; }
+@media (max-width: 640px) {
+  .ro-summary { padding: 6px 20px 24px; }
+  .ro-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 0; }
+  .ro-stats > div:nth-child(3) { padding-left: 0; border-left: 0; }
+}
+@media (prefers-reduced-motion: reduce) { .ro-ring-fg { transition: none; } }
+/* 快速复习窗口的旧规则（product-design.css 里 html.review-window .review-outcome button）优先级更高，这里压回去。 */
+html .ro.review-outcome .ro-primary, html .ro.review-outcome .ro-primary:hover:not(:disabled) { background: var(--blue, #3659d9); color: #fff; }
+html[data-appearance="dark"] .ro.review-outcome .ro-primary { color: #10162b; }
+html .ro.review-outcome :is(.ro-secondary, .ro-close:hover) { color: var(--ink, #20232b); }
+html .ro.review-outcome .ro-link { color: var(--blue, #3659d9); }
+html .ro.review-outcome :is(.ro-text, .ro-close) { color: var(--muted, #626b79); }
+.ro-kind.point { background: var(--gist-bg, #f6f2e6); color: var(--gist-ink, #6b5418); box-shadow: inset 0 0 0 1px var(--gist-line, #e4d9b8); }
