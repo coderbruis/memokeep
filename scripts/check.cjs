@@ -6,7 +6,7 @@ function checkSource(root = path.resolve(__dirname, '..')) {
   let files = 0;
   function visit(directory) {
     for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
-      if (['.git', 'node_modules', 'vendor', 'dist'].includes(entry.name)) continue;
+      if (['.git', 'node_modules', 'vendor', 'dist', 'target'].includes(entry.name)) continue;
       const file = path.join(directory, entry.name);
       if (entry.isSymbolicLink()) throw new Error(`Unexpected source symlink: ${file}`);
       if (entry.isDirectory()) visit(file);

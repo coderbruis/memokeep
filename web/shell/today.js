@@ -120,7 +120,7 @@
       const tomorrowEnd = new Date(config.now()); tomorrowEnd.setHours(24 + 23, 59, 59, 999);
       const dueTomorrow = (data().cards || []).filter(card => card.status === 'active' && card.dueAt <= tomorrowEnd.getTime()).length;
       const planNames = m.plans.map(row => row.plan.name);
-      const facts = [[m.reviewsDone, '张卡片'], [m.planDone, '项任务'], [m.focus, '分钟专注'], [notes, '篇笔记']].filter(([value]) => value);
+      const facts = [[m.reviewsDone, '张卡片'], [m.planDone, '项任务'], [Pomo ? Pomo.roundMinutes(m.focus) : 0, '分钟专注'], [notes, '篇笔记']].filter(([value]) => value);
       host.innerHTML = `<span class="today-done-seal" aria-hidden="true">${icon('check')}</span><div><h2>今天全部完成</h2>
         <p>${m.plans.length ? `${m.plans.length > 1 ? '所有计划' : '计划'}都已打卡，` : ''}连续学习第 ${Math.max(1, learningStreak())} 天。</p>
         <div class="today-done-facts">${facts.map(([value, label]) => `<span><b>${value}</b>${label}</span>`).join('')}</div>
@@ -190,7 +190,7 @@
       // 已结束或还没开始的计划不作为默认专注对象。
       const usable = id => m.plans.some(row => row.plan.id === id);
       const lastPlan = (running ? timer.planId : null) || [timer?.planId, timer?.settings?.lastPlanId].find(usable) || m.plans[0]?.plan.id || null;
-      const sessions = Pomo ? (data().focusSessions || []).filter(session => Pomo.dayOf(session.startedAt || session.endedAt || '') === Pomo.dayOf(new Date(config.now()).toISOString())).length : 0;
+      const sessions = Pomo ? Pomo.completedCount(data().focusSessions || [], { day: Pomo.dayOf(new Date(config.now()).toISOString()) }) : 0;
       host.innerHTML = `<div class="today-block-head"><h2>${icon('timer')}专注</h2></div>
         <div class="today-focus${running ? ' running' : ''}">
           <div class="today-focus-top"><b>${Pomo ? e(Pomo.formatMinutes(m.focus)) : '0 分钟'}</b><small>${running ? `${timer.phase === 'break' ? '休息中' : '专注中'}${timer.planId && planName(timer.planId) ? ` · ${e(planName(timer.planId))}` : ''}` : `今天 · ${sessions} 个番茄`}</small></div>
@@ -212,7 +212,7 @@
         days.push({ label: offset ? '日一二三四五六'[day.getDay()] : '今', reviews, focus, score: reviews + focus / 5 });
       }
       const max = Math.max(1, ...days.map(day => day.score));
-      chart.innerHTML = days.map((day, index) => `<div class="${index === 6 ? 'today' : ''}" title="${day.reviews} 次回忆${day.focus ? ` · 专注 ${day.focus} 分钟` : ''}"><i style="--h:${Math.round(day.score / max * 100)}%"></i><small>${day.label}</small></div>`).join('');
+      chart.innerHTML = days.map((day, index) => `<div class="${index === 6 ? 'today' : ''}" title="${day.reviews} 次回忆${day.focus ? ` · 专注 ${Pomo.formatMinutes(day.focus)}` : ''}"><i style="--h:${Math.round(day.score / max * 100)}%"></i><small>${day.label}</small></div>`).join('');
       const active = days.filter(day => day.score).length, total = days.reduce((sum, day) => sum + day.reviews, 0);
       chart.setAttribute('aria-label', `最近七天共 ${total} 次回忆，${active} 天有学习`);
       config.$('#homeWeekSummary').textContent = `${total} 次回忆 · ${active} 天参与`;
@@ -220,10 +220,11 @@
       config.$('#homeStreak').innerHTML = streak ? `${icon('sparkles')}连续学习 <b>${streak} 天</b>` : '今天学一点，开始连续';
     }
 
+    let recentRequest = 0;
     function renderRecent() {
       const host = config.$('#homeRecentNotes');
       if (!host) return;
-      const docs = [...(data().documents || [])].sort((a, b) => new Date(b.updatedAt || b.importedAt || 0) - new Date(a.updatedAt || a.importedAt || 0)).slice(0, 3);
+      const fallback = () => [...(data().documents || [])].sort((a, b) => new Date(b.updatedAt || b.importedAt || 0) - new Date(a.updatedAt || a.importedAt || 0)).slice(0, 3);
       const when = value => {
         if (!value) return '';
         const time = new Date(value).getTime(), diff = config.now() - time, minute = 60_000;
@@ -233,7 +234,13 @@
         if (diff < 7 * 24 * 60 * minute) return `周${'日一二三四五六'[new Date(time).getDay()]}`;
         return `${new Date(time).getMonth() + 1} 月 ${new Date(time).getDate()} 日`;
       };
-      host.innerHTML = docs.map(doc => `<button class="home-recent-note" type="button" data-open-recent-note="${e(doc.id)}"><svg aria-hidden="true"><use href="#icon-file-text"></use></svg><span><strong>${e(doc.title || '未命名笔记')}</strong><small>${e(env.application.state.knowledge.libraryById(doc.knowledgeBaseId)?.name || '我的知识库')}</small></span><time>${e(when(doc.updatedAt || doc.importedAt))}</time></button>`).join('') || '<p class="hint">暂无笔记</p>';
+      const draw = docs => { host.innerHTML = docs.map(doc => `<button class="home-recent-note" type="button" data-open-recent-note="${e(doc.id)}"><svg aria-hidden="true"><use href="#icon-file-text"></use></svg><span><strong>${e(doc.title || '未命名笔记')}</strong><small>${e(env.application.state.knowledge.libraryById(doc.knowledgeBaseId)?.name || '我的知识库')}</small></span><time>${e(when(doc.updatedAt || doc.importedAt))}</time></button>`).join('') || '<p class="hint">暂无笔记</p>'; };
+      const storage = env.application.persistence?.storage, request = ++recentRequest;
+      if (storage?.listNoteSummaries) {
+        Promise.resolve(storage.listNoteSummaries('documents', 0, 3)).then(page => {
+          if (request === recentRequest) draw(page?.rows || fallback());
+        }).catch(() => { if (request === recentRequest) draw(fallback()); });
+      } else draw(fallback());
     }
 
     let autoReviewDay = '';

@@ -27,7 +27,6 @@ Quill 的依赖还包括 Parchment（BSD-3-Clause）、quill-delta（MIT）、fa
 | `choices.js` | 11.2.3 | MIT |
 | `quill` | 2.0.3 | BSD-3-Clause |
 | `ts-fsrs` | 5.4.2 | MIT |
-| `turndown` | 7.2.4 | MIT |
 
 安装后的各包目录中保留了原始 `LICENSE`、`NOTICE` 或同类文件。传递依赖的名称、版本及可用的许可证元数据见 `package-lock.json`；对应许可证全文以各包附带文件为准。
 
@@ -35,8 +34,8 @@ Quill 的依赖还包括 Parchment（BSD-3-Clause）、quill-delta（MIT）、fa
 
 | 组件 | 锁定版本 | 许可证 |
 | --- | --- | --- |
-| Electron | 38.8.6 | MIT；运行时还附带 Chromium、Node.js 及其他第三方声明 |
-| electron-builder | 26.15.3 | MIT |
+| Tauri | 2.12.7 | MIT 或 Apache-2.0 |
+| Wry | 0.57.3 | MIT 或 Apache-2.0 |
 | esbuild | 0.28.2 | MIT |
 
-分发桌面应用时，应保留 Electron 附带的 `LICENSE`、`LICENSES.chromium.html` 及 npm 运行时依赖中的许可文件。更新依赖或重新生成浏览器文件后，请同步更新本声明和相应原始许可证。
+Rust 依赖版本见 `Cargo.lock`，npm 依赖版本见相应锁文件。分发应用及重新生成浏览器文件时，保留各依赖所要求的许可证和版权声明。

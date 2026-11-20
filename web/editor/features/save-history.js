@@ -10,7 +10,10 @@
       // attributes before MutationObserver's callback or Quill's next update.
       if (session.richContentObserver?.takeRecords().length) session.serializedRichNote = null;
       if (session.serializedRichNote !== null) return session.serializedRichNote;
-      const content = session.richEditor.root.cloneNode(true);
+      // Inert serialization keeps original cover URLs without starting browser network requests.
+      const template = session.richEditor.root.ownerDocument?.createElement('template');
+      if (template) template.innerHTML = session.richEditor.root.outerHTML;
+      const content = template?.content.firstElementChild || session.richEditor.root.cloneNode(true);
       content.querySelectorAll('.ql-cursor').forEach(cursor => cursor.remove());
       env.serializeNoteLinkCards(content);
       content.querySelectorAll('.note-image-frame').forEach(frame => {

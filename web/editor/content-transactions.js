@@ -8,7 +8,7 @@
       const targetId = session.target?.id;
       const previousTarget = session.target;
       let target, previousRichImageIds;
-      await services.transact(data => {
+      await (services.transactNote || services.transact)(data => {
         const currentDocument = [...data.documents, ...data.cardDocuments].find(doc => doc.id === targetId);
         target = currentDocument || draft?.draftDocument && structuredClone(draft.draftDocument);
         if (targetId && !target) return false;

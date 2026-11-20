@@ -1,4 +1,4 @@
-// Bundle the pinned upstream browser build so packaged Electron and offline web use the same engine.
+// Bundle the pinned upstream browser build for the desktop and web clients.
 const fs = require('node:fs');
 const path = require('node:path');
 const root = path.resolve(__dirname, '..');

@@ -32,6 +32,19 @@
       state.editor.activeNoteEditorLibraryId = session.editorLibraryId;
       config.$('#inlineMarkdownNoteForm').dataset.editorToken = session.editorToken;
       config.$('#inlineMarkdownNoteForm').dataset.documentId = session.document?.id || 'new';
+      session.editorRoot = config.$('#inlineMarkdownNoteForm');
+      const setEditorInitializing = initializing => {
+        session.editorInitializing = initializing;
+        session.editorRoot.setAttribute('aria-busy', String(initializing));
+        // Leave the back/history toolbar available; all editable fields, tag
+        // pickers and formatting controls wait until the saved baseline exists.
+        for (const panel of session.editorRoot.children) {
+          if (!panel.classList.contains('note-editor-toolbar')) panel.inert = initializing;
+        }
+        config.$('#inlineMarkdownNoteTitle').disabled = initializing;
+        config.$('#inlineMarkdownNoteContent').disabled = initializing;
+      };
+      setEditorInitializing(true);
       session.canvas = config.$('.note-editor-canvas');
       session.editor = config.$('#inlineMarkdownNoteContent');
       session.commandMenu = config.$('#noteCommandMenu');
@@ -311,7 +324,7 @@
         services: { versionLimit: config.NOTE_VERSION_LIMIT, draft: id => env.noteDraftTab(id), documentById: id => actions.documentById(id),
           validateQuestions: actions.validateNotebookCardQuestions, imageIdsFromContent: env.application.domain.noteImageIdsFromContent,
           parseCards: env.application.domain.parseInlineCards, versionFromDocument: features.versionFromDocument, snapshotsMatch: features.snapshotsMatch, uid: () => config.uid(), normalizeTagIds: env.normalizeNoteTagIds,
-          syncInlineCards: actions.syncInlineCards, syncCardSources: (...args) => actions.syncCardSources?.(...args), transact: change => env.application.persistence.transact(change), deleteImages: actions.deleteUnreferencedNoteImageFiles, isCurrent: features.isCurrentEditor },
+          syncInlineCards: actions.syncInlineCards, syncCardSources: (...args) => actions.syncCardSources?.(...args), transact: change => env.application.persistence.transact(change), transactNote: change => env.application.persistence.transactNote(change), deleteImages: actions.deleteUnreferencedNoteImageFiles, isCurrent: features.isCurrentEditor },
         view: { notify: actions.showToast, refreshSaveState: features.refreshSaveState, renderVersionMenu: features.renderVersionMenu,
           renderSidebar: () => { actions.renderSidebarKnowledgeTree(); actions.refreshLearningTools?.(); }, renderCards: () => env.renderCardWorkspace(),
           setDocumentId: id => { config.$('#inlineMarkdownNoteForm').dataset.documentId = id; } }
@@ -736,6 +749,8 @@
         (session.editorMode === 'note' ? session.richWorkspace : session.canvas).classList.add('note-open-fade');
         session.latestSnapshot = features.captureSnapshot();
         session.savedSnapshot = { ...(env.noteDraftTab()?.draftBaseline || session.latestSnapshot) };
+        setEditorInitializing(false);
+        session.richEditor?.enable(!config.$('#librariesView').classList.contains('note-reading'));
         features.refreshSaveState();
         const tab = env.openNoteTabs.find(tab => tab.id === state.editor.editingMarkdownDocumentId);
         if (tab) env.requestAnimationFrame(() => { if (features.isCurrentEditor()) config.$('#librariesView').scrollTop = tab.scrollTop; });
@@ -743,7 +758,6 @@
         env.console.error('Failed to initialize note rich editor', error);
         if (features.isCurrentEditor()) actions.showToast(`富文本组件加载失败：${error.message}`, true);
       });
-      session.editorRoot = config.$('#inlineMarkdownNoteForm');
       session.disposeNoteScreenshot = env.window.MemoKeepScreenshot?.mount({
         platform: config.desktop,
         runtime: env.MemoKeepRuntime.createRuntime({ features: env.MemoKeepFeatures, platform: config.desktop || {}, hasEntitlement: id => actions.isPluginEnabled?.(id) ?? true }),
@@ -791,7 +805,7 @@
         setReading: reading => {
           session.editor.readOnly = reading;
           config.$('#inlineMarkdownNoteTitle').readOnly = reading;
-          session.richEditor?.enable(!reading);
+          session.richEditor?.enable(!reading && !session.editorInitializing);
           session.richEditorReady.then(() => { if(features.isCurrentEditor()) session.richEditor?.enable(!config.$('#librariesView').classList.contains('note-reading')); });
           features.closeCommandMenu(); features.closeContextMenu();
         }

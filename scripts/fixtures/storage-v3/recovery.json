@@ -1,0 +1,342 @@
+{
+  "version": 1,
+  "base": {
+    "library/notes/2d187fdd42c8bded008ee5fff515c067793d3e71c1570deba6473770cbf1e897/46cedbf2ec76be8c357eb61b82839904f284f9acb55efaf95e870c10fb7b22a0.json": "{\"id\":\"note-a\",\"knowledgeBaseId\":\"library-a\",\"title\":\"原始标题\",\"metadata\":{\"noteContent\":\"<p>原文😀</p>\",\"other\":null}}",
+    "library/notes/2d187fdd42c8bded008ee5fff515c067793d3e71c1570deba6473770cbf1e897/7bc0e981da80dd24ac2fdd99c807d18def36179261f7da398d8755b09060895d.json": "{\"id\":\"note-b\",\"knowledgeBaseId\":\"library-a\",\"title\":\"待删除\"}",
+    "cards/reviews/2026-10.jsonl": "{\"id\":\"review-a\",\"reviewedAt\":\"2026-10-31T23:59:59.999Z\"}\n",
+    "profile/extra.json": "{\"version\":2,\"futureField\":{\"value\":null,\"tags\":[\"保留\"]}}",
+    "library/knowledge-bases.json": "[{\"id\":\"library-a\",\"name\":\"测试知识库\"}]",
+    "memokeep.json": "{\"format\":\"memokeep-store\",\"version\":3,\"workspaceId\":\"workspace-demo\",\"generation\":0,\"lastCommitId\":null,\"collections\":{\"knowledgeBases\":{\"layout\":\"json\",\"path\":\"library/knowledge-bases.json\"},\"documents\":{\"layout\":\"rows\",\"order\":[[\"library/notes/2d187fdd42c8bded008ee5fff515c067793d3e71c1570deba6473770cbf1e897/7bc0e981da80dd24ac2fdd99c807d18def36179261f7da398d8755b09060895d.json\",0],[\"library/notes/2d187fdd42c8bded008ee5fff515c067793d3e71c1570deba6473770cbf1e897/46cedbf2ec76be8c357eb61b82839904f284f9acb55efaf95e870c10fb7b22a0.json\",0]]},\"reviewRecords\":{\"layout\":\"rows\",\"order\":[[\"cards/reviews/2026-10.jsonl\",0]]},\"extra\":{\"layout\":\"json\",\"path\":\"profile/extra.json\"}},\"files\":{\"library/notes/2d187fdd42c8bded008ee5fff515c067793d3e71c1570deba6473770cbf1e897/46cedbf2ec76be8c357eb61b82839904f284f9acb55efaf95e870c10fb7b22a0.json\":{\"generation\":0,\"size\":128,\"sha256\":\"b02eab64834c8a78519b32bbc8dd3698243cbb926d754c4aaac0843b6ac86bc1\",\"kind\":\"json\"},\"library/notes/2d187fdd42c8bded008ee5fff515c067793d3e71c1570deba6473770cbf1e897/7bc0e981da80dd24ac2fdd99c807d18def36179261f7da398d8755b09060895d.json\":{\"generation\":0,\"size\":65,\"sha256\":\"0586d72a6a2ccc3f3b727659918e523a81731f3763e9755c84b660422753f052\",\"kind\":\"json\"},\"cards/reviews/2026-10.jsonl\":{\"generation\":0,\"size\":58,\"sha256\":\"9db920ccc43a0925c0da131429e268024326ac43aeb2bc9bcc709412ffd20e15\",\"kind\":\"jsonl\"},\"profile/extra.json\":{\"generation\":0,\"size\":60,\"sha256\":\"6f1848201cec8a60eb9df1c7d2d670549ecde5c78cfd40c5f556fc54518b9389\",\"kind\":\"json\"},\"library/knowledge-bases.json\":{\"generation\":0,\"size\":45,\"sha256\":\"34038bb8d8f5c871b7e3701e8e0b4695498449c838e1d97667f4e3bedb46998e\",\"kind\":\"json\"}}}"
+  },
+  "target": {
+    "library/notes/2d187fdd42c8bded008ee5fff515c067793d3e71c1570deba6473770cbf1e897/46cedbf2ec76be8c357eb61b82839904f284f9acb55efaf95e870c10fb7b22a0.json": "{\"id\":\"note-a\",\"knowledgeBaseId\":\"library-a\",\"title\":\"更名后\",\"metadata\":{\"noteContent\":\"<p>新正文😀</p>\",\"other\":null}}",
+    "library/notes/2d187fdd42c8bded008ee5fff515c067793d3e71c1570deba6473770cbf1e897/f0ddee3e7dc3525447d1c8bf653fdf1249768d0b177078bd826069ed4308fb33.json": "{\"id\":\"note-c\",\"knowledgeBaseId\":\"library-a\",\"title\":\"新笔记\"}",
+    "cards/reviews/2026-10.jsonl": "{\"id\":\"review-a\",\"reviewedAt\":\"2026-10-31T23:59:59.999Z\"}\n",
+    "cards/reviews/2026-11.jsonl": "{\"id\":\"review-b\",\"reviewedAt\":\"2026-11-01T00:00:00.000Z\"}\n",
+    "profile/extra.json": "{\"version\":2,\"futureField\":{\"value\":null,\"tags\":[\"保留\"]}}",
+    "library/knowledge-bases.json": "[{\"id\":\"library-a\",\"name\":\"测试知识库\"}]",
+    "memokeep.json": "{\"format\":\"memokeep-store\",\"version\":3,\"workspaceId\":\"workspace-demo\",\"generation\":1,\"lastCommitId\":\"commit-1\",\"collections\":{\"knowledgeBases\":{\"layout\":\"json\",\"path\":\"library/knowledge-bases.json\"},\"documents\":{\"layout\":\"rows\",\"order\":[[\"library/notes/2d187fdd42c8bded008ee5fff515c067793d3e71c1570deba6473770cbf1e897/f0ddee3e7dc3525447d1c8bf653fdf1249768d0b177078bd826069ed4308fb33.json\",0],[\"library/notes/2d187fdd42c8bded008ee5fff515c067793d3e71c1570deba6473770cbf1e897/46cedbf2ec76be8c357eb61b82839904f284f9acb55efaf95e870c10fb7b22a0.json\",0]]},\"reviewRecords\":{\"layout\":\"rows\",\"order\":[[\"cards/reviews/2026-11.jsonl\",0],[\"cards/reviews/2026-10.jsonl\",0]]},\"extra\":{\"layout\":\"json\",\"path\":\"profile/extra.json\"}},\"files\":{\"library/notes/2d187fdd42c8bded008ee5fff515c067793d3e71c1570deba6473770cbf1e897/46cedbf2ec76be8c357eb61b82839904f284f9acb55efaf95e870c10fb7b22a0.json\":{\"generation\":1,\"size\":128,\"sha256\":\"4fb04765caa4891e0fe144fde42d3cc90c81ca4428e7343fb783623a0ccc8871\",\"kind\":\"json\"},\"library/notes/2d187fdd42c8bded008ee5fff515c067793d3e71c1570deba6473770cbf1e897/f0ddee3e7dc3525447d1c8bf653fdf1249768d0b177078bd826069ed4308fb33.json\":{\"generation\":1,\"size\":65,\"sha256\":\"ebe2577c7d705e2e975ff6f3e00be5b22c75560291331d8e4d419e1374810902\",\"kind\":\"json\"},\"cards/reviews/2026-10.jsonl\":{\"generation\":0,\"size\":58,\"sha256\":\"9db920ccc43a0925c0da131429e268024326ac43aeb2bc9bcc709412ffd20e15\",\"kind\":\"jsonl\"},\"cards/reviews/2026-11.jsonl\":{\"generation\":1,\"size\":58,\"sha256\":\"446841be400f69975d78f3a6d59d6ee2784790c09d17d12c7fb33856cdbc8b0e\",\"kind\":\"jsonl\"},\"profile/extra.json\":{\"generation\":0,\"size\":60,\"sha256\":\"6f1848201cec8a60eb9df1c7d2d670549ecde5c78cfd40c5f556fc54518b9389\",\"kind\":\"json\"},\"library/knowledge-bases.json\":{\"generation\":0,\"size\":45,\"sha256\":\"34038bb8d8f5c871b7e3701e8e0b4695498449c838e1d97667f4e3bedb46998e\",\"kind\":\"json\"}}}"
+  },
+  "journal": {
+    "manifest.json": "{\"format\":\"memokeep-commit\",\"version\":1,\"workspaceId\":\"workspace-demo\",\"commitId\":\"commit-1\",\"baseGeneration\":0,\"targetGeneration\":1,\"baseIndexSha256\":\"db6b2be570a8dc101d9b13e450d6fdae49c1846b6598696ab9ca4bdb6de853f2\",\"targetIndexSha256\":\"574bcc0643edbb67f0e4c9de94751cc86c83fef6f6ae424f63ed77a8010d2dfd\",\"changes\":[{\"path\":\"library/notes/2d187fdd42c8bded008ee5fff515c067793d3e71c1570deba6473770cbf1e897/46cedbf2ec76be8c357eb61b82839904f284f9acb55efaf95e870c10fb7b22a0.json\",\"before\":{\"generation\":0,\"size\":128,\"sha256\":\"b02eab64834c8a78519b32bbc8dd3698243cbb926d754c4aaac0843b6ac86bc1\",\"kind\":\"json\"},\"after\":{\"generation\":1,\"size\":128,\"sha256\":\"4fb04765caa4891e0fe144fde42d3cc90c81ca4428e7343fb783623a0ccc8871\",\"kind\":\"json\"}},{\"path\":\"library/notes/2d187fdd42c8bded008ee5fff515c067793d3e71c1570deba6473770cbf1e897/7bc0e981da80dd24ac2fdd99c807d18def36179261f7da398d8755b09060895d.json\",\"before\":{\"generation\":0,\"size\":65,\"sha256\":\"0586d72a6a2ccc3f3b727659918e523a81731f3763e9755c84b660422753f052\",\"kind\":\"json\"},\"after\":null},{\"path\":\"library/notes/2d187fdd42c8bded008ee5fff515c067793d3e71c1570deba6473770cbf1e897/f0ddee3e7dc3525447d1c8bf653fdf1249768d0b177078bd826069ed4308fb33.json\",\"before\":null,\"after\":{\"generation\":1,\"size\":65,\"sha256\":\"ebe2577c7d705e2e975ff6f3e00be5b22c75560291331d8e4d419e1374810902\",\"kind\":\"json\"}},{\"path\":\"cards/reviews/2026-11.jsonl\",\"before\":null,\"after\":{\"generation\":1,\"size\":58,\"sha256\":\"446841be400f69975d78f3a6d59d6ee2784790c09d17d12c7fb33856cdbc8b0e\",\"kind\":\"jsonl\"}}]}",
+    "base-index.json": "{\"format\":\"memokeep-store\",\"version\":3,\"workspaceId\":\"workspace-demo\",\"generation\":0,\"lastCommitId\":null,\"collections\":{\"knowledgeBases\":{\"layout\":\"json\",\"path\":\"library/knowledge-bases.json\"},\"documents\":{\"layout\":\"rows\",\"order\":[[\"library/notes/2d187fdd42c8bded008ee5fff515c067793d3e71c1570deba6473770cbf1e897/7bc0e981da80dd24ac2fdd99c807d18def36179261f7da398d8755b09060895d.json\",0],[\"library/notes/2d187fdd42c8bded008ee5fff515c067793d3e71c1570deba6473770cbf1e897/46cedbf2ec76be8c357eb61b82839904f284f9acb55efaf95e870c10fb7b22a0.json\",0]]},\"reviewRecords\":{\"layout\":\"rows\",\"order\":[[\"cards/reviews/2026-10.jsonl\",0]]},\"extra\":{\"layout\":\"json\",\"path\":\"profile/extra.json\"}},\"files\":{\"library/notes/2d187fdd42c8bded008ee5fff515c067793d3e71c1570deba6473770cbf1e897/46cedbf2ec76be8c357eb61b82839904f284f9acb55efaf95e870c10fb7b22a0.json\":{\"generation\":0,\"size\":128,\"sha256\":\"b02eab64834c8a78519b32bbc8dd3698243cbb926d754c4aaac0843b6ac86bc1\",\"kind\":\"json\"},\"library/notes/2d187fdd42c8bded008ee5fff515c067793d3e71c1570deba6473770cbf1e897/7bc0e981da80dd24ac2fdd99c807d18def36179261f7da398d8755b09060895d.json\":{\"generation\":0,\"size\":65,\"sha256\":\"0586d72a6a2ccc3f3b727659918e523a81731f3763e9755c84b660422753f052\",\"kind\":\"json\"},\"cards/reviews/2026-10.jsonl\":{\"generation\":0,\"size\":58,\"sha256\":\"9db920ccc43a0925c0da131429e268024326ac43aeb2bc9bcc709412ffd20e15\",\"kind\":\"jsonl\"},\"profile/extra.json\":{\"generation\":0,\"size\":60,\"sha256\":\"6f1848201cec8a60eb9df1c7d2d670549ecde5c78cfd40c5f556fc54518b9389\",\"kind\":\"json\"},\"library/knowledge-bases.json\":{\"generation\":0,\"size\":45,\"sha256\":\"34038bb8d8f5c871b7e3701e8e0b4695498449c838e1d97667f4e3bedb46998e\",\"kind\":\"json\"}}}",
+    "target-index.json": "{\"format\":\"memokeep-store\",\"version\":3,\"workspaceId\":\"workspace-demo\",\"generation\":1,\"lastCommitId\":\"commit-1\",\"collections\":{\"knowledgeBases\":{\"layout\":\"json\",\"path\":\"library/knowledge-bases.json\"},\"documents\":{\"layout\":\"rows\",\"order\":[[\"library/notes/2d187fdd42c8bded008ee5fff515c067793d3e71c1570deba6473770cbf1e897/f0ddee3e7dc3525447d1c8bf653fdf1249768d0b177078bd826069ed4308fb33.json\",0],[\"library/notes/2d187fdd42c8bded008ee5fff515c067793d3e71c1570deba6473770cbf1e897/46cedbf2ec76be8c357eb61b82839904f284f9acb55efaf95e870c10fb7b22a0.json\",0]]},\"reviewRecords\":{\"layout\":\"rows\",\"order\":[[\"cards/reviews/2026-11.jsonl\",0],[\"cards/reviews/2026-10.jsonl\",0]]},\"extra\":{\"layout\":\"json\",\"path\":\"profile/extra.json\"}},\"files\":{\"library/notes/2d187fdd42c8bded008ee5fff515c067793d3e71c1570deba6473770cbf1e897/46cedbf2ec76be8c357eb61b82839904f284f9acb55efaf95e870c10fb7b22a0.json\":{\"generation\":1,\"size\":128,\"sha256\":\"4fb04765caa4891e0fe144fde42d3cc90c81ca4428e7343fb783623a0ccc8871\",\"kind\":\"json\"},\"library/notes/2d187fdd42c8bded008ee5fff515c067793d3e71c1570deba6473770cbf1e897/f0ddee3e7dc3525447d1c8bf653fdf1249768d0b177078bd826069ed4308fb33.json\":{\"generation\":1,\"size\":65,\"sha256\":\"ebe2577c7d705e2e975ff6f3e00be5b22c75560291331d8e4d419e1374810902\",\"kind\":\"json\"},\"cards/reviews/2026-10.jsonl\":{\"generation\":0,\"size\":58,\"sha256\":\"9db920ccc43a0925c0da131429e268024326ac43aeb2bc9bcc709412ffd20e15\",\"kind\":\"jsonl\"},\"cards/reviews/2026-11.jsonl\":{\"generation\":1,\"size\":58,\"sha256\":\"446841be400f69975d78f3a6d59d6ee2784790c09d17d12c7fb33856cdbc8b0e\",\"kind\":\"jsonl\"},\"profile/extra.json\":{\"generation\":0,\"size\":60,\"sha256\":\"6f1848201cec8a60eb9df1c7d2d670549ecde5c78cfd40c5f556fc54518b9389\",\"kind\":\"json\"},\"library/knowledge-bases.json\":{\"generation\":0,\"size\":45,\"sha256\":\"34038bb8d8f5c871b7e3701e8e0b4695498449c838e1d97667f4e3bedb46998e\",\"kind\":\"json\"}}}",
+    "COMMIT": "{\"commitId\":\"commit-1\",\"manifestSha256\":\"dbb1da7844592f1bdf39a36acf63a666abb57925dc716dd59fa130f15c8afab7\"}",
+    "payload/library/notes/2d187fdd42c8bded008ee5fff515c067793d3e71c1570deba6473770cbf1e897/46cedbf2ec76be8c357eb61b82839904f284f9acb55efaf95e870c10fb7b22a0.json": "{\"id\":\"note-a\",\"knowledgeBaseId\":\"library-a\",\"title\":\"更名后\",\"metadata\":{\"noteContent\":\"<p>新正文😀</p>\",\"other\":null}}",
+    "payload/library/notes/2d187fdd42c8bded008ee5fff515c067793d3e71c1570deba6473770cbf1e897/f0ddee3e7dc3525447d1c8bf653fdf1249768d0b177078bd826069ed4308fb33.json": "{\"id\":\"note-c\",\"knowledgeBaseId\":\"library-a\",\"title\":\"新笔记\"}",
+    "payload/cards/reviews/2026-11.jsonl": "{\"id\":\"review-b\",\"reviewedAt\":\"2026-11-01T00:00:00.000Z\"}\n"
+  },
+  "cases": [
+    {
+      "id": "prepare-only",
+      "disk": {
+        "index": "base",
+        "journal": "none",
+        "participant": "prepared"
+      },
+      "expected": {
+        "action": "discard",
+        "activeGeneration": 0,
+        "participant": "aborted",
+        "writesAndNetwork": "open",
+        "evidence": "discard-after-abort"
+      }
+    },
+    {
+      "id": "partial-stage-no-marker",
+      "disk": {
+        "index": "base",
+        "journal": "active",
+        "omit": [
+          "COMMIT",
+          "payload/library/notes/2d187fdd42c8bded008ee5fff515c067793d3e71c1570deba6473770cbf1e897/46cedbf2ec76be8c357eb61b82839904f284f9acb55efaf95e870c10fb7b22a0.json",
+          "payload/library/notes/2d187fdd42c8bded008ee5fff515c067793d3e71c1570deba6473770cbf1e897/f0ddee3e7dc3525447d1c8bf653fdf1249768d0b177078bd826069ed4308fb33.json"
+        ],
+        "participant": "prepared"
+      },
+      "expected": {
+        "action": "discard",
+        "activeGeneration": 0,
+        "participant": "aborted",
+        "writesAndNetwork": "open",
+        "evidence": "discard-after-abort"
+      }
+    },
+    {
+      "id": "marker-durable-no-renames",
+      "disk": {
+        "index": "base",
+        "journal": "active",
+        "participant": "prepared"
+      },
+      "expected": {
+        "action": "roll-forward",
+        "activeGeneration": 1,
+        "participant": "published-once",
+        "writesAndNetwork": "open",
+        "evidence": "retire-after-publish"
+      }
+    },
+    {
+      "id": "recovery-interrupted-after-replace-and-delete",
+      "disk": {
+        "index": "base",
+        "journal": "active",
+        "applyAfter": [
+          "library/notes/2d187fdd42c8bded008ee5fff515c067793d3e71c1570deba6473770cbf1e897/46cedbf2ec76be8c357eb61b82839904f284f9acb55efaf95e870c10fb7b22a0.json",
+          "library/notes/2d187fdd42c8bded008ee5fff515c067793d3e71c1570deba6473770cbf1e897/7bc0e981da80dd24ac2fdd99c807d18def36179261f7da398d8755b09060895d.json"
+        ],
+        "omit": [
+          "payload/library/notes/2d187fdd42c8bded008ee5fff515c067793d3e71c1570deba6473770cbf1e897/46cedbf2ec76be8c357eb61b82839904f284f9acb55efaf95e870c10fb7b22a0.json"
+        ],
+        "participant": "prepared"
+      },
+      "expected": {
+        "action": "roll-forward",
+        "activeGeneration": 1,
+        "participant": "published-once",
+        "writesAndNetwork": "open",
+        "evidence": "retire-after-publish"
+      }
+    },
+    {
+      "id": "all-files-landed-before-index",
+      "disk": {
+        "index": "base",
+        "journal": "active",
+        "applyAfter": [
+          "library/notes/2d187fdd42c8bded008ee5fff515c067793d3e71c1570deba6473770cbf1e897/46cedbf2ec76be8c357eb61b82839904f284f9acb55efaf95e870c10fb7b22a0.json",
+          "library/notes/2d187fdd42c8bded008ee5fff515c067793d3e71c1570deba6473770cbf1e897/7bc0e981da80dd24ac2fdd99c807d18def36179261f7da398d8755b09060895d.json",
+          "library/notes/2d187fdd42c8bded008ee5fff515c067793d3e71c1570deba6473770cbf1e897/f0ddee3e7dc3525447d1c8bf653fdf1249768d0b177078bd826069ed4308fb33.json",
+          "cards/reviews/2026-11.jsonl"
+        ],
+        "omit": [
+          "payload/library/notes/2d187fdd42c8bded008ee5fff515c067793d3e71c1570deba6473770cbf1e897/46cedbf2ec76be8c357eb61b82839904f284f9acb55efaf95e870c10fb7b22a0.json",
+          "payload/library/notes/2d187fdd42c8bded008ee5fff515c067793d3e71c1570deba6473770cbf1e897/f0ddee3e7dc3525447d1c8bf653fdf1249768d0b177078bd826069ed4308fb33.json",
+          "payload/cards/reviews/2026-11.jsonl"
+        ],
+        "participant": "prepared"
+      },
+      "expected": {
+        "action": "roll-forward",
+        "activeGeneration": 1,
+        "participant": "published-once",
+        "writesAndNetwork": "open",
+        "evidence": "retire-after-publish"
+      }
+    },
+    {
+      "id": "index-durable-publish-failed",
+      "disk": {
+        "index": "target",
+        "journal": "active",
+        "omit": [
+          "payload/library/notes/2d187fdd42c8bded008ee5fff515c067793d3e71c1570deba6473770cbf1e897/46cedbf2ec76be8c357eb61b82839904f284f9acb55efaf95e870c10fb7b22a0.json",
+          "payload/library/notes/2d187fdd42c8bded008ee5fff515c067793d3e71c1570deba6473770cbf1e897/f0ddee3e7dc3525447d1c8bf653fdf1249768d0b177078bd826069ed4308fb33.json",
+          "payload/cards/reviews/2026-11.jsonl"
+        ],
+        "participant": "prepared"
+      },
+      "expected": {
+        "action": "finish-publication",
+        "activeGeneration": 1,
+        "participant": "published-once",
+        "writesAndNetwork": "open",
+        "evidence": "retire-after-publish"
+      }
+    },
+    {
+      "id": "publish-durable-before-cleanup",
+      "disk": {
+        "index": "target",
+        "journal": "active",
+        "participant": "published"
+      },
+      "expected": {
+        "action": "finish-publication",
+        "activeGeneration": 1,
+        "participant": "published-once",
+        "writesAndNetwork": "open",
+        "evidence": "retire-after-publish"
+      }
+    },
+    {
+      "id": "journal-retired-before-gc",
+      "disk": {
+        "index": "target",
+        "journal": "garbage",
+        "participant": "published"
+      },
+      "expected": {
+        "action": "open",
+        "activeGeneration": 1,
+        "participant": "published-once",
+        "writesAndNetwork": "open",
+        "evidence": "garbage-ignored"
+      }
+    },
+    {
+      "id": "committed-payload-missing",
+      "disk": {
+        "index": "base",
+        "journal": "active",
+        "omit": [
+          "payload/library/notes/2d187fdd42c8bded008ee5fff515c067793d3e71c1570deba6473770cbf1e897/46cedbf2ec76be8c357eb61b82839904f284f9acb55efaf95e870c10fb7b22a0.json"
+        ],
+        "participant": "prepared"
+      },
+      "expected": {
+        "action": "protect",
+        "activeGeneration": null,
+        "participant": "unchanged",
+        "writesAndNetwork": "blocked",
+        "evidence": "retain"
+      }
+    },
+    {
+      "id": "torn-marker",
+      "disk": {
+        "index": "base",
+        "journal": "active",
+        "journalOverrides": {
+          "COMMIT": "{\"commitId\":"
+        },
+        "participant": "prepared"
+      },
+      "expected": {
+        "action": "protect",
+        "activeGeneration": null,
+        "participant": "unchanged",
+        "writesAndNetwork": "blocked",
+        "evidence": "retain"
+      }
+    },
+    {
+      "id": "marker-missing-after-replace",
+      "disk": {
+        "index": "base",
+        "journal": "active",
+        "applyAfter": [
+          "library/notes/2d187fdd42c8bded008ee5fff515c067793d3e71c1570deba6473770cbf1e897/46cedbf2ec76be8c357eb61b82839904f284f9acb55efaf95e870c10fb7b22a0.json"
+        ],
+        "omit": [
+          "COMMIT",
+          "payload/library/notes/2d187fdd42c8bded008ee5fff515c067793d3e71c1570deba6473770cbf1e897/46cedbf2ec76be8c357eb61b82839904f284f9acb55efaf95e870c10fb7b22a0.json"
+        ],
+        "participant": "prepared"
+      },
+      "expected": {
+        "action": "protect",
+        "activeGeneration": null,
+        "participant": "unchanged",
+        "writesAndNetwork": "blocked",
+        "evidence": "retain"
+      }
+    },
+    {
+      "id": "target-edited-externally",
+      "disk": {
+        "index": "target",
+        "journal": "active",
+        "fileOverrides": {
+          "library/notes/2d187fdd42c8bded008ee5fff515c067793d3e71c1570deba6473770cbf1e897/46cedbf2ec76be8c357eb61b82839904f284f9acb55efaf95e870c10fb7b22a0.json": "{}"
+        },
+        "participant": "prepared"
+      },
+      "expected": {
+        "action": "protect",
+        "activeGeneration": null,
+        "participant": "unchanged",
+        "writesAndNetwork": "blocked",
+        "evidence": "retain"
+      }
+    },
+    {
+      "id": "base-edited-externally-even-with-payload",
+      "disk": {
+        "index": "base",
+        "journal": "active",
+        "fileOverrides": {
+          "library/notes/2d187fdd42c8bded008ee5fff515c067793d3e71c1570deba6473770cbf1e897/46cedbf2ec76be8c357eb61b82839904f284f9acb55efaf95e870c10fb7b22a0.json": "{}"
+        },
+        "participant": "prepared"
+      },
+      "expected": {
+        "action": "protect",
+        "activeGeneration": null,
+        "participant": "unchanged",
+        "writesAndNetwork": "blocked",
+        "evidence": "retain"
+      }
+    },
+    {
+      "id": "index-generation-jump",
+      "disk": {
+        "index": "base",
+        "journal": "active",
+        "fileOverrides": {
+          "memokeep.json": "{\"format\":\"memokeep-store\",\"version\":3,\"workspaceId\":\"workspace-demo\",\"generation\":8,\"lastCommitId\":\"other\",\"collections\":{\"knowledgeBases\":{\"layout\":\"json\",\"path\":\"library/knowledge-bases.json\"},\"documents\":{\"layout\":\"rows\",\"order\":[[\"library/notes/2d187fdd42c8bded008ee5fff515c067793d3e71c1570deba6473770cbf1e897/7bc0e981da80dd24ac2fdd99c807d18def36179261f7da398d8755b09060895d.json\",0],[\"library/notes/2d187fdd42c8bded008ee5fff515c067793d3e71c1570deba6473770cbf1e897/46cedbf2ec76be8c357eb61b82839904f284f9acb55efaf95e870c10fb7b22a0.json\",0]]},\"reviewRecords\":{\"layout\":\"rows\",\"order\":[[\"cards/reviews/2026-10.jsonl\",0]]},\"extra\":{\"layout\":\"json\",\"path\":\"profile/extra.json\"}},\"files\":{\"library/notes/2d187fdd42c8bded008ee5fff515c067793d3e71c1570deba6473770cbf1e897/46cedbf2ec76be8c357eb61b82839904f284f9acb55efaf95e870c10fb7b22a0.json\":{\"generation\":0,\"size\":128,\"sha256\":\"b02eab64834c8a78519b32bbc8dd3698243cbb926d754c4aaac0843b6ac86bc1\",\"kind\":\"json\"},\"library/notes/2d187fdd42c8bded008ee5fff515c067793d3e71c1570deba6473770cbf1e897/7bc0e981da80dd24ac2fdd99c807d18def36179261f7da398d8755b09060895d.json\":{\"generation\":0,\"size\":65,\"sha256\":\"0586d72a6a2ccc3f3b727659918e523a81731f3763e9755c84b660422753f052\",\"kind\":\"json\"},\"cards/reviews/2026-10.jsonl\":{\"generation\":0,\"size\":58,\"sha256\":\"9db920ccc43a0925c0da131429e268024326ac43aeb2bc9bcc709412ffd20e15\",\"kind\":\"jsonl\"},\"profile/extra.json\":{\"generation\":0,\"size\":60,\"sha256\":\"6f1848201cec8a60eb9df1c7d2d670549ecde5c78cfd40c5f556fc54518b9389\",\"kind\":\"json\"},\"library/knowledge-bases.json\":{\"generation\":0,\"size\":45,\"sha256\":\"34038bb8d8f5c871b7e3701e8e0b4695498449c838e1d97667f4e3bedb46998e\",\"kind\":\"json\"}}}"
+        },
+        "participant": "prepared"
+      },
+      "expected": {
+        "action": "protect",
+        "activeGeneration": null,
+        "participant": "unchanged",
+        "writesAndNetwork": "blocked",
+        "evidence": "retain"
+      }
+    },
+    {
+      "id": "recovery-missing-extension",
+      "disk": {
+        "index": "target",
+        "journal": "active",
+        "participant": "unavailable"
+      },
+      "expected": {
+        "action": "protect",
+        "activeGeneration": null,
+        "participant": "unchanged",
+        "writesAndNetwork": "blocked",
+        "evidence": "retain"
+      }
+    },
+    {
+      "id": "committed-base-index-missing",
+      "disk": {
+        "index": "target",
+        "journal": "active",
+        "omit": [
+          "base-index.json"
+        ],
+        "participant": "prepared"
+      },
+      "expected": {
+        "action": "protect",
+        "activeGeneration": null,
+        "participant": "unchanged",
+        "writesAndNetwork": "blocked",
+        "evidence": "retain"
+      }
+    },
+    {
+      "id": "marker-missing-after-index",
+      "disk": {
+        "index": "target",
+        "journal": "active",
+        "omit": [
+          "COMMIT"
+        ],
+        "participant": "prepared"
+      },
+      "expected": {
+        "action": "protect",
+        "activeGeneration": null,
+        "participant": "unchanged",
+        "writesAndNetwork": "blocked",
+        "evidence": "retain"
+      }
+    }
+  ]
+}

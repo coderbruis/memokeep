@@ -25,17 +25,6 @@ function syntheticShell(context) {
   context.applicationShell = shell;
   return shell;
 }
-const bridge = `(() => { if (typeof applicationShell === 'undefined' || globalThis.__shellFixtureBound) return; globalThis.__shellFixtureBound = true;
- const shell = applicationShell, routes = ${JSON.stringify({ ...manifest.fields, ...manifest.constants, ...manifest.functions })};
- for (const [name, route] of Object.entries(routes)) { const parts = route.split('.'), key = parts.pop(); let owner = shell; for (const part of parts) owner = owner[part];
- if (Object.getOwnPropertyDescriptor(globalThis, name)?.configurable === false) continue;
- Object.defineProperty(globalThis, name, { configurable: true, get: () => owner[key], set: value => { owner[key] = value; } }); }
-})();`;
-const observed = new WeakSet();
-function shellTest(contents) {
-  if (!observed.has(contents)) { observed.add(contents); contents.on('console-message', event => { if (event.level === 'error') console.error('Renderer:', event.message); }); }
-  return { executeJavaScript: (source, ...args) => contents.executeJavaScript(bridge + '\n' + source, ...args) };
-}
 function patchBrowserPopovers(window, document) {
   const opened = new WeakSet();
   const patch = element => {
@@ -55,4 +44,4 @@ function patchBrowserPopovers(window, document) {
   Object.defineProperty(document, 'querySelectorAll', { value: selector => selector.includes(':popover-open')
     ? Array.from(query(selector.replaceAll(':popover-open', ''))).filter(node => opened.has(node)) : query(selector) });
 }
-module.exports = { loadShellModules, bindShellFixture, syntheticShell, shellTest, patchBrowserPopovers };
+module.exports = { loadShellModules, bindShellFixture, syntheticShell, patchBrowserPopovers };

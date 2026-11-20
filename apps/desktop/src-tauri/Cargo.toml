@@ -1,0 +1,18 @@
+[package]
+name = "memokeep-community-tauri"
+version = "0.1.0"
+edition = "2021"
+
+[features]
+custom-protocol = ["tauri/custom-protocol"]
+smoke-test = ["tauri-plugin-memokeep-workspace/smoke-test"]
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-memokeep-workspace = { path = "../../../crates/memokeep-tauri" }
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[lints]
+workspace = true

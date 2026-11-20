@@ -4,21 +4,37 @@ function safeNoteLink(value) {
 function readNoteLinkCard(node) {
   return { url: safeNoteLink(node.getAttribute('href')), title: node.querySelector('.note-link-title')?.textContent || node.getAttribute('href'),
     description: node.querySelector('.note-link-description')?.textContent || '', site: node.querySelector('.note-link-site')?.textContent || '',
-    image: safeNoteLink(node.querySelector('img')?.getAttribute('src') || ''), loaded: node.dataset.noteLinkLoaded === 'true' };
+    image: safeNoteLink(node.querySelector('img')?.dataset.noteLinkImage || node.querySelector('img')?.getAttribute('src') || ''), loaded: node.dataset.noteLinkLoaded === 'true' };
 }
-function writeNoteLinkCard(node, value) {
+function loadNoteLinkCover(image) {
+  const url = image.dataset.noteLinkImage;
+  const reader = window.memoKeepDesktop?.readLinkPreviewImage;
+  if (!reader || !url || image.dataset.noteLinkImagePending || !(image.isConnected || image.ownerDocument.contains(image))) return;
+  image.dataset.noteLinkImagePending = 'true';
+  void Promise.resolve().then(() => reader(url)).then(result => {
+    if (image.dataset.noteLinkImage !== url || !(image.isConnected || image.ownerDocument.contains(image))) return;
+    if (typeof result === 'string' && result.length <= 720000 && /^data:image\/(png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$/.test(result)) image.src = result;
+    else image.style.display = 'none';
+  }).catch(() => { image.style.display = 'none'; });
+}
+function writeNoteLinkCard(node, value, serializing = false) {
+  const owner = node.ownerDocument || document;
   const url = safeNoteLink(value.url);
   node.setAttribute('href', url); node.setAttribute('target', '_blank'); node.setAttribute('rel', 'noopener noreferrer');
   if(value.loaded) node.dataset.noteLinkLoaded = 'true';
   node.replaceChildren();
   if(safeNoteLink(value.image)) {
-    const image=document.createElement('img'); image.className='note-link-cover'; image.src=value.image; image.alt=''; image.referrerPolicy='no-referrer';
+    const image=owner.createElement('img'); image.className='note-link-cover'; image.alt=''; image.referrerPolicy='no-referrer';
+    if (!serializing && window.memoKeepDesktop?.readLinkPreviewImage) {
+      image.dataset.noteLinkImage = safeNoteLink(value.image);
+      requestAnimationFrame(() => loadNoteLinkCover(image));
+    } else image.src=value.image;
     image.onerror=()=>{image.style.display='none';}; node.append(image);
   }
-  const body=document.createElement('span');body.className='note-link-body';node.append(body);
+  const body=owner.createElement('span');body.className='note-link-body';node.append(body);
   for (const [name, text] of [['title', value.title || url], ['description', value.description], ['site', value.site || (url ? new URL(url).hostname : '')]]) {
     if(!text)continue;
-    const span = document.createElement('span'); span.className = `note-link-${name}`; span.textContent = text; body.append(span);
+    const span = owner.createElement('span'); span.className = `note-link-${name}`; span.textContent = text; body.append(span);
   }
 }
 function registerNoteLinkCard(registry, Quill) {
@@ -31,7 +47,7 @@ function registerNoteLinkCard(registry, Quill) {
   registry.register(NoteLinkCard);
 }
 function serializeNoteLinkCards(root) {
-  root.querySelectorAll('a.note-link-card').forEach(node => writeNoteLinkCard(node, readNoteLinkCard(node)));
+  root.querySelectorAll('a.note-link-card').forEach(node => writeNoteLinkCard(node, readNoteLinkCard(node), true));
 }
 function bindNoteLinkPaste(quill) {
   const controller = new AbortController(), { signal } = controller;
@@ -59,9 +75,9 @@ function bindNoteLinkPaste(quill) {
     const target=active, request=++requestId;
     let title = menu.querySelector('input').value.trim() || active.url;
     let metadata=active;
-    if(type!=='link' && (!active.loaded || refresh) && window.memoKeepDesktop?.readLinkPreview) {
+    if((type!=='link' || refresh) && (!active.loaded || refresh) && window.memoKeepDesktop?.readLinkPreview) {
       menu.querySelector('.note-link-status').textContent='正在读取网页信息…';
-      let result;try{result=await window.memoKeepDesktop.readLinkPreview(active.url)}catch{result={error:'无法读取网页'}}
+      let result;try{result=await window.memoKeepDesktop.readLinkPreview(active.url,{refresh})}catch{result={error:'无法读取网页'}}
       if(signal.aborted || active!==target || request!==requestId)return;
       if(!result.error) {
         metadata={...active,...result,loaded:true};
@@ -119,6 +135,7 @@ function bindNoteLinkPaste(quill) {
   const scan=()=>{
     cancelAnimationFrame(scanFrame);scanFrame=requestAnimationFrame(()=>{
       if(signal.aborted || !window.memoKeepDesktop?.readLinkPreview)return;
+      quill.root.querySelectorAll('img.note-link-cover[data-note-link-image]').forEach(loadNoteLinkCover);
       quill.root.querySelectorAll('a.note-link-card').forEach(async node=>{
         if(node.dataset.noteLinkLoaded==='true'||attempted.has(node))return;
         attempted.add(node);const original=readNoteLinkCard(node);

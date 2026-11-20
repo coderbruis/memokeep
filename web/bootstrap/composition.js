@@ -9,7 +9,7 @@
       onError: error => ports.notify(`保存失败：${error.message}`, true),
       onSyncError: error => ports.notify(`同步失败：${error.message}`, true) });
     const persistence = { storage, ...saving, ...sync };
-    const dependencies = { state, save: () => persistence.save(), transact: change => persistence.transact(change), ...ports.actions };
+    const dependencies = { state, save: () => persistence.save(), transact: (change, context) => persistence.transact(change, context), ...ports.actions };
     const operations = {
       cards: modules.operations.createCardOperations(dependencies), memos: modules.operations.createMemoOperations(dependencies),
       settings: modules.operations.createSettingsOperations(dependencies), knowledge: modules.operations.createKnowledgeOperations(dependencies)
@@ -21,7 +21,7 @@
       cardRuntime = modules.operations.createCardRuntime();
       if (ports.cardBulk) {
         operations.cardTrash = modules.operations.createCardTrashOperations({ ...ports.cardBulk, state, runtime: cardRuntime,
-          domain: modules.domain, transact: change => persistence.transact(change), hooks: {
+          domain: modules.domain, transact: (change, context) => persistence.transact(change, context), hooks: {
             renderAll: ports.cardBulk.helpers.renderAll, renderTrash: ports.cardBulk.helpers.renderTrash,
             showCardUndo: (...args) => cardBulk.showCardUndo(...args) } });
         cardBulk = modules.views.createCardBulkView({ ...ports.cardBulk, state, runtime: cardRuntime,
@@ -30,8 +30,8 @@
       }
       if (ports.cardDialogs) {
         cardEditor = modules.views.createCardEditor({ ...ports.cardDialogs, state, runtime: cardRuntime,
-          imageIds: modules.domain.noteImageIdsFromContent, transact: change => persistence.transact(change) });
-        cardDetail = modules.views.createCardDetail({ ...ports.cardDialogs, state, transact: change => persistence.transact(change) });
+          imageIds: modules.domain.noteImageIdsFromContent, transact: (change, context) => persistence.transact(change, context) });
+        cardDetail = modules.views.createCardDetail({ ...ports.cardDialogs, state, transact: (change, context) => persistence.transact(change, context) });
         cardDialogs = modules.views.createCardDialogBindings({ ...ports.cardDialogs, state, editor: cardEditor,
           detail: cardDetail, deleteCardById: cardBulk.deleteCardById });
       }

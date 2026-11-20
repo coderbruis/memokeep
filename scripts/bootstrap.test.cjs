@@ -89,7 +89,7 @@ test('bootstrap modules are loadable without legacy globals and the HTML orders 
   assert.ok(html.indexOf('src="bootstrap/composition.js"') < html.indexOf('src="legacy/application.js"'));
   assert.ok(html.indexOf('src="legacy/application.js"') < html.indexOf('src="app.js"'));
   const entry = fs.readFileSync(path.join(__dirname,'../web/app.js'),'utf8');
-  assert.doesNotMatch(entry, /\bdata\b|ipcRenderer|localStorage/);
+  assert.doesNotMatch(entry, /\bdata\b|memoKeepDesktop|localStorage/);
   const legacy = fs.readFileSync(path.join(__dirname,'../web/legacy/application.js'),'utf8');
   assert.doesNotMatch(legacy, /^(?:async )?function (?:getApplicationState|getApplicationOperations|getApplicationPersistence|getEditorSession|getNoteTabView|save|refreshSharedData|applySharedData|libraryById|itemById|parseInlineCards)\(/m);
 });

@@ -3,6 +3,7 @@
   // 正文可以和编辑器在同一帧里出现（否则先闪一下空白再填内容）。按总大小淘汰最久没用的。
   const noteImageCache = new Map();
   const NOTE_IMAGE_CACHE_LIMIT = 96 * 1024 * 1024;
+  const NOTE_IMAGE_PLACEHOLDER = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVR4nGNgAAIAAAUAAXpeqz8AAAAASUVORK5CYII=';
   let noteImageCacheSize = 0;
   const cachedNoteImage = id => {
     const hit = noteImageCache.get(id);
@@ -82,14 +83,6 @@
     const prefetchOpenTabImages = () => {
       const read = config.desktop?.readNoteImage, idle = env.window.requestIdleCallback?.bind(env.window);
       if (!read || !idle || prefetchingNoteImages) return;
-      const data = state.persistence.data, ids = [];
-      for (const tab of env.openNoteTabs || []) {
-        const document = [...(data.documents || []), ...(data.cardDocuments || [])].find(item => item.id === tab.id);
-        for (const match of String(document?.metadata?.noteContent || '').matchAll(/data-memokeep-image-id="([^"]+)"/g)) {
-          if (!noteImageCache.has(match[1]) && !ids.includes(match[1])) ids.push(match[1]);
-        }
-      }
-      if (!ids.length) return;
       prefetchingNoteImages = true;
       const next = () => idle(async () => {
         const id = ids.shift();
@@ -97,11 +90,28 @@
         if (!noteImageCache.has(id)) rememberNoteImage(id, await read(id).catch(() => null));
         next();
       }, { timeout: 2000 });
-      next();
+      let ids = [];
+      idle(() => {
+        if (!features.isCurrentEditor()) { prefetchingNoteImages = false; return; }
+        const data = state.persistence.data, documents = new Map();
+        for (const document of [...(data.documents || []), ...(data.cardDocuments || [])]) documents.set(document.id, document);
+        const pending = new Set();
+        for (const tab of env.openNoteTabs || []) {
+          for (const match of String(documents.get(tab.id)?.metadata?.noteContent || '').matchAll(/data-memokeep-image-id="([^"]+)"/g)) {
+            if (!noteImageCache.has(match[1])) pending.add(match[1]);
+          }
+        }
+        ids = [...pending];
+        next();
+      }, { timeout: 2000 });
     };
 
     const loadRichNote = async content => {
       if (!session.richEditor) return;
+      const editor = session.richEditor, loadGeneration = session.richNoteLoadGeneration = (session.richNoteLoadGeneration || 0) + 1;
+      const isCurrentLoad = () => features.isCurrentEditor() && session.richEditor === editor && session.richNoteLoadGeneration === loadGeneration;
+      const wasEnabled = editor.isEnabled();
+      editor.enable(false);
       session.richEditorLoading = true;
       try {
         session.richEditor.setText('', 'silent');
@@ -119,33 +129,52 @@
           source: image.getAttribute('src') || '',
           fileName: image.dataset.fileName || image.alt || '图片'
         }));
+        const reads = new Map();
         const readImage = async image => {
           const cached = image.id && cachedNoteImage(image.id);
           if (cached) return cached;
           if (!image.id || !config.desktop?.readNoteImage) return /^https?:\/\//i.test(image.source) ? { dataUrl: image.source, fileName: image.fileName } : null;
-          const preview = await config.desktop.readNoteImage(image.id).catch(() => null);
+          if (!reads.has(image.id)) reads.set(image.id, (async () => {
+            try { return await config.desktop.readNoteImage(image.id); }
+            catch { return null; }
+          })());
+          const preview = await reads.get(image.id);
           rememberNoteImage(image.id, preview);
           return preview;
         };
-        const resolvedImages = await Promise.all(storedImages.map(async image => ({ ...image, preview: await readImage(image) })));
-        if (!features.isCurrentEditor()) return;
-        resolvedImages.forEach(image => {
-          if (image.preview?.dataUrl) image.element.setAttribute('src', image.preview.dataUrl);
-          else image.element.replaceWith('[图片不可用]');
+        // Start native reads before clipboard conversion/layout work so native
+        // delivery can overlap rendering instead of waiting for its microtask.
+        const pendingImages = storedImages.filter(image => image.id).map(image => ({ image, preview: readImage(image) }));
+        storedImages.forEach(image => {
+          if (image.id) image.element.setAttribute('src', cachedNoteImage(image.id)?.dataUrl || NOTE_IMAGE_PLACEHOLDER);
         });
         // Restore the complete document; paste conversion drops its final empty paragraph.
-        session.richEditor.setContents(session.richEditor.clipboard.convertHTML(template.innerHTML), 'silent');
+        editor.setContents(editor.clipboard.convertHTML(template.innerHTML), 'silent');
+        // The body is visible while native image reads are pending. Keep each image's
+        // identity in the document even on failure, so a later save/reopen can retry it.
+        const editorImages = [...editor.root.querySelectorAll('img')];
+        await Promise.all(pendingImages.map(async ({ image, preview: pendingPreview }) => {
+          const target = editorImages.find(candidate => candidate.dataset.memokeepImageId === image.id);
+          if (!target) return;
+          editorImages.splice(editorImages.indexOf(target), 1);
+          const preview = await pendingPreview;
+          if (!isCurrentLoad() || !editor.root.contains(target)) return;
+          if (preview?.dataUrl) target.setAttribute('src', preview.dataUrl);
+          else target.title = '图片暂时不可用，重新打开笔记可重试';
+          target.dataset.fileName = image.fileName;
+          target.alt = image.fileName;
+        }));
+        if (!isCurrentLoad()) return;
+        // Drain DOM changes before clearing the loading guard. Hydration must not
+        // become a user edit; initial history/baseline are established afterwards.
+        editor.update('silent');
         prefetchOpenTabImages();
-        const editorImages = [...session.richEditor.root.querySelectorAll('img')];
-        resolvedImages.filter(image => image.preview?.dataUrl).forEach((image, index) => {
-          const editorImage = editorImages[index];
-          if (!editorImage) return;
-          if (image.id) editorImage.dataset.memokeepImageId = image.id;
-          editorImage.dataset.fileName = image.preview.fileName || image.fileName;
-          editorImage.alt = image.preview.fileName || image.fileName;
-        });
       } finally {
-        session.richEditorLoading = false;
+        if (session.richNoteLoadGeneration === loadGeneration) {
+          session.richEditorLoading = false;
+          if (isCurrentLoad() && wasEnabled && !session.editorInitializing
+              && !config.$('#librariesView').classList.contains('note-reading')) editor.enable(true);
+        }
       }
     };
 
@@ -229,6 +258,7 @@
       env.registerNoteCodeStyle(env.window.Quill, noteRegistry, { getDefault: () => state.persistence.data.settings.noteCodeStyle, isLoading: () => session.richEditorLoading });
       session.richEditor = new env.window.Quill('#noteRichEditor', {
         theme: 'snow',
+        readOnly: true,
         placeholder: '开始撰写笔记，支持 Markdown 快捷输入…',
         registry: noteRegistry,
         modules: { toolbar: '#noteRichToolbar', table: true, keyboard: { bindings: { 'code exit': false, ...env.createNoteMarkdownBindings() } } }
@@ -691,7 +721,6 @@
         },
         createCard: (text, range) => features.createCardFromNote(text, range)
       }) || null;
-      features.renderNoteOutline();
       features.renderCodeCopyButtons();
       session.codeBlocksResizeObserver = new env.ResizeObserver(features.renderCodeCopyButtons);
       session.codeBlocksResizeObserver.observe(session.richEditor.root);

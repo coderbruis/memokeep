@@ -17,6 +17,7 @@
   <link rel="stylesheet" href="card-editor.css">
   <link rel="stylesheet" href="note-tabs.css">
   <link rel="stylesheet" href="note-find.css">
+  <link rel="stylesheet" href="note-references.css">
   <link rel="stylesheet" href="review-presentation.css">
   <link rel="stylesheet" href="review-outcome.css">
   <link rel="stylesheet" href="card-edit-dialog.css">
@@ -275,13 +276,13 @@
     <symbol id="icon-folder" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h5l2 3h7a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></symbol>
   </svg>
   <main class="shell">
-    <div class="window-toolbar" aria-label="窗口工具栏">
+    <div class="window-toolbar" aria-label="窗口工具栏" data-tauri-drag-region>
       <button class="sidebar-collapse-button" id="sidebarCollapseBtn" type="button" aria-label="收起侧栏" aria-expanded="true" aria-describedby="sidebarCollapseTooltip">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path class="sidebar-collapse-rail" d="M5.2 4H9v16H5.2A2.2 2.2 0 0 1 3 17.8V6.2A2.2 2.2 0 0 1 5.2 4Z"/><rect x="3" y="4" width="18" height="16" rx="2.2"/><path d="M9 4v16"/><path class="sidebar-collapse-chevron" d="m17 8-4 4 4 4"/></svg>
         <span class="sidebar-collapse-tooltip" id="sidebarCollapseTooltip" role="tooltip">收起侧栏</span>
       </button>
-      <div id="workspacePageTabs" class="workspace-page-tabs" role="tablist" aria-label="页面标签" hidden></div>
-      <div class="workspace-titlebar" aria-label="当前页面">
+      <div id="workspacePageTabs" class="workspace-page-tabs" role="tablist" aria-label="页面标签" data-tauri-drag-region hidden></div>
+      <div class="workspace-titlebar" aria-label="当前页面" data-tauri-drag-region>
         <span class="workspace-title-page" data-workspace-page="home" aria-current="page"><svg aria-hidden="true"><use href="#icon-sun"></use></svg>今天</span>
         <span class="workspace-title-page" data-workspace-page="libraries" aria-current="page"><svg aria-hidden="true"><use href="#icon-book-open"></use></svg>知识库</span>
         <span class="workspace-title-page" data-workspace-page="cards" aria-current="page"><svg aria-hidden="true"><use href="#icon-layers"></use></svg>记忆卡片</span>
@@ -296,7 +297,7 @@
         <span class="workspace-title-page" data-workspace-page="trash" aria-current="page"><svg aria-hidden="true"><use href="#icon-trash"></use></svg>回收站</span>
         <span class="workspace-title-page" data-workspace-page="filePreview" aria-current="page"><svg aria-hidden="true"><use href="#icon-file-text"></use></svg>文件预览</span>
       </div>
-      <div id="workspaceOpenTabs" class="workspace-open-tabs" role="group" aria-label="已打开的笔记" hidden></div>
+      <div id="workspaceOpenTabs" class="workspace-open-tabs" role="group" aria-label="已打开的笔记" data-tauri-drag-region hidden></div>
     </div>
     <header>
       <div class="sidebar-topbar">
@@ -395,7 +396,7 @@
 
     <!-- Page: 知识库 -->
     <section id="librariesView" class="view hidden">
-      <div id="noteTabsBar" class="note-tabs-bar" hidden></div>
+      <div id="noteTabsBar" class="note-tabs-bar" data-tauri-drag-region hidden></div>
       <div class="knowledge-page-actions"><button class="primary" id="newNoteBtn">＋ 新建笔记</button></div>
       <div class="workspace-grid"><section class="library-content" id="libraryContent"><div class="empty-state"><span>⌁</span><h2>暂无知识库</h2><button class="primary" id="emptyCreateBtn">新建知识库</button></div></section></div>
     </section>
@@ -543,12 +544,12 @@
           </section>
           <section class="settings-card" hidden data-settings-section="reminders"><h2>桌面伙伴与提醒</h2><label class="switch-row">显示桌面伙伴<input id="petEnabled" type="checkbox"></label><label class="switch-row">允许系统通知<input id="notificationsEnabled" type="checkbox"></label><div class="reminder-interval-setting"><div class="reminder-setting-copy"><span class="reminder-setting-icon"><svg aria-hidden="true"><use href="#icon-clock"></use></svg></span><span><strong id="reminderIntervalLabel">提醒间隔</strong></span></div><div class="reminder-interval-control"><select id="reminderMinutes" aria-labelledby="reminderIntervalLabel"><option value="15">15 分钟</option><option value="30">30 分钟 · 推荐</option><option value="60">1 小时</option><option value="120">2 小时</option></select></div></div><div class="time-row"><label>开始时间<input id="activeHoursStart" type="time"></label><label>结束时间<input id="activeHoursEnd" type="time"></label></div></section>
 <section class="settings-card" hidden data-settings-section="data"><h2>文档存储</h2><div class="storage-location"><div><span>当前存储位置</span><strong id="knowledgeStoragePath">正在读取…</strong></div><button class="secondary" id="chooseKnowledgeStorageBtn">更改位置</button></div><p id="knowledgeSyncHint" class="data-summary" hidden></p></section>
-<section class="settings-card" hidden data-settings-section="data"><h2>本地数据与备份</h2><div class="stack-buttons"><button class="secondary" id="exportBackupBtn">导出完整备份</button><button class="secondary" id="importBackupBtn">从备份恢复</button><button class="secondary" id="undoBackupRestoreBtn" disabled>撤销上次恢复</button><button class="secondary" id="exportCardsBtn">导出卡片 CSV</button></div><p id="dataSummary" class="data-summary"></p></section>
+<section class="settings-card" hidden data-settings-section="data"><h2>本地数据与备份</h2><div class="stack-buttons"><button class="secondary" id="exportBackupBtn">导出完整备份</button><button class="secondary" id="exportModuleJsonBtn" hidden>按模块导出 JSON</button><button class="secondary" id="importBackupBtn">从备份恢复</button><button class="secondary" id="undoBackupRestoreBtn" disabled>撤销上次恢复</button><button class="secondary" id="exportCardsBtn">导出卡片 CSV</button></div><p id="dataSummary" class="data-summary"></p></section>
         </div>
       </div>
     </section>
     <section id="filePreviewView" class="view file-preview-view hidden" aria-label="文档预览">
-      <div class="file-preview-toolbar"><div><h2 id="filePreviewSource"></h2><p id="filePreviewStatus" class="hint" role="status" aria-live="polite"></p></div><div class="file-preview-actions"><button type="button" id="filePreviewEdit" class="secondary">编辑</button><button type="button" id="filePreviewSkip" class="secondary file-preview-close">关闭</button><div class="file-preview-save-wrap"><button type="button" id="filePreviewOpenSave" class="primary" aria-haspopup="menu" aria-expanded="false">保存</button><div id="filePreviewSaveMenu" class="file-preview-save-menu hidden" role="menu"><button type="button" id="filePreviewSaveOriginal" role="menuitem">原路径保存</button><button type="button" id="filePreviewSaveLibrary" role="menuitem">保存到知识库</button></div></div></div></div>
+      <div class="file-preview-toolbar"><div><h2 id="filePreviewSource"></h2><p id="filePreviewStatus" class="hint" role="status" aria-live="polite"></p></div><div class="file-preview-actions"><button type="button" id="filePreviewEdit" class="secondary">编辑</button><button type="button" id="filePreviewSkip" class="secondary file-preview-close">关闭</button><div class="file-preview-save-wrap"><button type="button" id="filePreviewOpenSave" class="primary" aria-haspopup="menu" aria-expanded="false">保存</button><div id="filePreviewSaveMenu" class="file-preview-save-menu hidden" role="menu"><button type="button" id="filePreviewSaveOriginal" role="menuitem">原路径保存</button><button type="button" id="filePreviewSaveAs" role="menuitem">原目录另存为…</button><button type="button" id="filePreviewSaveLibrary" role="menuitem">保存到知识库</button></div></div></div></div>
       <div class="file-preview-body"><article id="filePreviewContent" class="markdown-body file-preview-content" aria-label="文档内容"></article><textarea id="filePreviewEditor" class="file-preview-editor hidden" aria-label="编辑文档内容" spellcheck="false"></textarea><div id="filePreviewOutline" class="file-preview-outline" aria-label="文档大纲" tabindex="0"><span class="file-preview-outline-icon" role="img" aria-label="文档大纲"><svg aria-hidden="true"><use href="#icon-list-tree"></use></svg></span><button type="button" id="filePreviewOutlinePin" class="file-preview-outline-pin" aria-label="固定大纲" aria-pressed="false" aria-controls="filePreviewOutlineList"><svg aria-hidden="true"><use href="#icon-pin"></use></svg></button><nav id="filePreviewOutlineList"></nav></div></div>
     </section>
   </main>
@@ -774,6 +775,15 @@
       <div class="dialog-actions"><button type="button" id="filePreviewCancelSave" class="secondary">取消</button><button type="submit" id="filePreviewSave" class="primary">保存笔记</button></div>
     </form>
   </dialog>
+  <dialog id="filePreviewSaveAsDialog" class="file-preview-dialog" aria-labelledby="filePreviewSaveAsHeading">
+    <form id="filePreviewSaveAsForm" class="file-preview-form">
+      <div class="dialog-head"><div><h2 id="filePreviewSaveAsHeading">原目录另存为</h2></div><button type="button" id="filePreviewCancelSaveAs" class="icon-btn" aria-label="取消另存">×</button></div>
+      <div class="file-preview-fields"><label>文件名称（不含扩展名）<input id="filePreviewSaveAsName" required maxlength="100" placeholder="请输入文件名称" aria-describedby="filePreviewSaveAsHint"></label></div>
+      <p id="filePreviewSaveAsHint" class="hint"></p>
+      <p id="filePreviewSaveAsStatus" class="hint" role="status" aria-live="polite"></p>
+      <div class="dialog-actions"><button type="button" id="filePreviewDismissSaveAs" class="secondary">取消</button><button type="submit" id="filePreviewSaveAsSubmit" class="primary">另存文件</button></div>
+    </form>
+  </dialog>
   <input id="markdownImportInput" class="hidden" type="file" accept=".md,.markdown,.txt" multiple aria-label="导入笔记">
   <dialog id="workspaceSearchDialog" class="product-search-dialog" aria-label="搜索">
     <div class="product-search-field">
@@ -917,6 +927,7 @@
   <script src="shell/notebooks.js"></script>
   <script src="shell/editor-view.js"></script>
   <script src="shell/editor-binding.js"></script>
+  <script src="shell/reminder-delivery.js"></script>
   <script src="shell/memos.js"></script>
   <script src="shell/settings.js"></script>
   <script src="shell/reminders.js"></script>
@@ -924,6 +935,7 @@
   <script src="domain/engagement.js"></script>
   <script src="shell/engagement.js"></script>
   <script src="shell/workspace-history.js"></script>
+  <script src="shell/note-navigation.js"></script>
   <script src="shell/page-tabs.js"></script>
   <script src="shell/source-learning.js"></script>
   <script src="shell/plans.js"></script>

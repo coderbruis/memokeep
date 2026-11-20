@@ -52,7 +52,7 @@
     if (!item || !parsed) return '请使用字母、数字、方向键或功能键';
     if (binding !== [...modifiers.filter(m => parsed.mods.includes(m)), parsed.code].join('+')) return '无效的组合键';
     if (item.group !== '复习' && !parsed.mods.includes(mod) && !/^F\d/.test(parsed.code)) return `请包含 ${isMac ? 'Command' : 'Ctrl'}，避免影响文字输入`;
-    // These combinations remain owned by the OS, Electron or the text editor.
+    // These combinations remain owned by the OS, desktop host or the text editor.
     const primary = parsed.mods.includes(mod);
     const unshifted = !parsed.mods.includes('Alt') && !parsed.mods.includes(isMac?'Control':'Meta');
     if ((primary && unshifted && /^(Key[QRCXVZABIUFNPT]|Equal|Minus|Digit0)$/.test(parsed.code))

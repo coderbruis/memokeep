@@ -3,10 +3,16 @@
 (function expose(root) {
   const pad = value => String(value).padStart(2, '0');
   const DAY_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
+  let calendarProvider = null;
 
-  function dayKey(at) {
+  function civilDayKey(at) {
     const date = at instanceof Date ? at : new Date(at);
     return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+  }
+  const dayKey = at => calendarProvider ? calendarProvider.dayKey(at) : civilDayKey(at);
+  function setCalendarProvider(provider) {
+    if (provider !== null && typeof provider?.dayKey !== 'function') throw new Error('日历接口无效');
+    calendarProvider = provider; return () => { if (calendarProvider === provider) calendarProvider = null; };
   }
   function parseDay(day) {
     const [year, month, date] = String(day).split('-').map(Number);
@@ -15,9 +21,9 @@
   function addDays(day, count) {
     const date = parseDay(day);
     date.setDate(date.getDate() + count);
-    return dayKey(date);
+    return civilDayKey(date);
   }
-  const isDay = value => typeof value === 'string' && DAY_PATTERN.test(value) && dayKey(parseDay(value)) === value;
+  const isDay = value => typeof value === 'string' && DAY_PATTERN.test(value) && civilDayKey(parseDay(value)) === value;
   const daysBetween = (from, to) => Math.round((parseDay(to) - parseDay(from)) / 86_400_000);
 
   // 已结束：手动结束，或过了结束日期。没有结束日期的计划不会自动结束。
@@ -54,7 +60,7 @@
   function dayItems(plan, day, today) {
     const entry = plan.days?.[day] || {}, doneFixed = new Set(entry.doneFixed || []);
     return {
-      fixed: fixedIdsFor(plan, day, today).map(id => ({ ...fixedTask(plan, id), done: doneFixed.has(id) })),
+      fixed: fixedIdsFor(plan, day, today).map(id => ({ ...fixedTask(plan, id), ...(entry.fixedNames?.[id] ? { name: entry.fixedNames[id] } : {}), done: doneFixed.has(id) })),
       tasks: (entry.tasks || []).map(task => ({ ...task, done: Boolean(task.done) })),
     };
   }
@@ -113,7 +119,7 @@
     }
     return pending;
   }
-  const api = { isReviewTask, reviewTasksToComplete, dayKey, parseDay, addDays, isDay, daysBetween, planEnded, lastDay, inPlan, fixedIdsFor, fixedTask, dayStat, dayItems, streak, planDays, progress };
+  const api = { isReviewTask, reviewTasksToComplete, dayKey, civilDayKey, setCalendarProvider, parseDay, addDays, isDay, daysBetween, planEnded, lastDay, inPlan, fixedIdsFor, fixedTask, dayStat, dayItems, streak, planDays, progress };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.MemoKeepPlans = api;
 })(globalThis);

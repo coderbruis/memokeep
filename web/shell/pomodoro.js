@@ -23,7 +23,7 @@
           if (!event.session) continue;
           event.session = { id: config.uid(), ...event.session };
           const session = event.session;
-          await transact(data => { (data.focusSessions ||= []).push(session); });
+          await transact(data => { data.focusSessions ||= []; if (!data.focusSessions.some(row => row.id === session.id)) data.focusSessions.push(session); });
         }
         return events.at(-1) || null;
       }
@@ -67,7 +67,7 @@
     const sessions = () => state.persistence.data.focusSessions || [];
     const today = () => Plans.dayKey(config.now());
     const minutesToday = () => P.minutesByDay(sessions()).get(today()) || 0;
-    const planMinutes = planId => sessions().filter(session => session.planId === planId).reduce((sum, session) => sum + Number(session.minutes || 0), 0);
+    const planMinutes = planId => P.totalMinutes(sessions(), planId);
     const plans = () => state.persistence.data.plans || [];
     const activePlans = () => plans().filter(plan => !Plans.planEnded(plan, today()) && plan.startDate <= today());
     const planName = id => plans().find(plan => plan.id === id)?.name || '';

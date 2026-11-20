@@ -22,6 +22,7 @@
         </div>
         <span id="noteSaveStatus" class="note-save-status${pendingDraft ? ' is-dirty' : ''}" role="status">${pendingDraft ? '未保存' : '已保存'}</span>
         <button type="button" id="saveNoteButton" class="note-save-button" aria-label="保存笔记"${pendingDraft ? '' : ' disabled'} title="保存笔记（${saveShortcut}）"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 3h12l4 4v14H3V3zM7 3v6h9V3M7 21v-8h10v8"/></svg><span>保存</span><kbd class="card-editor-only">${saveShortcut}</kbd></button>
+        ${document?.id ? '<button type="button" class="note-toolbar-icon-button note-references-button" data-open-note-references>关联</button>' : ''}
         <div class="note-history-control">
           <button type="button" id="noteHistoryButton" class="note-toolbar-icon-button" aria-label="历史版本" title="历史版本" aria-haspopup="menu" aria-expanded="false"><svg aria-hidden="true"><use href="#icon-history"></use></svg><span class="card-editor-only">历史版本</span></button>
           <div id="noteHistoryMenu" class="note-history-menu hidden" role="menu" aria-label="最近保存的版本"></div>

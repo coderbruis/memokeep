@@ -128,7 +128,7 @@
       document.addEventListener('scroll', hideSidebarTooltip, true);
       window.addEventListener('blur', hideSidebarTooltip);
       // Bind to the buttons themselves. Delegated pointerover is unreliable in the
-      // Electron renderer when the SVG <use> element is the event target.
+      // desktop WebView when the SVG <use> element is the event target.
       $$(sidebarTooltipSelector).forEach(target => {
         if (target.matches('.sidebar-action-bar button')) target.removeAttribute('title');
         target.addEventListener('pointerdown', hideSidebarTooltip);

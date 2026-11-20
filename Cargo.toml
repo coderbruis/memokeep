@@ -1,0 +1,10 @@
+[workspace]
+members = ["crates/memokeep-storage", "crates/memokeep-desktop-services", "crates/memokeep-tauri", "apps/desktop/src-tauri"]
+resolver = "2"
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
+
+[workspace.lints.clippy]
+unwrap_used = "deny"
+expect_used = "deny"

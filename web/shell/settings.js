@@ -43,7 +43,14 @@
       state.shell.reminderIntervalChoices?.setChoiceByValue(reminderValue);
       config.$('#activeHoursStart').value = env.application.state.settings.current.activeHoursStart;
       config.$('#activeHoursEnd').value = env.application.state.settings.current.activeHoursEnd;
-      config.$('#knowledgeStoragePath').textContent = env.application.state.settings.current.knowledgeStoragePath || state.shell.localDataPath;
+      const storagePath = config.$('#knowledgeStoragePath');
+      if (config.desktop?.markdownPublishing) {
+        storagePath.closest('section').querySelector('h2').textContent = 'Markdown 持续发布';
+        storagePath.previousElementSibling.textContent = '当前发布目录';
+        config.$('#chooseKnowledgeStorageBtn').textContent = '选择发布目录';
+      }
+      storagePath.textContent = env.application.state.settings.current.knowledgeStoragePath
+        || (config.desktop?.markdownPublishing ? '未选择发布目录' : state.shell.localDataPath);
       config.$('#knowledgeSyncHint').textContent = ''; config.$('#knowledgeSyncHint').hidden = true;
       config.$('#dataSummary').textContent = `${env.application.state.knowledge.libraries.length} 个知识库 · ${env.application.state.knowledge.documents.length} 个文档 · ${env.application.state.knowledge.items.length} 条知识 · ${env.application.state.cards.all.length} 张卡片 · ${env.application.state.memos.all.length} 条备忘录 · ${env.application.state.review.records.length} 次复习`;
     }
@@ -79,12 +86,21 @@
     }
     function showBackupPreview(preview, apply) {
       const current=actions.backupCounts(state.persistence.data),labels={libraries:'知识库',notes:'笔记',cards:'卡片',reviews:'复习记录',memos:'备忘录',candidates:'候选',versions:'历史版本',media:'内含图片'};
+      const counts = Object.entries(labels).map(([key, label]) => {
+        const change = preview.changes?.[key];
+        const detail = change ? `<small>新增 ${Number(change.added)} · 更新 ${Number(change.updated)} · 移除 ${Number(change.removed)}</small>` : '';
+        return `<div><span>${label}</span><strong>${current[key] || 0} → ${preview.summary[key] || 0}</strong>${detail}</div>`;
+      }).join('');
+      const attachmentCounts = Object.values(preview.extensions || {}).map(summary =>
+        `<div data-backup-extension><span>${actions.escapeHtml(summary.label || '扩展附件')}</span><strong>可恢复 ${Number(summary.attachments) || 0} · 缺少 ${Number(summary.missing) || 0}</strong></div>`).join('');
+      const warnings = (Array.isArray(preview.warnings) ? preview.warnings : []).filter(message => typeof message === 'string').map(message =>
+        `<p class="hint" data-backup-warning>${actions.escapeHtml(message)}</p>`).join('');
       const dialog=env.document.createElement('dialog');dialog.className='backup-preview-dialog';dialog.id='backupRestorePreview';dialog.setAttribute('aria-labelledby','backupPreviewTitle');
-      dialog.innerHTML=`<header><h2 id="backupPreviewTitle">恢复前检查</h2><button type="button" aria-label="关闭" data-backup-cancel>×</button></header><p>${actions.escapeHtml(preview.name||'JSON备份')}</p><div class="backup-preview-counts">${Object.entries(labels).map(([key,label])=>`<div><span>${label}</span><strong>${current[key]||0} → ${preview.summary[key]||0}</strong></div>`).join('')}</div><p class="hint">将替换本机内容，可撤销；存储目录不变。</p>${preview.legacy?'<p class="hint">此备份不含本地图片。</p>':''}<p data-backup-error role="alert"></p><footer><button type="button" data-backup-cancel>取消</button><button type="button" data-backup-apply class="primary">确认恢复</button></footer>`;
+      dialog.innerHTML=`<header><h2 id="backupPreviewTitle">恢复前检查</h2><button type="button" aria-label="关闭" data-backup-cancel>×</button></header><p>${actions.escapeHtml(preview.name||'JSON备份')}</p><div class="backup-preview-counts">${counts}${attachmentCounts}</div><p class="hint">将替换本机内容，可撤销；存储目录不变。</p>${preview.legacy?'<p class="hint">此备份没有完整的本地图片清单。</p>':''}${warnings}<p data-backup-error role="alert"></p><footer><button type="button" data-backup-cancel>取消</button><button type="button" data-backup-apply class="primary">确认恢复</button></footer>`;
       env.document.body.append(dialog);let applying=false,applied=false;
       const close=()=>{if(!applying)dialog.close()};dialog.querySelectorAll('[data-backup-cancel]').forEach(button=>button.onclick=close);
       dialog.addEventListener('cancel',event=>{if(applying)event.preventDefault()});
-      dialog.addEventListener('close',()=>{if(!applied&&preview.token)void config.desktop?.importBackup?.({cancel:preview.token});dialog.remove()},{once:true});
+      dialog.addEventListener('close',()=>{if(!applied&&preview.token)void config.desktop.importBackup({cancel:preview.token}).catch(()=>{});dialog.remove()},{once:true});
       dialog.querySelector('[data-backup-apply]').onclick=async()=>{
         if(applying)return;applying=true;dialog.querySelectorAll('button').forEach(button=>button.disabled=true);dialog.querySelector('[data-backup-error]').textContent='';
         try{const restored=await apply();applied=true;state.shell.backupUndoAvailable=true;dialog.close();actions.adoptRestoredBackup(restored)}
@@ -182,7 +198,10 @@
       state.persistence.data.settings.knowledgeStoragePath = selectedPath;
       await env.application.persistence.save();
       actions.renderSettings();
-      actions.showToast('存储位置已更新，知识库与记忆卡片笔记已同步');
+      if (config.desktop.markdownPublishing) {
+        const { exportError } = await config.desktop.getMarkdownPublishStatus();
+        actions.showToast(exportError || 'Markdown 发布目录已更新', Boolean(exportError));
+      } else actions.showToast('存储位置已更新，知识库与记忆卡片笔记已同步');
     }
 
     async function handleWebBackupInput(event) {
@@ -190,6 +209,7 @@
         const file=event.target.files[0];if(!file)return;if(file.size>700*1024*1024)throw new Error('备份文件过大');
         const raw=JSON.parse(await file.text()),summary=actions.backupCounts(raw);
         if(raw.backup?.media?.length)throw new Error('此备份包含本地图片，请在桌面版恢复以保留完整媒体');
+        if(raw.backup?.extensions && Object.keys(raw.backup.extensions).length)throw new Error('此备份包含扩展附件，请在支持相应功能的桌面版恢复');
         actions.showBackupPreview({name:file.name,summary,legacy:!raw.backup?.mediaIncluded},async()=>{
           const previous=env.structuredClone(state.persistence.data),normalized=actions.normalize(raw);delete normalized.backup;
           normalized.settings={...normalized.settings,knowledgeStoragePath:previous.settings.knowledgeStoragePath||''};
@@ -238,6 +258,15 @@
       config.$('#autoAddGists') && (config.$('#autoAddGists').onchange=event=>actions.setAutoAddGists?.(event.target.checked));
       config.$('#settingsStudyPlanBtn') && (config.$('#settingsStudyPlanBtn').onclick=actions.openStudyPlanSettings);
       config.$('#exportBackupBtn').onclick = actions.exportBackup;
+      const moduleExport = config.$('#exportModuleJsonBtn');
+      if (moduleExport && config.desktop?.exportModuleJson) {
+        moduleExport.hidden = false;
+        moduleExport.onclick = async () => {
+          if (!await env.application.editor.session.flushNoteTabsForWindowClose()) return;
+          try { if (await config.desktop.exportModuleJson()) actions.showToast('模块 JSON 已导出'); }
+          catch (error) { actions.showToast(error.message, true); }
+        };
+      }
       config.$('#importBackupBtn').onclick = actions.importBackup;
       config.$('#exportCardsBtn').onclick = actions.exportCards;
     }

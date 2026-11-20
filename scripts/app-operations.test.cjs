@@ -101,10 +101,14 @@ test('restart retains review/lapse history and session records while resetting s
   assert.deepEqual(card.schedulerData, {}); assert.equal(card.strength, 0); assert.equal(card.status, 'active');
   assert.deepEqual(h.state.review.records, records); assert.deepEqual(h.state.review.sessions.all.queue, ['a']);
 });
-test('restart failure retains pending changes and selection, as before', async () => {
+test('restart failure retains the committed schedule and selection for an atomic retry', async () => {
   const h = setup(), ids = new Set(['a']); h.control.fail = true;
+  const before = structuredClone(h.state.read());
   await assert.rejects(h.cards.restart(ids), /write failed/);
-  assert.equal(ids.size, 1); assert.equal(h.state.cards.byId('a').schedulerResetAt, timestamp);
+  assert.equal(ids.size, 1); assert.deepEqual(h.state.read(), before);
+  h.control.fail = false;
+  assert.equal(await h.cards.restart(ids), 1);
+  assert.equal(h.state.cards.byId('a').schedulerResetAt, timestamp);
 });
 test('memo create and update preserve completion/repeat metadata and save exactly once per operation', async () => {
   const h = setup(); await h.memos.upsert(null, { title: 'new', updatedAt: iso, repeat: 'weekly' }, iso);

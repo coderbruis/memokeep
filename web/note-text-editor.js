@@ -2,6 +2,7 @@ function renderPlainTextNoteEditor(library, doc) {
   return `<div id="inlineMarkdownNoteForm" class="clean-note-editor note-text-editor" data-document-id="${applicationShell.actions.escapeHtml(doc.id)}">
     <div class="note-editor-toolbar"><button type="button" id="closeInlineEditorBtn" class="note-back-button" aria-label="返回知识库"><svg aria-hidden="true"><use href="#icon-arrow-left"></use></svg><span>返回</span></button>
       <span id="noteSaveStatus" class="note-save-status" role="status">已保存</span><button type="button" id="saveNoteButton" class="note-save-button" aria-label="保存文件"><svg aria-hidden="true"><use href="#icon-save"></use></svg><span>保存</span></button>
+      <button type="button" class="note-toolbar-icon-button note-references-button" data-open-note-references>关联</button>
       <div class="note-history-control"><button type="button" id="noteHistoryButton" class="note-toolbar-icon-button" aria-label="历史版本" aria-haspopup="menu" aria-expanded="false"><svg aria-hidden="true"><use href="#icon-history"></use></svg></button><div id="noteHistoryMenu" class="note-history-menu hidden" role="menu" aria-label="历史版本"></div></div></div>
     <div class="note-text-paper note-open-fade"><div class="note-text-location">${applicationShell.actions.escapeHtml(library?.name || '')}</div>
       <div class="note-text-title"><input id="inlineMarkdownNoteTitle" class="note-title-input" maxlength="100" aria-label="文件名称" value="${applicationShell.actions.escapeHtml(doc.title)}"></div>${renderNoteTagControl()}
@@ -74,7 +75,7 @@ function bindPlainTextNoteEditor(doc) {
       applicationShell.actions.showToast('文件名称不能为空', true); title.focus(); return false;
     }
     const draft = noteDraftTab(id);
-    try { await application.persistence.transact(data => {
+    try { await (application.persistence.transactNote || application.persistence.transact)(data => {
       const existing = data.documents.find(doc => doc.id === id), previous = existing || draft?.draftDocument;
       if (!previous) throw new Error('文件已不存在');
       const timestamp = new Date().toISOString();

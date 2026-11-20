@@ -1,0 +1,989 @@
+{
+  "version": 1,
+  "schedulerVersion": "fsrs-6/ts-fsrs-5.4.2",
+  "vectors": [
+    {
+      "id": "new-again",
+      "input": {
+        "options": null,
+        "card": {
+          "id": "card-a",
+          "status": "active",
+          "dueAt": 1789207200000,
+          "reviewCount": 0,
+          "schedulerVersion": "mvp-1"
+        },
+        "records": [],
+        "rating": "again",
+        "at": 1789207200000
+      },
+      "expected": {
+        "card": {
+          "id": "card-a",
+          "status": "active",
+          "dueAt": 1789207260000,
+          "reviewCount": 1,
+          "schedulerVersion": "fsrs-6/ts-fsrs-5.4.2",
+          "lastReviewedAt": 1789207200000,
+          "lapseCount": 1,
+          "strength": 0,
+          "schedulerData": {
+            "due": "2026-09-12T10:01:00.000Z",
+            "stability": 0.212,
+            "difficulty": 6.4133,
+            "elapsed_days": 0,
+            "scheduled_days": 0,
+            "reps": 1,
+            "lapses": 0,
+            "learning_steps": 0,
+            "state": 1,
+            "last_review": "2026-09-12T10:00:00.000Z"
+          },
+          "updatedAt": "2026-09-12T10:00:00.000Z"
+        },
+        "log": {
+          "cardId": "card-a",
+          "rating": "again",
+          "reviewedAt": 1789207200000,
+          "previousDueAt": 1789207200000,
+          "nextDueAt": 1789207260000,
+          "schedulerVersion": "fsrs-6/ts-fsrs-5.4.2",
+          "fsrs": {
+            "rating": 1,
+            "state": 0,
+            "due": "2026-09-12T10:00:00.000Z",
+            "stability": 0,
+            "difficulty": 0,
+            "elapsed_days": 0,
+            "last_elapsed_days": 0,
+            "scheduled_days": 0,
+            "learning_steps": 0,
+            "review": "2026-09-12T10:00:00.000Z"
+          },
+          "schedulerBefore": {
+            "due": "2026-09-12T10:00:00.000Z",
+            "stability": 0,
+            "difficulty": 0,
+            "elapsed_days": 0,
+            "scheduled_days": 0,
+            "reps": 0,
+            "lapses": 0,
+            "learning_steps": 0,
+            "state": 0
+          },
+          "schedulerAfter": {
+            "due": "2026-09-12T10:01:00.000Z",
+            "stability": 0.212,
+            "difficulty": 6.4133,
+            "elapsed_days": 0,
+            "scheduled_days": 0,
+            "reps": 1,
+            "lapses": 0,
+            "learning_steps": 0,
+            "state": 1,
+            "last_review": "2026-09-12T10:00:00.000Z"
+          }
+        }
+      }
+    },
+    {
+      "id": "new-hard",
+      "input": {
+        "options": null,
+        "card": {
+          "id": "card-a",
+          "status": "active",
+          "dueAt": 1789207200000,
+          "reviewCount": 0,
+          "schedulerVersion": "mvp-1"
+        },
+        "records": [],
+        "rating": "hard",
+        "at": 1789207200000
+      },
+      "expected": {
+        "card": {
+          "id": "card-a",
+          "status": "active",
+          "dueAt": 1789207560000,
+          "reviewCount": 1,
+          "schedulerVersion": "fsrs-6/ts-fsrs-5.4.2",
+          "lastReviewedAt": 1789207200000,
+          "lapseCount": 0,
+          "strength": 0,
+          "schedulerData": {
+            "due": "2026-09-12T10:06:00.000Z",
+            "stability": 1.2931,
+            "difficulty": 5.11217071,
+            "elapsed_days": 0,
+            "scheduled_days": 0,
+            "reps": 1,
+            "lapses": 0,
+            "learning_steps": 0,
+            "state": 1,
+            "last_review": "2026-09-12T10:00:00.000Z"
+          },
+          "updatedAt": "2026-09-12T10:00:00.000Z"
+        },
+        "log": {
+          "cardId": "card-a",
+          "rating": "hard",
+          "reviewedAt": 1789207200000,
+          "previousDueAt": 1789207200000,
+          "nextDueAt": 1789207560000,
+          "schedulerVersion": "fsrs-6/ts-fsrs-5.4.2",
+          "fsrs": {
+            "rating": 2,
+            "state": 0,
+            "due": "2026-09-12T10:00:00.000Z",
+            "stability": 0,
+            "difficulty": 0,
+            "elapsed_days": 0,
+            "last_elapsed_days": 0,
+            "scheduled_days": 0,
+            "learning_steps": 0,
+            "review": "2026-09-12T10:00:00.000Z"
+          },
+          "schedulerBefore": {
+            "due": "2026-09-12T10:00:00.000Z",
+            "stability": 0,
+            "difficulty": 0,
+            "elapsed_days": 0,
+            "scheduled_days": 0,
+            "reps": 0,
+            "lapses": 0,
+            "learning_steps": 0,
+            "state": 0
+          },
+          "schedulerAfter": {
+            "due": "2026-09-12T10:06:00.000Z",
+            "stability": 1.2931,
+            "difficulty": 5.11217071,
+            "elapsed_days": 0,
+            "scheduled_days": 0,
+            "reps": 1,
+            "lapses": 0,
+            "learning_steps": 0,
+            "state": 1,
+            "last_review": "2026-09-12T10:00:00.000Z"
+          }
+        }
+      }
+    },
+    {
+      "id": "new-good",
+      "input": {
+        "options": null,
+        "card": {
+          "id": "card-a",
+          "status": "active",
+          "dueAt": 1789207200000,
+          "reviewCount": 0,
+          "schedulerVersion": "mvp-1"
+        },
+        "records": [],
+        "rating": "good",
+        "at": 1789207200000
+      },
+      "expected": {
+        "card": {
+          "id": "card-a",
+          "status": "active",
+          "dueAt": 1789207800000,
+          "reviewCount": 1,
+          "schedulerVersion": "fsrs-6/ts-fsrs-5.4.2",
+          "lastReviewedAt": 1789207200000,
+          "lapseCount": 0,
+          "strength": 1,
+          "schedulerData": {
+            "due": "2026-09-12T10:10:00.000Z",
+            "stability": 2.3065,
+            "difficulty": 2.11810397,
+            "elapsed_days": 0,
+            "scheduled_days": 0,
+            "reps": 1,
+            "lapses": 0,
+            "learning_steps": 1,
+            "state": 1,
+            "last_review": "2026-09-12T10:00:00.000Z"
+          },
+          "updatedAt": "2026-09-12T10:00:00.000Z"
+        },
+        "log": {
+          "cardId": "card-a",
+          "rating": "good",
+          "reviewedAt": 1789207200000,
+          "previousDueAt": 1789207200000,
+          "nextDueAt": 1789207800000,
+          "schedulerVersion": "fsrs-6/ts-fsrs-5.4.2",
+          "fsrs": {
+            "rating": 3,
+            "state": 0,
+            "due": "2026-09-12T10:00:00.000Z",
+            "stability": 0,
+            "difficulty": 0,
+            "elapsed_days": 0,
+            "last_elapsed_days": 0,
+            "scheduled_days": 0,
+            "learning_steps": 0,
+            "review": "2026-09-12T10:00:00.000Z"
+          },
+          "schedulerBefore": {
+            "due": "2026-09-12T10:00:00.000Z",
+            "stability": 0,
+            "difficulty": 0,
+            "elapsed_days": 0,
+            "scheduled_days": 0,
+            "reps": 0,
+            "lapses": 0,
+            "learning_steps": 0,
+            "state": 0
+          },
+          "schedulerAfter": {
+            "due": "2026-09-12T10:10:00.000Z",
+            "stability": 2.3065,
+            "difficulty": 2.11810397,
+            "elapsed_days": 0,
+            "scheduled_days": 0,
+            "reps": 1,
+            "lapses": 0,
+            "learning_steps": 1,
+            "state": 1,
+            "last_review": "2026-09-12T10:00:00.000Z"
+          }
+        }
+      }
+    },
+    {
+      "id": "new-easy",
+      "input": {
+        "options": null,
+        "card": {
+          "id": "card-a",
+          "status": "active",
+          "dueAt": 1789207200000,
+          "reviewCount": 0,
+          "schedulerVersion": "mvp-1"
+        },
+        "records": [],
+        "rating": "easy",
+        "at": 1789207200000
+      },
+      "expected": {
+        "card": {
+          "id": "card-a",
+          "status": "active",
+          "dueAt": 1789898400000,
+          "reviewCount": 1,
+          "schedulerVersion": "fsrs-6/ts-fsrs-5.4.2",
+          "lastReviewedAt": 1789207200000,
+          "lapseCount": 0,
+          "strength": 2,
+          "schedulerData": {
+            "due": "2026-09-20T10:00:00.000Z",
+            "stability": 8.2956,
+            "difficulty": 1,
+            "elapsed_days": 0,
+            "scheduled_days": 8,
+            "reps": 1,
+            "lapses": 0,
+            "learning_steps": 0,
+            "state": 2,
+            "last_review": "2026-09-12T10:00:00.000Z"
+          },
+          "updatedAt": "2026-09-12T10:00:00.000Z"
+        },
+        "log": {
+          "cardId": "card-a",
+          "rating": "easy",
+          "reviewedAt": 1789207200000,
+          "previousDueAt": 1789207200000,
+          "nextDueAt": 1789898400000,
+          "schedulerVersion": "fsrs-6/ts-fsrs-5.4.2",
+          "fsrs": {
+            "rating": 4,
+            "state": 0,
+            "due": "2026-09-12T10:00:00.000Z",
+            "stability": 0,
+            "difficulty": 0,
+            "elapsed_days": 0,
+            "last_elapsed_days": 0,
+            "scheduled_days": 0,
+            "learning_steps": 0,
+            "review": "2026-09-12T10:00:00.000Z"
+          },
+          "schedulerBefore": {
+            "due": "2026-09-12T10:00:00.000Z",
+            "stability": 0,
+            "difficulty": 0,
+            "elapsed_days": 0,
+            "scheduled_days": 0,
+            "reps": 0,
+            "lapses": 0,
+            "learning_steps": 0,
+            "state": 0
+          },
+          "schedulerAfter": {
+            "due": "2026-09-20T10:00:00.000Z",
+            "stability": 8.2956,
+            "difficulty": 1,
+            "elapsed_days": 0,
+            "scheduled_days": 8,
+            "reps": 1,
+            "lapses": 0,
+            "learning_steps": 0,
+            "state": 2,
+            "last_review": "2026-09-12T10:00:00.000Z"
+          }
+        }
+      }
+    },
+    {
+      "id": "first-hard-override",
+      "input": {
+        "options": {
+          "hardMinutes": 30
+        },
+        "card": {
+          "id": "card-a",
+          "status": "active",
+          "dueAt": 1789207200000,
+          "reviewCount": 0,
+          "schedulerVersion": "mvp-1"
+        },
+        "records": [],
+        "rating": "hard",
+        "at": 1789207200000
+      },
+      "expected": {
+        "card": {
+          "id": "card-a",
+          "status": "active",
+          "dueAt": 1789209000000,
+          "reviewCount": 1,
+          "schedulerVersion": "fsrs-6/ts-fsrs-5.4.2",
+          "lastReviewedAt": 1789207200000,
+          "lapseCount": 0,
+          "strength": 0,
+          "schedulerData": {
+            "due": "2026-09-12T10:30:00.000Z",
+            "stability": 1.2931,
+            "difficulty": 5.11217071,
+            "elapsed_days": 0,
+            "scheduled_days": 0,
+            "reps": 1,
+            "lapses": 0,
+            "learning_steps": 0,
+            "state": 1,
+            "last_review": "2026-09-12T10:00:00.000Z"
+          },
+          "updatedAt": "2026-09-12T10:00:00.000Z"
+        },
+        "log": {
+          "cardId": "card-a",
+          "rating": "hard",
+          "reviewedAt": 1789207200000,
+          "previousDueAt": 1789207200000,
+          "nextDueAt": 1789209000000,
+          "schedulerVersion": "fsrs-6/ts-fsrs-5.4.2",
+          "fsrs": {
+            "rating": 2,
+            "state": 0,
+            "due": "2026-09-12T10:00:00.000Z",
+            "stability": 0,
+            "difficulty": 0,
+            "elapsed_days": 0,
+            "last_elapsed_days": 0,
+            "scheduled_days": 0,
+            "learning_steps": 0,
+            "review": "2026-09-12T10:00:00.000Z"
+          },
+          "schedulerBefore": {
+            "due": "2026-09-12T10:00:00.000Z",
+            "stability": 0,
+            "difficulty": 0,
+            "elapsed_days": 0,
+            "scheduled_days": 0,
+            "reps": 0,
+            "lapses": 0,
+            "learning_steps": 0,
+            "state": 0
+          },
+          "schedulerAfter": {
+            "due": "2026-09-12T10:30:00.000Z",
+            "stability": 1.2931,
+            "difficulty": 5.11217071,
+            "elapsed_days": 0,
+            "scheduled_days": 0,
+            "reps": 1,
+            "lapses": 0,
+            "learning_steps": 0,
+            "state": 1,
+            "last_review": "2026-09-12T10:00:00.000Z"
+          }
+        }
+      }
+    },
+    {
+      "id": "easy-override-capped",
+      "input": {
+        "options": {
+          "easyDays": 30,
+          "maximumInterval": 7
+        },
+        "card": {
+          "id": "card-a",
+          "status": "active",
+          "dueAt": 1789207200000,
+          "reviewCount": 0,
+          "schedulerVersion": "mvp-1"
+        },
+        "records": [],
+        "rating": "easy",
+        "at": 1789207200000
+      },
+      "expected": {
+        "card": {
+          "id": "card-a",
+          "status": "active",
+          "dueAt": 1789812000000,
+          "reviewCount": 1,
+          "schedulerVersion": "fsrs-6/ts-fsrs-5.4.2",
+          "lastReviewedAt": 1789207200000,
+          "lapseCount": 0,
+          "strength": 2,
+          "schedulerData": {
+            "due": "2026-09-19T10:00:00.000Z",
+            "stability": 8.2956,
+            "difficulty": 1,
+            "elapsed_days": 0,
+            "scheduled_days": 7,
+            "reps": 1,
+            "lapses": 0,
+            "learning_steps": 0,
+            "state": 2,
+            "last_review": "2026-09-12T10:00:00.000Z"
+          },
+          "updatedAt": "2026-09-12T10:00:00.000Z"
+        },
+        "log": {
+          "cardId": "card-a",
+          "rating": "easy",
+          "reviewedAt": 1789207200000,
+          "previousDueAt": 1789207200000,
+          "nextDueAt": 1789812000000,
+          "schedulerVersion": "fsrs-6/ts-fsrs-5.4.2",
+          "fsrs": {
+            "rating": 4,
+            "state": 0,
+            "due": "2026-09-12T10:00:00.000Z",
+            "stability": 0,
+            "difficulty": 0,
+            "elapsed_days": 0,
+            "last_elapsed_days": 0,
+            "scheduled_days": 0,
+            "learning_steps": 0,
+            "review": "2026-09-12T10:00:00.000Z"
+          },
+          "schedulerBefore": {
+            "due": "2026-09-12T10:00:00.000Z",
+            "stability": 0,
+            "difficulty": 0,
+            "elapsed_days": 0,
+            "scheduled_days": 0,
+            "reps": 0,
+            "lapses": 0,
+            "learning_steps": 0,
+            "state": 0
+          },
+          "schedulerAfter": {
+            "due": "2026-09-19T10:00:00.000Z",
+            "stability": 8.2956,
+            "difficulty": 1,
+            "elapsed_days": 0,
+            "scheduled_days": 7,
+            "reps": 1,
+            "lapses": 0,
+            "learning_steps": 0,
+            "state": 2,
+            "last_review": "2026-09-12T10:00:00.000Z"
+          }
+        }
+      }
+    },
+    {
+      "id": "review-lapse",
+      "input": {
+        "options": null,
+        "card": {
+          "id": "card-a",
+          "status": "active",
+          "dueAt": 1789898400000,
+          "reviewCount": 1,
+          "schedulerVersion": "fsrs-6/ts-fsrs-5.4.2",
+          "lastReviewedAt": 1789207200000,
+          "lapseCount": 0,
+          "strength": 2,
+          "schedulerData": {
+            "due": "2026-09-20T10:00:00.000Z",
+            "stability": 8.2956,
+            "difficulty": 1,
+            "elapsed_days": 0,
+            "scheduled_days": 8,
+            "reps": 1,
+            "lapses": 0,
+            "learning_steps": 0,
+            "state": 2,
+            "last_review": "2026-09-12T10:00:00.000Z"
+          },
+          "updatedAt": "2026-09-12T10:00:00.000Z"
+        },
+        "records": [],
+        "rating": "again",
+        "at": 1789898400000
+      },
+      "expected": {
+        "card": {
+          "id": "card-a",
+          "status": "active",
+          "dueAt": 1789899000000,
+          "reviewCount": 2,
+          "schedulerVersion": "fsrs-6/ts-fsrs-5.4.2",
+          "lastReviewedAt": 1789898400000,
+          "lapseCount": 1,
+          "strength": 1,
+          "schedulerData": {
+            "due": "2026-09-20T10:10:00.000Z",
+            "stability": 1.38863246,
+            "difficulty": 7.02698957,
+            "elapsed_days": 8,
+            "scheduled_days": 0,
+            "reps": 2,
+            "lapses": 1,
+            "learning_steps": 0,
+            "state": 3,
+            "last_review": "2026-09-20T10:00:00.000Z"
+          },
+          "updatedAt": "2026-09-20T10:00:00.000Z"
+        },
+        "log": {
+          "cardId": "card-a",
+          "rating": "again",
+          "reviewedAt": 1789898400000,
+          "previousDueAt": 1789898400000,
+          "nextDueAt": 1789899000000,
+          "schedulerVersion": "fsrs-6/ts-fsrs-5.4.2",
+          "fsrs": {
+            "rating": 1,
+            "state": 2,
+            "due": "2026-09-12T10:00:00.000Z",
+            "stability": 8.2956,
+            "difficulty": 1,
+            "elapsed_days": 8,
+            "last_elapsed_days": 0,
+            "scheduled_days": 8,
+            "learning_steps": 0,
+            "review": "2026-09-20T10:00:00.000Z"
+          },
+          "schedulerBefore": {
+            "due": "2026-09-20T10:00:00.000Z",
+            "stability": 8.2956,
+            "difficulty": 1,
+            "elapsed_days": 0,
+            "scheduled_days": 8,
+            "reps": 1,
+            "lapses": 0,
+            "learning_steps": 0,
+            "state": 2,
+            "last_review": "2026-09-12T10:00:00.000Z"
+          },
+          "schedulerAfter": {
+            "due": "2026-09-20T10:10:00.000Z",
+            "stability": 1.38863246,
+            "difficulty": 7.02698957,
+            "elapsed_days": 8,
+            "scheduled_days": 0,
+            "reps": 2,
+            "lapses": 1,
+            "learning_steps": 0,
+            "state": 3,
+            "last_review": "2026-09-20T10:00:00.000Z"
+          }
+        }
+      }
+    },
+    {
+      "id": "valid-state-capped",
+      "input": {
+        "options": {
+          "maximumInterval": 3
+        },
+        "card": {
+          "id": "card-a",
+          "status": "active",
+          "dueAt": 1789898400000,
+          "reviewCount": 1,
+          "schedulerVersion": "fsrs-6/ts-fsrs-5.4.2",
+          "lastReviewedAt": 1789207200000,
+          "lapseCount": 0,
+          "strength": 2,
+          "schedulerData": {
+            "due": "2026-09-20T10:00:00.000Z",
+            "stability": 8.2956,
+            "difficulty": 1,
+            "elapsed_days": 0,
+            "scheduled_days": 8,
+            "reps": 1,
+            "lapses": 0,
+            "learning_steps": 0,
+            "state": 2,
+            "last_review": "2026-09-12T10:00:00.000Z"
+          },
+          "updatedAt": "2026-09-12T10:00:00.000Z"
+        },
+        "records": [],
+        "rating": "good",
+        "at": 1789898400000
+      },
+      "expected": {
+        "card": {
+          "id": "card-a",
+          "status": "active",
+          "dueAt": 1790157600000,
+          "reviewCount": 2,
+          "schedulerVersion": "fsrs-6/ts-fsrs-5.4.2",
+          "lastReviewedAt": 1789898400000,
+          "lapseCount": 0,
+          "strength": 3,
+          "schedulerData": {
+            "due": "2026-09-23T10:00:00.000Z",
+            "stability": 38.90515015,
+            "difficulty": 1,
+            "elapsed_days": 8,
+            "scheduled_days": 3,
+            "reps": 2,
+            "lapses": 0,
+            "learning_steps": 0,
+            "state": 2,
+            "last_review": "2026-09-20T10:00:00.000Z"
+          },
+          "updatedAt": "2026-09-20T10:00:00.000Z"
+        },
+        "log": {
+          "cardId": "card-a",
+          "rating": "good",
+          "reviewedAt": 1789898400000,
+          "previousDueAt": 1789898400000,
+          "nextDueAt": 1790157600000,
+          "schedulerVersion": "fsrs-6/ts-fsrs-5.4.2",
+          "fsrs": {
+            "rating": 3,
+            "state": 2,
+            "due": "2026-09-12T10:00:00.000Z",
+            "stability": 8.2956,
+            "difficulty": 1,
+            "elapsed_days": 8,
+            "last_elapsed_days": 0,
+            "scheduled_days": 8,
+            "learning_steps": 0,
+            "review": "2026-09-20T10:00:00.000Z"
+          },
+          "schedulerBefore": {
+            "due": "2026-09-20T10:00:00.000Z",
+            "stability": 8.2956,
+            "difficulty": 1,
+            "elapsed_days": 0,
+            "scheduled_days": 8,
+            "reps": 1,
+            "lapses": 0,
+            "learning_steps": 0,
+            "state": 2,
+            "last_review": "2026-09-12T10:00:00.000Z"
+          },
+          "schedulerAfter": {
+            "due": "2026-09-23T10:00:00.000Z",
+            "stability": 38.90515015,
+            "difficulty": 1,
+            "elapsed_days": 8,
+            "scheduled_days": 3,
+            "reps": 2,
+            "lapses": 0,
+            "learning_steps": 0,
+            "state": 2,
+            "last_review": "2026-09-20T10:00:00.000Z"
+          }
+        }
+      }
+    },
+    {
+      "id": "legacy-unsorted-dedupe-replay",
+      "input": {
+        "options": null,
+        "card": {
+          "id": "card-a",
+          "status": "active",
+          "dueAt": 1789207200000,
+          "reviewCount": 0,
+          "schedulerVersion": "fsrs-6/ts-fsrs-5.4.2",
+          "schedulerData": {
+            "stability": -1
+          }
+        },
+        "records": [
+          {
+            "id": "second",
+            "cardId": "card-a",
+            "rating": "good",
+            "reviewedAt": 1789120800000
+          },
+          {
+            "id": "first",
+            "cardId": "card-a",
+            "rating": "again",
+            "reviewedAt": "2026-09-10T10:00:00.000Z"
+          },
+          {
+            "id": "second",
+            "cardId": "card-a",
+            "rating": "again",
+            "reviewedAt": 1788516000000
+          },
+          {
+            "id": "foreign",
+            "cardId": "another-card",
+            "rating": "easy",
+            "reviewedAt": 1789120800000
+          }
+        ],
+        "rating": "good",
+        "at": 1789207200000
+      },
+      "expected": {
+        "card": {
+          "id": "card-a",
+          "status": "active",
+          "dueAt": 1789552800000,
+          "reviewCount": 3,
+          "schedulerVersion": "fsrs-6/ts-fsrs-5.4.2",
+          "schedulerData": {
+            "due": "2026-09-16T10:00:00.000Z",
+            "stability": 4.47481716,
+            "difficulty": 6.39094132,
+            "elapsed_days": 1,
+            "scheduled_days": 4,
+            "reps": 3,
+            "lapses": 0,
+            "learning_steps": 0,
+            "state": 2,
+            "last_review": "2026-09-12T10:00:00.000Z"
+          },
+          "lastReviewedAt": 1789207200000,
+          "lapseCount": 1,
+          "strength": 1,
+          "updatedAt": "2026-09-12T10:00:00.000Z"
+        },
+        "log": {
+          "cardId": "card-a",
+          "rating": "good",
+          "reviewedAt": 1789207200000,
+          "previousDueAt": 1789207200000,
+          "nextDueAt": 1789552800000,
+          "schedulerVersion": "fsrs-6/ts-fsrs-5.4.2",
+          "fsrs": {
+            "rating": 3,
+            "state": 1,
+            "due": "2026-09-11T10:00:00.000Z",
+            "stability": 1.88678762,
+            "difficulty": 6.40211507,
+            "elapsed_days": 1,
+            "last_elapsed_days": 1,
+            "scheduled_days": 0,
+            "learning_steps": 1,
+            "review": "2026-09-12T10:00:00.000Z"
+          },
+          "schedulerBefore": {
+            "due": "2026-09-11T10:10:00.000Z",
+            "stability": 1.88678762,
+            "difficulty": 6.40211507,
+            "elapsed_days": 1,
+            "scheduled_days": 0,
+            "reps": 2,
+            "lapses": 0,
+            "learning_steps": 1,
+            "state": 1,
+            "last_review": "2026-09-11T10:00:00.000Z"
+          },
+          "schedulerAfter": {
+            "due": "2026-09-16T10:00:00.000Z",
+            "stability": 4.47481716,
+            "difficulty": 6.39094132,
+            "elapsed_days": 1,
+            "scheduled_days": 4,
+            "reps": 3,
+            "lapses": 0,
+            "learning_steps": 0,
+            "state": 2,
+            "last_review": "2026-09-12T10:00:00.000Z"
+          }
+        }
+      }
+    },
+    {
+      "id": "reset-retains-lifetime-counts",
+      "input": {
+        "options": null,
+        "card": {
+          "id": "card-a",
+          "status": "active",
+          "dueAt": 1789207200000,
+          "reviewCount": 24,
+          "schedulerVersion": "mvp-1",
+          "schedulerResetAt": 1789207200000,
+          "lapseCount": 7,
+          "pointRecall": {
+            "key": [
+              true,
+              false
+            ]
+          }
+        },
+        "records": [
+          {
+            "id": "second",
+            "cardId": "card-a",
+            "rating": "good",
+            "reviewedAt": 1789120800000
+          },
+          {
+            "id": "first",
+            "cardId": "card-a",
+            "rating": "again",
+            "reviewedAt": "2026-09-10T10:00:00.000Z"
+          },
+          {
+            "id": "second",
+            "cardId": "card-a",
+            "rating": "again",
+            "reviewedAt": 1788516000000
+          },
+          {
+            "id": "foreign",
+            "cardId": "another-card",
+            "rating": "easy",
+            "reviewedAt": 1789120800000
+          }
+        ],
+        "rating": "easy",
+        "at": 1789207200000
+      },
+      "expected": {
+        "card": {
+          "id": "card-a",
+          "status": "active",
+          "dueAt": 1789898400000,
+          "reviewCount": 25,
+          "schedulerVersion": "fsrs-6/ts-fsrs-5.4.2",
+          "schedulerResetAt": 1789207200000,
+          "lapseCount": 7,
+          "pointRecall": {
+            "key": [
+              true,
+              false
+            ]
+          },
+          "lastReviewedAt": 1789207200000,
+          "strength": 2,
+          "schedulerData": {
+            "due": "2026-09-20T10:00:00.000Z",
+            "stability": 8.2956,
+            "difficulty": 1,
+            "elapsed_days": 0,
+            "scheduled_days": 8,
+            "reps": 1,
+            "lapses": 0,
+            "learning_steps": 0,
+            "state": 2,
+            "last_review": "2026-09-12T10:00:00.000Z"
+          },
+          "updatedAt": "2026-09-12T10:00:00.000Z"
+        },
+        "log": {
+          "cardId": "card-a",
+          "rating": "easy",
+          "reviewedAt": 1789207200000,
+          "previousDueAt": 1789207200000,
+          "nextDueAt": 1789898400000,
+          "schedulerVersion": "fsrs-6/ts-fsrs-5.4.2",
+          "fsrs": {
+            "rating": 4,
+            "state": 0,
+            "due": "2026-09-12T10:00:00.000Z",
+            "stability": 0,
+            "difficulty": 0,
+            "elapsed_days": 0,
+            "last_elapsed_days": 0,
+            "scheduled_days": 0,
+            "learning_steps": 0,
+            "review": "2026-09-12T10:00:00.000Z"
+          },
+          "schedulerBefore": {
+            "due": "2026-09-12T10:00:00.000Z",
+            "stability": 0,
+            "difficulty": 0,
+            "elapsed_days": 0,
+            "scheduled_days": 0,
+            "reps": 0,
+            "lapses": 0,
+            "learning_steps": 0,
+            "state": 0
+          },
+          "schedulerAfter": {
+            "due": "2026-09-20T10:00:00.000Z",
+            "stability": 8.2956,
+            "difficulty": 1,
+            "elapsed_days": 0,
+            "scheduled_days": 8,
+            "reps": 1,
+            "lapses": 0,
+            "learning_steps": 0,
+            "state": 2,
+            "last_review": "2026-09-12T10:00:00.000Z"
+          }
+        }
+      }
+    },
+    {
+      "id": "clock-before-last-review",
+      "input": {
+        "options": null,
+        "card": {
+          "id": "card-a",
+          "status": "active",
+          "dueAt": 1789898400000,
+          "reviewCount": 1,
+          "schedulerVersion": "fsrs-6/ts-fsrs-5.4.2",
+          "lastReviewedAt": 1789207200000,
+          "lapseCount": 0,
+          "strength": 2,
+          "schedulerData": {
+            "due": "2026-09-20T10:00:00.000Z",
+            "stability": 8.2956,
+            "difficulty": 1,
+            "elapsed_days": 0,
+            "scheduled_days": 8,
+            "reps": 1,
+            "lapses": 0,
+            "learning_steps": 0,
+            "state": 2,
+            "last_review": "2026-09-12T10:00:00.000Z"
+          },
+          "updatedAt": "2026-09-12T10:00:00.000Z"
+        },
+        "records": [],
+        "rating": "good",
+        "at": 1789207199999
+      },
+      "expectedError": "系统时间早于上次复习，请检查系统时间"
+    }
+  ]
+}

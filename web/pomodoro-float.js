@@ -46,11 +46,12 @@
       const data = await window.memoKeepDesktop.read();
       plans = new Map((data.plans || []).map(plan => [plan.id, plan.name]));
       sessions = data.focusSessions || [];
+      window.dispatchEvent(new CustomEvent('focus-data-updated', { detail: { sessions } }));
     } catch { /* 悬浮窗只读数据，失败时保留上一次的名称 */ }
   }
   const planName = id => (id && plans.get(id)) || '未归入计划';
   const todayMinutes = () => P.minutesByDay(sessions).get(P.dayOf(new Date().toISOString())) || 0;
-  const planMinutes = id => sessions.filter(session => session.planId === id).reduce((sum, session) => sum + Number(session.minutes || 0), 0);
+  const planMinutes = id => P.totalMinutes(sessions, id);
   const left = () => state.running && state.endsAt ? Math.max(0, state.endsAt - Date.now()) : state.leftMs;
 
   function ring(size, width) {
@@ -158,6 +159,7 @@
     if (state.planId && !plans.has(state.planId)) await refreshData();
     render();
   });
+  window.addEventListener('focus-statistics-changed', () => { void refreshData().then(render); });
   // 每秒刷新倒计时；计时状态以主进程为准。
   setInterval(() => { if (state?.running) render(); }, 1000);
   (async () => { await refreshData(); state = await api.get(); render(); })();

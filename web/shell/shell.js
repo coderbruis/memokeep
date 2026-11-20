@@ -225,7 +225,7 @@
       if (!doc) { actions.showToast('这篇笔记已移除', true); return false; }
       state.knowledge.selectedLibraryId = doc.knowledgeBaseId;
       const notebook = (state.persistence.data.cardNotebooks || []).find(note => note.sourceDocumentId === doc.id);
-      await actions.openMarkdownNoteEditor(doc, '', null, notebook?.id || null);
+      if (!await actions.openMarkdownNoteEditor(doc, '', null, notebook?.id || null)) return false;
       if (history) config.$('#noteHistoryButton')?.click();
       return true;
     }
@@ -320,12 +320,13 @@
       config.$('#workspaceSearchQuery').focus();
     }
 
-    function renderWorkspaceSearch() {
+    async function renderWorkspaceSearch() {
       const query = config.$('#workspaceSearchQuery').value, terms = workspaceSearchTerms(query), list = config.$('#workspaceSearchResults');
       const scopes = config.$('#workspaceSearchScopes'), count = config.$('#workspaceSearchCount');
-      state.shell.workspaceSearchRenderedQuery = query;
+      const generation = state.shell.workspaceSearchGeneration = (state.shell.workspaceSearchGeneration || 0) + 1;
       config.$('#workspaceSearchClear').hidden = !query;
       if (!terms.length) {
+        state.shell.workspaceSearchRenderedQuery = query;
         const libraries = state.persistence.data.knowledgeBases || [];
         const entries = [...state.persistence.data.documents].sort((a, b) => new Date(b.updatedAt || b.importedAt || 0) - new Date(a.updatedAt || a.importedAt || 0)).slice(0, 5)
           .map(doc => ({ kind: 'note', id: doc.id, title: doc.title || '未命名笔记', path: env.MemoKeepDirectoryTree?.label(libraries, doc.knowledgeBaseId) || '' }));
@@ -336,7 +337,26 @@
           + '<p class="product-search-tips"><span>多个关键词用空格分开，如 <code>接口 超时</code></span><span>同时搜索标题、正文和标签</span></p>';
         return actions.syncWorkspaceSearchActive();
       }
-      const all = env.MemoKeepDomain.searchContent(state.persistence.data, query);
+      let all;
+      if (config.desktop?.searchContent) {
+        if (state.shell.workspaceSearchRenderedQuery !== query) {
+          state.shell.workspaceSearchEntries = [];
+          list.replaceChildren();
+          count.textContent = '正在搜索…';
+        }
+        try { all = await config.desktop.searchContent(query); }
+        catch { /* The shared matcher remains available when the native index cannot be queried. */ }
+        if (generation !== state.shell.workspaceSearchGeneration || config.$('#workspaceSearchQuery').value !== query) return;
+      }
+      all ??= env.MemoKeepDomain.searchContent(state.persistence.data, query);
+      state.shell.workspaceSearchRenderedQuery = query;
+      const sources = new Map((state.persistence.data.cardNotebooks || []).map(note => [note.id, note.sourceDocumentId]));
+      for (const entry of all) {
+        const noteId = entry.kind === 'note' ? entry.id : entry.kind === 'notebook' ? sources.get(entry.id) : null;
+        if (!noteId) continue;
+        const hit = actions.findNotePassage?.(actions.documentById(noteId), terms);
+        if (hit) { entry.hit = { ...hit, noteId }; entry.excerpt = hit.text; }
+      }
       if (state.shell.workspaceSearchScope !== 'all' && !all.some(entry => entry.kind === state.shell.workspaceSearchScope)) state.shell.workspaceSearchScope = 'all';
       const scope = state.shell.workspaceSearchScope || 'all';
       scopes.hidden = !all.length;
@@ -392,10 +412,19 @@
     }
 
     async function openWorkspaceSearchResult(index) {
+      const dialog = config.$('#workspaceSearchDialog');
+      if (!dialog.open || config.$('#workspaceSearchQuery').value !== state.shell.workspaceSearchRenderedQuery) return;
       const entry = state.shell.workspaceSearchEntries?.[index];
       if (!entry) return;
-      config.$('#workspaceSearchDialog').close();
-      if (entry.kind === 'note') { await actions.openWorkspaceNote(entry.id); return; }
+      dialog.close();
+      if (entry.hit && actions.openNoteAtText) {
+        await actions.openNoteAtText(entry.hit.noteId, entry.hit.quote, entry.hit.text);
+        return;
+      }
+      if (entry.kind === 'note') {
+        await actions.openWorkspaceNote(entry.id);
+        return;
+      }
       if (!await env.application.editor.session.leaveActiveNoteEditor()) return;
       if (entry.kind === 'create') {
         actions.showView('libraries');
@@ -413,7 +442,7 @@
     function bindWorkspaceSearch() {
       const input = config.$('#workspaceSearchQuery'), list = config.$('#workspaceSearchResults'), dialog = config.$('#workspaceSearchDialog');
       if (!input || !list || !dialog) return;
-      const rerender = () => { state.shell.workspaceSearchActive = 0; actions.renderWorkspaceSearch(); list.scrollTop = 0; };
+      const rerender = () => { state.shell.workspaceSearchActive = 0; list.scrollTop = 0; return actions.renderWorkspaceSearch(); };
       input.oninput = () => { env.clearTimeout(state.shell.workspaceSearchTimer); state.shell.workspaceSearchTimer = env.setTimeout(rerender, 100); };
       config.$('#workspaceSearchClear').onclick = () => { input.value = ''; env.clearTimeout(state.shell.workspaceSearchTimer); rerender(); input.focus(); };
       config.$('#workspaceSearchScopes').addEventListener('click', event => { const button = event.target.closest('[data-workspace-search-scope]'); if (button && !button.disabled) actions.setWorkspaceSearchScope(button.dataset.workspaceSearchScope); });
@@ -430,7 +459,7 @@
         actions.syncWorkspaceSearchActive(false);
       });
       // 焦点始终留在输入框，↑↓ 只移动当前项。
-      input.addEventListener('keydown', event => {
+      input.addEventListener('keydown', async event => {
         if (event.isComposing || event.keyCode === 229) return;
         const total = state.shell.workspaceSearchEntries?.length || 0;
         if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
@@ -440,9 +469,10 @@
           actions.syncWorkspaceSearchActive();
         } else if (event.key === 'Enter') {
           event.preventDefault();
+          const query = input.value;
           env.clearTimeout(state.shell.workspaceSearchTimer);
-          if (input.value !== state.shell.workspaceSearchRenderedQuery) rerender();
-          void actions.openWorkspaceSearchResult(state.shell.workspaceSearchActive || 0);
+          if (input.value !== state.shell.workspaceSearchRenderedQuery) await rerender();
+          if (input.value === query) void actions.openWorkspaceSearchResult(state.shell.workspaceSearchActive || 0);
         } else if (event.key === 'Tab' && !config.$('#workspaceSearchScopes').hidden) {
           event.preventDefault();
           const tabs = [...config.$$('#workspaceSearchScopes [data-workspace-search-scope]:not([disabled])')];
@@ -456,6 +486,7 @@
     }
 
     function bindProductNavigation() {
+      actions.bindNoteNavigation?.();
       const shortcut = config.$('#workspaceSearchButton kbd');
       if (shortcut) shortcut.textContent = config.desktop?.platform === 'darwin' || /Mac/.test(env.navigator.platform || '') ? '⌘ K' : 'Ctrl K';
       const bind = (selector, callback) => { const button = config.$(selector); if (button) button.onclick = callback; };

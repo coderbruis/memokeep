@@ -10,35 +10,25 @@ MemoKeep 是一款以本地数据为基础的桌面笔记与复习应用，将�
 - **笔记编辑**：富文本、图片、表格、代码块，以及 Mermaid 图表源码编辑与预览。
 - **记忆复习**：从笔记整理记忆卡片，使用 FSRS 安排间隔复习，查看来源笔记。
 - **日常学习**：学习计划、备忘录与番茄钟。
-- **数据管理**：本地保存、备份与导入导出。
-- **语音作答**：在 macOS 上通过系统语音识别将口述答案转成文字。
+- **数据管理**：本地保存、备份与导入导出；macOS 系统文件打开与拖入预览。
+- **链接卡片**：Rust 抓取网页标题、描述和封面元数据，保留链接／标题／卡片切换。
+- **语音作答**：共享语音流程支持转写和答案匹配，实际识别取决于宿主提供的语音服务。
 
 Pro 是可选的付费扩展，提供自由复习、进阶统计等增强功能。Community 可以独立安装、使用、开发和测试，无需 Pro 账号。
 
 ## 本地运行
 
-需要 Node.js 22 LTS、npm，以及可运行 Electron 的桌面环境。
+默认桌面版本使用 Tauri。开发需要 macOS、Node.js 24、Rust stable 与 Xcode Command Line Tools。
 
 ```sh
 git clone https://github.com/coderbruis/memokeep.git
 cd memokeep
 npm ci
+npm --prefix apps/desktop ci
 npm start
 ```
 
-`npm ci` 按 `package-lock.json` 安装依赖，首次安装需要联网下载 npm 包和 Electron。
-
-### macOS 语音作答
-
-语音作答依赖 macOS 的 Speech 与 AVFoundation 框架。开发时安装 Xcode Command Line Tools，并先编译语音辅助程序：
-
-```sh
-xcode-select --install
-node scripts/build-speech-helper.cjs
-npm start
-```
-
-首次使用时，按系统提示授予麦克风和语音识别权限。默认要求本机识别；支持的语言和可用性取决于系统及已安装的语音资源。如果在语音设置中允许在线识别，音频可能由 Apple 的服务处理。其他平台仍可使用文字作答。
+`npm start` 使用 Tauri 应用标识和 SQLite 工作区。旧工作区可通过 `apps/desktop/export-legacy-workspace.cjs` 转换为便携备份，再从「设置 → 数据与备份」预览和恢复。
 
 ## 检查与测试
 
@@ -46,9 +36,14 @@ npm start
 npm run check
 npm test
 npm run verify:source
+npm run test:desktop
+npm run pack:mac
+npm run dist:mac
 ```
 
-`check` 检查源码语法，`test` 运行自动化测试，`verify:source` 检查 Community 源码边界。CI 在 Ubuntu 上运行这三项检查；macOS 打包和真实麦克风测试需在 macOS 上另行验证。
+`check` 检查源码语法；`test` 运行 JavaScript 测试，以及 Rust 存储库的 Clippy 和测试，任一步失败都会返回失败。仅调试前端时可用 `npm run test:js`，提交前仍需运行完整检查。`verify:source` 检查 Community 源码边界。macOS CI 另外运行桌面宿主 Rust 检查及隔离的 Tauri WebView 迁移、保存和回退验收。`pack:mac` 生成 `.app`，`dist:mac` 生成 DMG。
+
+旧工作空间导出的 Node.js 兼容代码集中在 `scripts/legacy-import/`，只供开发命令和合成数据测试使用，不进入安装包。运行时的备份恢复、图片、Markdown 发布、链接抓取与文件打开由 Rust 实现。服务边界和隔离测试见[桌面服务](docs/desktop-services.md)。
 
 ## 本地数据
 

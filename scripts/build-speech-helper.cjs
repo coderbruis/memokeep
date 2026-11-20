@@ -1,5 +1,5 @@
 // 编译复习语音作答用的 macOS 语音识别辅助程序：native/speech → build/speech/memokeep-speech。
-// 打包（scripts/build-edition.cjs）前自动执行；源码没变时跳过。
+// Tauri 装配前编译，源码不变时复用产物。
 const { execFileSync } = require('node:child_process');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -7,10 +7,10 @@ const { createHash } = require('node:crypto');
 const root = path.resolve(__dirname, '..');
 const output = path.join(root, 'build', 'speech', 'memokeep-speech');
 
-function buildSpeechHelper({ force = false, sourceRoot = root, sourceFile, outputDirectory } = {}) {
+function buildSpeechHelper({ force = false, sourceRoot = root, sourceFile, outputDirectory, outputName = 'memokeep-speech' } = {}) {
   if (process.platform !== 'darwin') return null;
   const inputs = [path.resolve(sourceRoot, sourceFile || 'native/speech/MemoKeepSpeech.swift'), path.resolve(sourceRoot, 'native/speech/Info.plist')];
-  const executable = path.join(path.resolve(sourceRoot, outputDirectory || 'build/speech'), 'memokeep-speech');
+  const executable = path.join(path.resolve(sourceRoot, outputDirectory || 'build/speech'), outputName);
   const stamp = executable + '.build.sha256';
   const target = `${process.arch === 'arm64' ? 'arm64' : 'x86_64'}-apple-macos12.0`;
   // Switching source editions can leave an executable newer than both inputs.

@@ -67,9 +67,9 @@ html[data-appearance="dark"] {
 /* 日历 */
 .plan-week, .plan-calendar { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
 .plan-week span { padding-bottom: 2px; text-align: center; font-size: 11.5px; color: var(--muted); }
-.plan-day { display: grid; grid-template-rows: auto 14px; place-content: center; justify-items: center; gap: 3px; aspect-ratio: 1; min-width: 0; border: 1.5px solid transparent; border-radius: 10px; background: transparent; color: var(--ink); font-size: 13px; font-variant-numeric: tabular-nums; cursor: pointer; }
+.plan-day { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 14px; place-content: center; justify-items: center; gap: 3px; aspect-ratio: 1; min-width: 0; border: 1.5px solid transparent; border-radius: 10px; background: transparent; color: var(--ink); font-size: 13px; font-variant-numeric: tabular-nums; cursor: pointer; }
 .plan-day-num { display: grid; place-items: center; min-width: 26px; height: 26px; padding: 0 4px; border-radius: 999px; line-height: 1; }
-.plan-day-sub { display: inline-flex; align-items: center; gap: 3px; height: 14px; font-size: 12px; line-height: 1; white-space: nowrap; color: var(--muted); }
+.plan-day-sub { display: inline-flex; align-items: center; gap: 3px; max-width: 100%; min-width: 0; overflow: hidden; height: 14px; font-size: 12px; line-height: 1; white-space: nowrap; color: var(--muted); }
 .plan-day-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--plan-miss-ink); }
 button.plan-day:hover { background: var(--hover); }
 .plan-day small { font-size: 12px; line-height: 1; color: var(--muted); }
@@ -216,7 +216,7 @@ html dialog#planDialog > form { display: block; width: auto; min-width: 0; max-w
 .plan-button.focus { border-color: var(--pomo, #d9544a); background: var(--pomo, #d9544a); color: #fff; }
 .plan-button.focus:hover { background: color-mix(in srgb, var(--pomo, #d9544a) 88%, var(--ink)); }
 html[data-appearance="dark"] .plan-button.focus { color: #1b0f0d; }
-.plan-day-min { font-size: 12px; line-height: 1; font-weight: 600; color: var(--pomo, #d9544a); }
+.plan-day-min { min-width: 0; overflow: hidden; text-overflow: ellipsis; font-size: 12px; line-height: 1; font-weight: 600; color: var(--pomo, #d9544a); }
 .plan-day.full .plan-day-min { color: var(--plan-done-ink); }
 .plan-focus-task { display: inline-flex; align-items: center; gap: 4px; flex: none; height: 26px; padding: 0 8px; border: 0; border-radius: 6px; background: transparent; color: var(--pomo, #d9544a); font-size: 12px; opacity: 0; cursor: pointer; }
 #plansView .plan-focus-task svg { width: 14px; height: 14px; }

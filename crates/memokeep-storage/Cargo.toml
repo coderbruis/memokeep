@@ -1,0 +1,22 @@
+[package]
+name = "memokeep-storage"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+base64 = "0.23"
+chrono = "0.4"
+chrono-tz = "0.10"
+iana-time-zone = "0.1"
+dom_query = { version = "0.29", default-features = false }
+rusqlite = { version = "0.37", features = ["bundled"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1", features = ["float_roundtrip"] }
+sha2 = "0.10"
+tempfile = "3"
+thiserror = "2"
+time = { version = "0.3", features = ["formatting"] }
+uuid = { version = "1", features = ["v4"] }
+
+[lints]
+workspace = true

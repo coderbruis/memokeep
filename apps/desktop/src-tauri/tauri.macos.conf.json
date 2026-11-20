@@ -1,0 +1,36 @@
+{
+  "bundle": {
+    "active": true,
+    "externalBin": [
+      "../../../dist/tauri-native/memokeep-speech-basic"
+    ],
+    "icon": [
+      "../../../build/icon.icns",
+      "../../../web/assets/app-icon.png"
+    ],
+    "macOS": {
+      "signingIdentity": "-"
+    },
+    "fileAssociations": [
+      {
+        "ext": [
+          "md",
+          "markdown"
+        ],
+        "name": "Markdown 文档",
+        "mimeType": "text/markdown",
+        "role": "Editor",
+        "rank": "Alternate"
+      },
+      {
+        "ext": [
+          "txt"
+        ],
+        "name": "纯文本文档",
+        "mimeType": "text/plain",
+        "role": "Editor",
+        "rank": "Alternate"
+      }
+    ]
+  }
+}

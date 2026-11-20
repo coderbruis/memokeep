@@ -26,7 +26,7 @@ function rememberNoteTab(document, cardNotebookId = null) {
 
 async function activateNoteTab(id) {
   const tab = openNoteTabs.find(tab => tab.id === id);
-  if (!tab || noteTabActionPending) return false;
+  if (!tab) return false;
   const document = applicationShell.actions.documentById(id);
   if (!document && id !== 'new') { application.views.tabs.renderNoteTabs(); applicationShell.actions.showToast('笔记已不存在', true); return false; }
   return applicationShell.actions.openMarkdownNoteEditor(document, '', null, tab.cardNotebookId);

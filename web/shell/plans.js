@@ -17,8 +17,8 @@
     const visible = () => !config.$('#plansView')?.classList.contains('hidden');
     const Pomo = root.MemoKeepPomodoro;
     const focusSessions = planId => (state.persistence.data.focusSessions || []).filter(session => session.planId === planId);
-    const focusTotal = planId => focusSessions(planId).reduce((sum, session) => sum + Number(session.minutes || 0), 0);
-    const focusByDay = planId => Pomo ? Pomo.minutesByDay(focusSessions(planId)) : new Map();
+    const focusTotal = planId => Pomo ? Pomo.totalMinutes(state.persistence.data.focusSessions || [], planId) : 0;
+    const focusByDay = planId => Pomo ? Pomo.minutesByDay(state.persistence.data.focusSessions || [], planId) : new Map();
     const timerNow = () => actions.pomodoroState?.() || null;
     const focusingPlan = () => { const timer = timerNow(); return timer && timer.phase === 'focus' ? timer.planId : null; };
     const clockTime = iso => { const date = new Date(iso); return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`; };
@@ -73,13 +73,13 @@
       let cells = '<span class="plan-day-pad"></span>'.repeat(lead);
       const minutes = focusByDay(plan.id);
       for (let date = 1; date <= count; date++) {
-        const day = P.dayKey(new Date(year, month - 1, date)), stat = P.dayStat(plan, day, now), future = day > now;
+        const day = P.civilDayKey(new Date(year, month - 1, date)), stat = P.dayStat(plan, day, now), future = day > now;
         const classes = ['plan-day'];
         let sub = '', state = `完成 ${stat.done}/${stat.total}`;
         const num = `<span class="plan-day-num">${date}</span>`;
         if (!P.inPlan(plan, day)) { cells += `<span class="plan-day out">${num}</span>`; continue; }
         // 第二行同时放状态和专注分钟：底色表示完成程度，蓝圆点只表示今天，选中用中性灰框。
-        const focused = minutes.get(day), min = focused ? `<span class="plan-day-min">${focused}′</span>` : '';
+        const focused = Pomo ? Pomo.roundMinutes(minutes.get(day)) : 0, min = focused ? `<span class="plan-day-min">${focused}′</span>` : '';
         if (stat.full && !future) { classes.push('full'); sub = icon('check', 'plan-day-tick') + min; state = '已全部完成'; }
         else if (stat.done > 0) { classes.push('part'); sub = `<span class="plan-day-count">${stat.done}/${stat.total}</span>${min ? `<span class="plan-day-sep" aria-hidden="true">·</span>${min}` : ''}`; }
         else if (day < now) { classes.push('miss'); sub = `<i class="plan-day-dot" aria-hidden="true"></i>${min}`; state = '未打卡'; }
@@ -136,12 +136,12 @@
     }
 
     function focusList(plan, day, readOnly, isToday) {
-      const list = focusSessions(plan.id).filter(session => Pomo?.dayOf(session.startedAt) === day).sort((a, b) => a.startedAt.localeCompare(b.startedAt));
+      const list = focusSessions(plan.id).filter(session => Pomo?.minutesByDay([session]).has(day)).sort((a, b) => String(a.startedAt || a.endedAt).localeCompare(String(b.startedAt || b.endedAt)));
       if (!list.length) return '';
-      const total = list.reduce((sum, session) => sum + Number(session.minutes || 0), 0);
+      const total = focusByDay(plan.id).get(day) || 0;
       return `<section class="plan-group plan-focus-group" aria-label="${isToday ? '今天' : '这天'}的专注">
         <div class="plan-group-head"><span class="plan-focus-title">${icon('timer')}${isToday ? '今天' : '这天'}的专注</span><span class="plan-focus-sum">${list.length} 段 · ${Pomo.formatMinutes(total)}</span></div>
-        ${list.map(session => `<div class="plan-session"><span class="plan-session-time">${clockTime(session.startedAt)} – ${clockTime(session.endedAt)}</span><span class="plan-session-task">${e(session.taskName || '专注')}</span><span class="plan-session-len">${session.minutes} 分钟</span>${readOnly ? '' : `<button type="button" class="plan-icon-button plan-task-remove" data-plan-delete-session="${e(session.id)}" aria-label="删除这段专注记录">${icon('x')}</button>`}</div>`).join('')}
+        ${list.map(session => `<div class="plan-session"><span class="plan-session-time">${session.startedAt ? clockTime(session.startedAt) : '开始时间未知'} – ${clockTime(session.endedAt)}</span><span class="plan-session-task">${e(session.taskName || '专注')}</span><span class="plan-session-len">${Pomo.formatMinutes(Number(session.activeDurationMs ?? Number(session.minutes || 0) * 60000) / 60000)}</span>${readOnly ? '' : `<button type="button" class="plan-icon-button plan-task-remove" data-plan-delete-session="${e(session.id)}" aria-label="删除这段专注记录">${icon('x')}</button>`}</div>`).join('')}
       </section>`;
     }
 
@@ -160,7 +160,7 @@
       const now = today(), [year, month] = ym.split('-').map(Number), first = new Date(year, month - 1, 1), lead = (first.getDay() + 6) % 7, count = new Date(year, month, 0).getDate();
       let cells = '<span></span>'.repeat(lead);
       for (let date = 1; date <= count; date++) {
-        const day = P.dayKey(new Date(year, month - 1, date));
+        const day = P.civilDayKey(new Date(year, month - 1, date));
         if (!P.inPlan(plan, day) || day > P.lastDay(plan, now)) { cells += '<span class="plan-mini-day out"></span>'; continue; }
         const stat = P.dayStat(plan, day, now), kind = stat.full ? 'full' : stat.done ? 'part' : 'miss';
         cells += `<button type="button" class="plan-mini-day ${kind}${day === ui.day ? ' selected' : ''}" data-plan-day="${day}" aria-pressed="${day === ui.day}" aria-label="${month} 月 ${date} 日，完成 ${stat.done}/${stat.total}" title="${month}/${date} · ${stat.done}/${stat.total}"></button>`;
@@ -171,11 +171,12 @@
       if (!Pomo) return '';
       const days = P.planDays(plan, today()), byDay = focusByDay(plan.id), values = days.map(day => byDay.get(day) || 0), total = values.reduce((a, b) => a + b, 0);
       if (!total) return '';
-      const max = Math.max(...values), best = days[values.indexOf(max)], average = Math.round(total / days.length), count = focusSessions(plan.id).length;
+      const max = Math.max(...values), best = days[values.indexOf(max)], average = Pomo.roundMinutes(total / days.length), count = focusSessions(plan.id).length;
+      const maxMinutes = Pomo.roundMinutes(max);
       return `<section class="plan-time" aria-label="学习时长">
-        <div class="plan-time-cards"><div><b>${Pomo.formatMinutes(total)}</b><span>累计学习</span></div><div><b>${average} 分钟</b><span>平均每天</span></div><div><b>${max} 分钟</b><span>学得最多的一天 · ${monthDay(best)}</span></div><div><b>${count} 段</b><span>专注记录</span></div></div>
+        <div class="plan-time-cards"><div><b>${Pomo.formatMinutes(total)}</b><span>累计学习</span></div><div><b>${average} 分钟</b><span>平均每天</span></div><div><b>${maxMinutes} 分钟</b><span>学得最多的一天 · ${monthDay(best)}</span></div><div><b>${count} 段</b><span>专注记录</span></div></div>
         <div class="plan-section-head"><h2>每天学习时长<small>分钟 · 虚线是平均值</small></h2></div>
-        <div class="plan-daybars" role="img" aria-label="每天学习时长，平均 ${average} 分钟，最多 ${max} 分钟">${values.map((value, index) => `<i class="${value ? '' : 'zero'}" style="height:${Math.max(2, value / max * 100)}%" title="${monthDay(days[index])} · ${value} 分钟"></i>`).join('')}<span class="plan-daybars-avg" style="bottom:${average / max * 100}%"><em>平均 ${average} 分钟</em></span></div>
+        <div class="plan-daybars" role="img" aria-label="每天学习时长，平均 ${average} 分钟，最多 ${maxMinutes} 分钟">${values.map((value, index) => `<i class="${value ? '' : 'zero'}" style="height:${Math.max(2, value / max * 100)}%" title="${monthDay(days[index])} · ${Pomo.roundMinutes(value)} 分钟"></i>`).join('')}<span class="plan-daybars-avg" style="bottom:${average / max * 100}%"><em>平均 ${average} 分钟</em></span></div>
         <div class="plan-daybars-axis"><span>${monthDay(days[0])}</span><span>${monthDay(days.at(-1))}</span></div>
       </section>`;
     }
@@ -293,7 +294,7 @@
         if (data.planDay) { ui.day = data.planDay; if (!ended(plan)) ui.month = ui.day.slice(0, 7); renderPlans(); config.$(`#plansContent [data-plan-day="${ui.day}"]`)?.focus(); }
         else if (data.planMonth) {
           const [year, month] = ui.month.split('-').map(Number), date = new Date(year, month - 1 + Number(data.planMonth), 1);
-          ui.month = P.dayKey(date).slice(0, 7); renderPlans(); config.$(`#plansContent [data-plan-month="${data.planMonth}"]`)?.focus();
+          ui.month = P.civilDayKey(date).slice(0, 7); renderPlans(); config.$(`#plansContent [data-plan-month="${data.planMonth}"]`)?.focus();
         }
         else if (data.planToggle) void run(() => data.planToggle === 'fixed' ? ops().toggleFixed(plan.id, ui.day, data.planId) : ops().toggleTask(plan.id, ui.day, data.planId), `[data-plan-id="${data.planId}"]`);
         else if (data.planRemove) void run(() => ops().removeTask(plan.id, ui.day, data.planRemove), '[data-plan-add] input');

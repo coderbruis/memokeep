@@ -85,7 +85,7 @@
       const escape = value => actions.escapeHtml(String(value)).replace(/"/g, '&quot;');
       const activeTitle = $('#inlineMarkdownNoteForm')?.dataset.documentId === state.activeId ? $('#inlineMarkdownNoteTitle')?.value : null;
       const dirty = Boolean(state.hasChanges?.());
-      if (!bar.querySelector('.note-tab-list')) bar.innerHTML = '<div class="note-tab-navigation"></div><div class="note-tab-list" role="tablist" aria-label="已打开的笔记"></div><button type="button" class="note-tab-add" id="newNoteTabButton" aria-label="新建笔记" title="新建笔记"><svg aria-hidden="true"><use href="#icon-plus"></use></svg></button><div class="note-tab-actions"></div>';
+      if (!bar.querySelector('.note-tab-list')) bar.innerHTML = '<div class="note-tab-navigation" data-tauri-drag-region></div><div class="note-tab-list" role="tablist" aria-label="已打开的笔记" data-tauri-drag-region></div><button type="button" class="note-tab-add" id="newNoteTabButton" aria-label="新建笔记" title="新建笔记"><svg aria-hidden="true"><use href="#icon-plus"></use></svg></button><div class="note-tab-actions" data-tauri-drag-region></div>';
       const list = bar.querySelector('.note-tab-list');
       const noteItems = state.tabs.map(tab => {
         const doc = actions.documentById(tab.id), active = tab.id === state.activeId;
@@ -93,7 +93,7 @@
         const unsaved = Boolean(tab.draftDocument || (active ? dirty : tab.dirty) || tab.saveError);
         const saveHint = unsaved ? `${tab.saveError ? `${tab.saveError} · ` : ''}未保存 · ${actions.shortcuts.label('save')} 保存` : '';
         const tooltip = [title, saveHint].filter(Boolean).join('\n');
-        return { key: `note:${tab.id}`, markup: `<div class="note-tab${active ? ' is-active' : ''}" draggable="true" data-workspace-tab-key="note:${escape(tab.id)}" data-note-tab-order="${escape(tab.id)}" title="拖动排序；Alt + Shift + 左右方向键调整位置">
+        return { key: `note:${tab.id}`, markup: `<div class="note-tab${active ? ' is-active' : ''}" draggable="true" data-tauri-drag-region="false" data-workspace-tab-key="note:${escape(tab.id)}" data-note-tab-order="${escape(tab.id)}" title="拖动排序；Alt + Shift + 左右方向键调整位置">
           <button type="button" id="noteTab-${escape(tab.id)}" class="note-tab-select" role="tab" aria-selected="${active}" aria-controls="libraryContent" tabindex="${active || !state.activeId && tab === state.tabs[0] ? 0 : -1}" data-note-tab="${escape(tab.id)}" title="${escape(tooltip)}" ${state.actionPending ? 'disabled' : ''}>
             ${unsaved ? `<span class="note-tab-dirty${tab.saveError ? ' is-save-error' : ''}" aria-label="${escape(tab.saveError || '未保存')}" title="${escape(saveHint)}"></span>` : ''}<span class="note-tab-filename"><span class="note-tab-title">${escape(title)}</span>${tab.cardNotebookId ? '' : actions.fileExtension(doc)}</span>
           </button>
@@ -139,10 +139,10 @@
       const noteItems = tabs.map(tab => {
         const doc = tab.draftDocument || actions.documentById(tab.id), title = doc?.title || '未命名笔记', recent = tab.id === lastActiveId;
         const disabled = state.actionPending || state.batchPending ? ' disabled' : '';
-        return { key: `note:${tab.id}`, markup: `<div class="workspace-open-tab${recent ? ' is-recent' : ''}" draggable="true" data-workspace-tab-key="note:${escape(tab.id)}" title="拖动排序；Alt + Shift + 左右方向键调整位置"><button type="button" data-open-tab="${escape(tab.id)}" title="回到「${escape(title)}」${recent ? '（上次编辑）' : ''}"${disabled}>${tab.cardNotebookId ? '<svg aria-hidden="true"><use href="#icon-book-open-text"></use></svg>' : actions.fileIcon(doc)}<span>${escape(title)}</span>${tab.draftDocument || tab.dirty ? '<i class="note-tab-dirty" aria-label="未保存"></i>' : ''}</button><button type="button" class="workspace-open-tab-close" data-close-open-tab="${escape(tab.id)}" aria-label="关闭笔记：${escape(title)}" title="关闭标签"${disabled}><svg aria-hidden="true"><use href="#icon-x"></use></svg></button></div>` };
+        return { key: `note:${tab.id}`, markup: `<div class="workspace-open-tab${recent ? ' is-recent' : ''}" draggable="true" data-tauri-drag-region="false" data-workspace-tab-key="note:${escape(tab.id)}" title="拖动排序；Alt + Shift + 左右方向键调整位置"><button type="button" data-open-tab="${escape(tab.id)}" title="回到「${escape(title)}」${recent ? '（上次编辑）' : ''}"${disabled}>${tab.cardNotebookId ? '<svg aria-hidden="true"><use href="#icon-book-open-text"></use></svg>' : actions.fileIcon(doc)}<span>${escape(title)}</span>${tab.draftDocument || tab.dirty ? '<i class="note-tab-dirty" aria-label="未保存"></i>' : ''}</button><button type="button" class="workspace-open-tab-close" data-close-open-tab="${escape(tab.id)}" aria-label="关闭笔记：${escape(title)}" title="关闭标签"${disabled}><svg aria-hidden="true"><use href="#icon-x"></use></svg></button></div>` };
       });
       const items = [...pageItems, ...noteItems], ordered = actions.orderWorkspaceTabs?.(items) || items;
-      strip.innerHTML = `<div class="workspace-open-tabs-list" role="tablist" aria-label="已打开的标签">${ordered.map(item => item.markup).join('')}</div><button type="button" class="workspace-open-tab-add" data-new-open-tab aria-label="新建笔记" title="新建笔记"${state.actionPending ? ' disabled' : ''}><svg aria-hidden="true"><use href="#icon-plus"></use></svg></button>`;
+      strip.innerHTML = `<div class="workspace-open-tabs-list" role="tablist" aria-label="已打开的标签" data-tauri-drag-region>${ordered.map(item => item.markup).join('')}</div><button type="button" class="workspace-open-tab-add" data-new-open-tab aria-label="新建笔记" title="新建笔记"${state.actionPending ? ' disabled' : ''}><svg aria-hidden="true"><use href="#icon-plus"></use></svg></button>`;
       if (!strip.dataset.bound) {
         strip.dataset.bound = 'true';
         strip.addEventListener('click', async event => {
@@ -200,6 +200,7 @@
     function bindNoteTabWindowDrag(bar) {
       const layer = platform.document.createElement('div');
       layer.className = 'note-window-drag-space';
+      layer.setAttribute('data-tauri-drag-region', '');
       layer.hidden = true;
       layer.setAttribute('aria-hidden', 'true');
       platform.document.body.append(layer);

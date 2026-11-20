@@ -1,0 +1,13 @@
+.note-references-button { width: auto; display: inline-flex; gap: 5px; padding-inline: 8px; }
+.note-references-dialog { width: min(520px, calc(100vw - 32px)); max-height: min(670px, calc(100dvh - 40px)); overflow: auto; }
+.note-references-dialog header, .note-references-dialog form { display: flex; gap: 12px; align-items: end; }
+.note-references-dialog header { justify-content: space-between; align-items: center; }
+.note-references-dialog form label { flex: 1; min-width: 0; }
+.note-references-dialog form select { width: 100%; }
+.note-references-dialog section { display: grid; gap: 5px; margin-top: 18px; }
+.note-references-dialog section h3, .note-references-dialog section p { margin: 0; }
+.note-references-dialog section button { text-align: start; overflow-wrap: anywhere; }
+.ql-editor a[data-memokeep-title] { font-size: 0; }
+.ql-editor a[data-memokeep-title]::after { content: attr(data-memokeep-title); font-size: var(--note-font-size, 1rem); }
+.backup-preview-counts > div { flex-wrap: wrap; }
+.backup-preview-counts small { flex-basis: 100%; color: var(--muted); }

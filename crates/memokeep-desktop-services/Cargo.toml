@@ -1,0 +1,27 @@
+[package]
+name = "memokeep-desktop-services"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+base64 = "0.23"
+dom_query = { version = "0.29", default-features = false }
+encoding_rs = "0.8"
+image = { version = "0.25", default-features = false, features = ["png", "jpeg", "gif", "webp"] }
+reqwest = { version = "0.13.5", default-features = false, features = ["blocking", "rustls-no-provider"] }
+rusqlite = "0.37"
+rustix = { version = "1.1", features = ["fs"] }
+rustls = { version = "0.23", default-features = false, features = ["ring", "std", "tls12"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1", features = ["float_roundtrip"] }
+sha2 = "0.10"
+thiserror = "2"
+tokio = { version = "1", features = ["net", "time", "rt"] }
+url = "2"
+uuid = { version = "1", features = ["v4"] }
+
+[dev-dependencies]
+tempfile = "3"
+
+[lints]
+workspace = true

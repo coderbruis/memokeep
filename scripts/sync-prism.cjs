@@ -1,5 +1,5 @@
 // Usage: node scripts/sync-prism.cjs /path/to/unpacked/prismjs-1.30.0/package
-// Vendored grammars keep packaged Electron fully offline; no runtime downloads.
+// Vendored grammars keep the application fully offline; no runtime downloads.
 const fs = require('node:fs');
 const path = require('node:path');
 const source = path.resolve(process.argv[2] || 'node_modules/prismjs');

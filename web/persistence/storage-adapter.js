@@ -8,14 +8,16 @@
       read(empty = '{}') {
         return desktop ? desktop.read() : JSON.parse(localStorage.getItem(storageKey) || empty);
       },
-      write(data, baseline) {
-        if (desktop) return desktop.write(data, baseline);
+      write(data, baseline, context) {
+        if (desktop) return desktop.write(data, baseline, context);
         const saved = mergeWindowData(baseline, data, JSON.parse(localStorage.getItem(storageKey) || '{}'));
         localStorage.setItem(storageKey, JSON.stringify(saved));
         return saved;
       },
-      writeChanges(patch, token) { return desktop.writeChanges(patch, token); },
+      writeChanges(patch, token, context) { return desktop.writeChanges(patch, token, context); },
       readChanges(token) { return desktop.readChanges(token); },
+      readNoteRecord(collection, id, knownRevision) { return desktop?.readNoteRecord?.(collection, id, knownRevision); },
+      listNoteSummaries(collection, offset, limit) { return desktop?.listNoteSummaries?.(collection, offset, limit); },
       readEditingPreferences() { return desktop.readEditingPreferences(); },
       subscribe(callback) {
         if (desktop) return desktop.onDataChanged(callback);

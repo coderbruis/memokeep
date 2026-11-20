@@ -57,7 +57,9 @@
       const prior = data.sourceChanges.find(change => change.cardId === card.id && ['pending', 'orphan'].includes(change.status));
       if (!result.stale) { if (prior) prior.status = 'unchanged'; continue; }
       if (data.sourceChanges.some(change => change.cardId === card.id && change.status === 'ignored' && change.newText === result.text)) { if (prior) prior.status = 'ignored'; continue; }
-      const values = { cardId: card.id, itemId: item.id, documentId: document.id, source: structuredClone(source), oldText: source.blockText || source.quote, newText: result.text, oldAnswer: card.answer, newAnswer: key(card.answer) === key(source.quote) ? result.text : card.answer, sourceVersion: result.version, status: result.orphan ? 'orphan' : 'pending', updatedAt: at };
+      // Shared sources are JSON records; materialize a transaction's proxied view before retaining its snapshot.
+      const sourceSnapshot = JSON.parse(JSON.stringify(source));
+      const values = { cardId: card.id, itemId: item.id, documentId: document.id, source: sourceSnapshot, oldText: source.blockText || source.quote, newText: result.text, oldAnswer: card.answer, newAnswer: key(card.answer) === key(source.quote) ? result.text : card.answer, sourceVersion: result.version, status: result.orphan ? 'orphan' : 'pending', updatedAt: at };
       if (prior) Object.assign(prior, values); else data.sourceChanges.push({ id: uid(), createdAt: at, ...values });
     }
   }

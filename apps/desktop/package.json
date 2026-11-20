@@ -1,0 +1,14 @@
+{
+  "name": "memokeep-community-tauri-frontend",
+  "private": true,
+  "scripts": {
+    "start": "npm run build && cargo run --locked --manifest-path src-tauri/Cargo.toml",
+    "build": "node stage.cjs",
+    "pack:mac": "npm run build && npm run tauri -- build --ci --bundles app -- --locked",
+    "dist:mac": "node package-dmg.cjs",
+    "test:desktop": "node test-desktop.cjs",
+    "tauri": "tauri"
+  },
+  "dependencies": { "@tauri-apps/api": "^2.0.0" },
+  "devDependencies": { "@tauri-apps/cli": "^2.0.0", "esbuild": "0.28.2" }
+}

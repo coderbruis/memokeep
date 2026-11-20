@@ -11,6 +11,21 @@ const clone = structuredClone;
 const seed = () => ({ version: 2, documents: [{ id: 'note', title: 'saved', content: 'body' }], cards: [], reviewRecords: [], settings: { selectionCardPopupEnabled: true } });
 const deferred = () => { let resolve, reject; const promise = new Promise((yes, no) => { resolve = yes; reject = no; }); return { promise, resolve, reject }; };
 const settle = () => new Promise(resolve => setImmediate(resolve));
+
+test('domain fact factories run after the queued mutation and reach the desktop patch write', async () => {
+  const current = seed();
+  const state = { data: clone(current), baseline: clone(current), ready: true, token: 1 };
+  let event, received;
+  const storage = { supportsPatches: true, async writeChanges(patch, token, facts) {
+    received = { patch, token, facts };
+    return { data: patches.applyDataPatch(current, patch), token: 2 };
+  } };
+  const saving = createSaveCoordinator({ state, storage, normalize: clone, patches, onError: error => { throw error; }, onSyncError() {} });
+  await saving.transact(data => { data.documents[0].title = 'new title'; event = { kind: 'note.updated', id: 'note' }; },
+    () => ({ commandId: 'note-command', domainEvents: [event] }));
+  assert.equal(received.facts.domainEvents[0].id, 'note');
+  assert.equal(state.data.documents[0].title, 'new title');
+});
 function setup(options = {}) {
   const state = { data: seed(), baseline: seed(), token: 7, ready: true, saving: false, refreshPending: false, refreshInFlight: null, refreshAgain: false };
   const disk = { value: seed(), fail: false };

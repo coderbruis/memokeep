@@ -16,6 +16,7 @@
     Object.assign(actions, root.MemoKeepShell.createEditorBinding(dependencies));
     Object.assign(actions, root.MemoKeepShell.createWorkspaceFeatures(dependencies));
     Object.assign(actions, root.MemoKeepShell.createWorkspaceHistory?.(dependencies));
+    Object.assign(actions, root.MemoKeepShell.createNoteNavigation?.(dependencies));
     Object.assign(actions, root.MemoKeepShell.createPageTabFeatures?.(dependencies));
     Object.assign(actions, root.MemoKeepShell.createEngagementFeatures?.(dependencies));
     Object.assign(actions, root.MemoKeepShell.createSourceLearningFeatures?.(dependencies));

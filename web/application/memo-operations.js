@@ -22,6 +22,14 @@
         if (!current.completed) { current.notifiedFor = null; current.popupShownFor = null; }
       });
     }
+    function complete(memo) {
+      const id = memo.id;
+      return transact(data => {
+        const current = data.memos.find(item => item.id === id);
+        if (!current || current.completed) return;
+        current.completed = true; current.completedAt = isoNow(); current.updatedAt = current.completedAt;
+      });
+    }
     function snooze(memo) {
       const id = memo.id;
       return transact(data => {
@@ -42,7 +50,7 @@
         }
       });
     }
-    return { upsert, toggleCompletion, snooze, remove, markReminded };
+    return { upsert, toggleCompletion, complete, snooze, remove, markReminded };
   }
   const api = { createMemoOperations };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

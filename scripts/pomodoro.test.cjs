@@ -19,7 +19,10 @@ test('a full focus records only running time, then starts the break automaticall
   assert.equal(P.tick(state, settings, 30 * M).events.length, 0);
   const done = P.tick(state, settings, 36 * M);
   assert.equal(done.events[0].type, 'focus-complete');
-  assert.deepEqual({ ...done.events[0].session, startedAt: undefined, endedAt: undefined }, { planId: 'plan', taskId: null, taskName: '刷题', minutes: 25, startedAt: undefined, endedAt: undefined });
+  const session = done.events[0].session;
+  assert.equal(session.planId, 'plan'); assert.equal(session.taskName, '刷题'); assert.equal(session.minutes, 25); assert.equal(session.outcome, 'completed'); assert.equal(session.timeAccuracy, 'exact');
+  assert.equal(session.id, state.focusSessionId); assert.equal(session.activeDurationMs, 25 * M);
+  assert.deepEqual(session.activeIntervals, [{ start: new Date(0).toISOString(), end: new Date(10 * M).toISOString() }, { start: new Date(20 * M).toISOString(), end: new Date(35 * M).toISOString() }]);
   assert.equal(done.state.phase, 'break'); assert.equal(done.state.running, true); assert.equal(done.state.totalMs, 5 * M);
   const rested = P.tick(done.state, settings, 42 * M);
   assert.equal(rested.state.phase, 'idle'); assert.equal(rested.state.planId, 'plan', 'the plan is remembered for the next focus');
@@ -40,13 +43,30 @@ test('every fourth focus earns a long break; auto focus can follow a break', () 
   assert.equal(P.snapshot(state, settings, now).round, 1, 'a new cycle starts at round 1');
 });
 
-test('stopping early keeps whole minutes of focus and drops under a minute', () => {
+test('stopping early preserves actual milliseconds and short facts while statistics exclude under a minute', () => {
   const settings = P.normalizeSettings({});
   const early = P.stop(P.start(P.initialState(settings), settings, 0, { planId: 'p' }), settings, 7.6 * M);
   assert.equal(early.events[0].session.minutes, 8);
   assert.equal(early.state.phase, 'idle');
   const tooShort = P.stop(P.start(P.initialState(settings), settings, 0), settings, 20_000);
-  assert.equal(tooShort.events[0].session, null);
+  assert.equal(tooShort.events[0].session.outcome, 'stopped'); assert.equal(tooShort.events[0].session.activeDurationMs, 20_000);
+  assert.equal(P.totalMinutes([tooShort.events[0].session]), 0); assert.equal(P.completedCount([early.events[0].session]), 0);
+});
+test('legacy running state retains unknown interval precision rather than inventing an active timeline', () => {
+  const settings = P.normalizeSettings(), state = { ...P.initialState(settings), phase: 'focus', running: true, runningSince: 0, focusStartedAt: 0, leftMs: 25 * M, totalMs: 25 * M, endsAt: 25 * M, focusElapsedMs: 0 };
+  const session = P.tick(state, settings, 25 * M).events[0].session;
+  assert.equal(session.timeAccuracy, 'legacy-summary'); assert.deepEqual(session.activeIntervals, []);
+});
+test('exact focus splits across local midnight and counts complete focus on its end day', () => {
+  const start = new Date(2026, 10, 17, 23, 50).getTime(), settings = P.normalizeSettings({ autoBreak: false });
+  const session = P.tick(P.start(P.initialState(settings), settings, start, { sessionId: 'stable' }), settings, start + 25 * M).events[0].session;
+  assert.equal(session.id, 'stable'); assert.deepEqual([...P.minutesByDay([session])], [['2026-11-17', 10], ['2026-11-18', 15]]);
+  assert.equal(P.completedCount([session], { day: '2026-11-17' }), 0); assert.equal(P.completedCount([session], { day: '2026-11-18' }), 1);
+});
+test('optional aggregation port controls totals without a dependency on an extension and can be removed', () => {
+  const clear = P.setAggregationProvider({ aggregate(_sessions, options) { assert.equal(options.planId, 'plan'); return { byDay: new Map([['date', 3]]), totalMinutes: 3, completedCount: 2, completedByDay: new Map([['date', 2]]) }; }, dayKey: () => 'date' });
+  assert.equal(P.totalMinutes([], 'plan'), 3); assert.equal(P.completedCount([], { planId: 'plan', day: 'date' }), 2); assert.equal(P.dayOf(0), 'date'); clear();
+  assert.equal(P.totalMinutes([]), 0); assert.notEqual(P.dayOf(0), 'date');
 });
 
 test('minutes are grouped by the start day and formatted', () => {

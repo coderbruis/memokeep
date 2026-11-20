@@ -1,5 +1,6 @@
 (function expose(root) {
   function createNotebooks({ state, config, actions, env }) {
+    let noteOpenWorker = null, pendingNoteOpen = null;
     function updateInlineNoteRows(note, rows, data = state.persistence.data) {
       note.content = rows.map(row => row.raw).join('\n');
       note.metadata = { ...note.metadata, inlineTagRows: env.structuredClone(rows), inlineCardCount: env.application.domain.parseInlineCards(note.content).length };
@@ -110,7 +111,7 @@
     }
 
     async function importMarkdownFiles(files, libraryId) {
-      if (!files.length) return;
+      if (!files.length) return false;
       const importedIds = new Set();
       try {
         if (files.some(file => !/\.(md|markdown|txt)$/i.test(file.name))) {
@@ -118,16 +119,17 @@
         }
         const sources = await Promise.all(files.map(async file => ({
           fileName: file.name,
+          openedId: file.nativeFile?.id,
           content: (await file.text()).replace(/^\uFEFF/, '')
         })));
-        if (!await env.application.editor.session.leaveActiveNoteEditor()) return;
+        if (!await env.application.editor.session.leaveActiveNoteEditor()) return false;
         if (!env.application.state.knowledge.libraryById(libraryId)) throw new Error('目标知识库目录已不存在，请重新选择');
         const timestamp = new Date().toISOString();
         for (const source of sources) {
           const fileType = /\.txt$/i.test(source.fileName) ? 'txt' : 'md';
           const noteContent = fileType === 'txt' ? '' : actions.markdownToRichHtml(source.content);
           const document = {
-            id: config.uid(), knowledgeBaseId: libraryId,
+            id: source.openedId || config.uid(), knowledgeBaseId: libraryId,
             title: actions.availableDocumentTitle(source.fileName.replace(/\.(md|markdown|txt)$/i, '') || env.MemoKeepNoteFiles.types[fileType].defaultTitle, libraryId, null, fileType),
             sourceType: fileType === 'txt' ? 'manual-text' : 'manual-markdown', sourceFileName: source.fileName,
             content: source.content,
@@ -144,7 +146,7 @@
       } catch (error) {
         state.persistence.data.documents = state.persistence.data.documents.filter(document => !importedIds.has(document.id));
         actions.showToast(`导入失败：${error.message}`, true);
-        return;
+        return false;
       }
       state.knowledge.selectedLibraryId = libraryId;
       state.knowledge.knowledgeTreeCollapsed = false;
@@ -152,27 +154,62 @@
       actions.saveCollapsedLibraryIds();
       actions.openMarkdownNoteEditor(actions.documentById([...importedIds][0]));
       actions.showToast(`已导入 ${importedIds.size} 篇笔记`);
+      return true;
     }
 
     // 从系统「打开方式」打开的文件：已经在 MemoKeep 里的直接打开那篇；否则导入到当前目录再打开。
-    let openingExternalFiles = Promise.resolve();
+    let openingExternalFiles = null, externalDrainRequested = false;
+    async function drainExternalNoteFiles() {
+      const files = await config.desktop?.takeOpenedNoteFiles?.() || [];
+      const fresh = [];
+      const handled = [];
+      const dropped = [];
+      let existing = null;
+      for (const file of files) {
+        const committed = state.persistence.data.documents.find(document => document.id === file.id);
+        if (file.error && !committed) { actions.showToast(`「${file.name}」${file.error}`, true); await config.desktop.acknowledgeOpenedNoteFile?.(file.id); continue; }
+        // The note may have committed before a crash interrupted queue acknowledgement.
+        // Never reopen its original Drop content over the already edited document.
+        if (file.origin === 'drop' && !committed) { dropped.push(file); continue; }
+        const match = committed
+          || (file.idPrefix && state.persistence.data.documents.find(document => document.id.toLowerCase().startsWith(file.idPrefix)))
+          || state.persistence.data.documents.find(document => document.sourceFileName === file.name && document.content === file.content);
+        if (match) existing = match; else fresh.push({ name: file.name, text: async () => file.content, nativeFile: file });
+        handled.push(file);
+      }
+      if (fresh.length) {
+        const libraryId = env.application.state.knowledge.libraryById(state.knowledge.selectedLibraryId)?.id || state.persistence.data.knowledgeBases[0]?.id;
+        if (!libraryId) { actions.showToast('请先创建知识库目录，再打开笔记文件', true); actions.openLibraryDialog(); return false; }
+        if (!await importMarkdownFiles(fresh, libraryId)) return false;
+      } else if (existing && await actions.openWorkspaceNote(existing.id) === false) return false;
+      for (const file of handled) {
+        if (file.id) await config.desktop.acknowledgeOpenedNoteFile?.(file.id);
+        if (file.token) await config.desktop.releaseOpenedNoteFile?.(file.token);
+      }
+      if (dropped.length && await actions.enqueueNativeFilePreviews?.(dropped) === false) return false;
+      return true;
+    }
+
     function openExternalNoteFiles() {
-      openingExternalFiles = openingExternalFiles.then(async () => {
-        const files = await config.desktop?.takeOpenedNoteFiles?.().catch(() => []) || [];
-        const fresh = [];
-        let existing = null;
-        for (const file of files) {
-          if (file.error) { actions.showToast(`「${file.name}」${file.error}`, true); continue; }
-          const match = (file.idPrefix && state.persistence.data.documents.find(document => document.id.toLowerCase().startsWith(file.idPrefix)))
-            || state.persistence.data.documents.find(document => document.sourceFileName === file.name && document.content === file.content);
-          if (match) existing = match; else fresh.push({ name: file.name, text: async () => file.content });
-        }
-        if (fresh.length) {
-          const libraryId = env.application.state.knowledge.libraryById(state.knowledge.selectedLibraryId)?.id || state.persistence.data.knowledgeBases[0]?.id;
-          if (!libraryId) { actions.showToast('请先创建知识库目录，再打开笔记文件', true); actions.openLibraryDialog(); return; }
-          await importMarkdownFiles(fresh, libraryId);
-        } else if (existing) await actions.openWorkspaceNote(existing.id);
-      }).catch(error => { actions.showToast(`打开文件失败：${error?.message || '请再试一次'}`, true); });
+      if (openingExternalFiles) {
+        externalDrainRequested = true;
+        return openingExternalFiles;
+      }
+      openingExternalFiles = (async () => {
+        do {
+          externalDrainRequested = false;
+          // Focus and OS notifications may refer to the same durable queue.
+          // A cancelled editor or library dialog must not immediately ask again.
+          if (!await drainExternalNoteFiles()) return false;
+        } while (externalDrainRequested);
+        return true;
+      })().catch(error => {
+        actions.showToast(`打开文件失败：${error?.message || '请再试一次'}`, true);
+        return false;
+      }).finally(() => {
+        openingExternalFiles = null;
+        externalDrainRequested = false;
+      });
       return openingExternalFiles;
     }
 
@@ -211,41 +248,107 @@
       } finally { submit.disabled = false; submit.textContent = '创建'; }
     }
 
-    async function openMarkdownNoteEditor(document = null, initialTitle = '', _sourceElement = null, cardNotebookId = null) {
-      if (env.noteTabActionPending || state.persistence.dataSavePending) return false;
+    async function openNoteTarget(request) {
+      let { document, initialTitle, cardNotebookId } = request;
       if (state.editor.editingMarkdownDocumentId === (document?.id || 'new') && state.editor.editingCardNotebookId === cardNotebookId && config.$('#inlineMarkdownNoteForm')) {
         config.$$('.view').forEach(view => view.classList.toggle('hidden', view.id !== 'librariesView'));
-        actions.syncSidebarSelection(); env.application.views.tabs.renderNoteTabs(true); return true;
+        actions.syncSidebarSelection(); return true;
       }
-      env.noteTabActionPending = true;
+      const previousTab = env.openNoteTabs.find(tab => tab.id === state.editor.editingMarkdownDocumentId);
+      if (previousTab) previousTab.scrollTop = config.$('#librariesView').scrollTop;
+      if (state.editor.activeNoteEditorHasChanges?.() && !await env.application.editor.session.saveNoteBeforeTabChange()) return 'blocked';
+      if (pendingNoteOpen) return false;
+      if (document) {
+        document = actions.documentById(document.id);
+        if (!document) { actions.showToast('笔记已不存在', true); return false; }
+        const collection = state.persistence.data.cardDocuments.some(row => row.id === document.id) ? 'cardDocuments' : 'documents';
+        if (state.persistence.data[collection].some(row => row.id === document.id)) {
+          const token = state.persistence.sharedDataToken;
+          let selected;
+          try {
+            selected = await env.application.persistence.storage?.readNoteRecord?.(collection, document.id, token);
+            if (pendingNoteOpen) return false;
+            // An event may invalidate our snapshot while the conditional read is awaiting IPC.
+            if (selected?.unchanged && state.persistence.sharedDataToken !== token) {
+              selected = await env.application.persistence.storage.readNoteRecord(collection, document.id);
+            }
+          } catch (error) {
+            if (pendingNoteOpen) return false;
+            throw error;
+          }
+          if (pendingNoteOpen) return false;
+          // The source remains editable while reading. Preserve input made during that wait.
+          if (state.editor.activeNoteEditorHasChanges?.()) {
+            const draft = env.noteDraftTab?.(state.editor.editingMarkdownDocumentId);
+            if (!await env.application.editor.session.saveNoteBeforeTabChange()) return 'blocked';
+            if (pendingNoteOpen) return false;
+            if (!draft) return openNoteTarget(request);
+          }
+          if (selected && !selected.unchanged) {
+            if (!selected.record) { actions.showToast('笔记已被其他窗口删除', true); return false; }
+            document = selected.record;
+            state.persistence.data = { ...state.persistence.data, [collection]: state.persistence.data[collection].map(row => row.id === document.id ? document : row) };
+            const baseline = state.persistence.persistedData;
+            if (baseline) state.persistence.persistedData = { ...baseline, [collection]: (baseline[collection] || []).map(row => row.id === document.id ? structuredClone(document) : row) };
+            if (state.persistence.sharedDataToken !== selected.revision) state.persistence.sharedDataToken = null;
+          } else document = actions.documentById(document.id);
+          if (!document) { actions.showToast('笔记已被其他窗口删除', true); return false; }
+        }
+      }
+      const immersive = config.$('#librariesView').classList.contains('card-editor-immersive');
+      const reading = config.$('#librariesView').classList.contains('note-reading');
+      env.application.editor.session.resetActiveNoteEditor();
+      config.$('#librariesView').classList.toggle('card-editor-immersive', immersive);
+      config.$('#librariesView').classList.toggle('note-reading', reading);
+      if (document?.knowledgeBaseId) state.knowledge.selectedLibraryId = document.knowledgeBaseId;
+      if (cardNotebookId) env.application.cards.runtime.cardScope = { type: 'notebook', id: cardNotebookId };
+      env.rememberNoteTab(document, cardNotebookId);
+      let expanded = false;
+      if (document?.knowledgeBaseId) {
+        for (const parent of env.MemoKeepDirectoryTree.ancestors(state.persistence.data.knowledgeBases, document.knowledgeBaseId)) {
+          expanded = state.knowledge.collapsedLibraryIds.delete(parent.id) || expanded;
+        }
+        if (expanded) actions.saveCollapsedLibraryIds();
+      }
+      state.editor.editingCardNotebookId = cardNotebookId;
+      state.editor.pendingNewMarkdownNoteTitle = document ? '' : initialTitle.trim();
+      state.editor.editingMarkdownDocumentId = document?.id || 'new';
+      actions.showView('libraries');
+      if (expanded) actions.renderSidebarKnowledgeTree();
+      actions.updateNoteWindowTitle();
+      return true;
+    }
+
+    async function drainNoteOpens() {
+      let current;
       try {
-        const previousTab = env.openNoteTabs.find(tab => tab.id === state.editor.editingMarkdownDocumentId);
-        if (previousTab) previousTab.scrollTop = config.$('#librariesView').scrollTop;
-        if (state.editor.activeNoteEditorHasChanges?.() && !await env.application.editor.session.saveNoteBeforeTabChange()) return false;
-        if (document) {
-          document = actions.documentById(document.id);
-          if (!document) { actions.showToast('笔记已不存在', true); return false; }
+        while (pendingNoteOpen) {
+          current = pendingNoteOpen; pendingNoteOpen = null;
+          const result = await openNoteTarget(current);
+          current.resolve(result === true); current = null;
+          if (result === 'blocked') break;
         }
-        const immersive = config.$('#librariesView').classList.contains('card-editor-immersive');
-        const reading = config.$('#librariesView').classList.contains('note-reading');
-        env.application.editor.session.resetActiveNoteEditor();
-        config.$('#librariesView').classList.toggle('card-editor-immersive', immersive);
-        config.$('#librariesView').classList.toggle('note-reading', reading);
-        if (document?.knowledgeBaseId) state.knowledge.selectedLibraryId = document.knowledgeBaseId;
-        if (cardNotebookId) env.application.cards.runtime.cardScope = { type: 'notebook', id: cardNotebookId };
-        env.rememberNoteTab(document, cardNotebookId);
-        if (document?.knowledgeBaseId) {
-          env.MemoKeepDirectoryTree.ancestors(state.persistence.data.knowledgeBases, document.knowledgeBaseId).forEach(parent => state.knowledge.collapsedLibraryIds.delete(parent.id));
-          actions.saveCollapsedLibraryIds();
+      } catch (error) {
+        actions.showToast(`笔记打开失败：${error.message}`, true);
+        current?.resolve(false);
+      } finally {
+        pendingNoteOpen?.resolve(false); pendingNoteOpen = null;
+        noteOpenWorker = null; env.noteTabActionPending = false;
+        env.application.views.tabs.renderNoteTabs(true);
+      }
+    }
+
+    function openMarkdownNoteEditor(document = null, initialTitle = '', _sourceElement = null, cardNotebookId = null) {
+      if (!noteOpenWorker && (env.noteTabActionPending || state.persistence.dataSavePending)) return Promise.resolve(false);
+      return new Promise(resolve => {
+        pendingNoteOpen?.resolve(false);
+        pendingNoteOpen = { document, initialTitle, cardNotebookId, resolve };
+        if (!noteOpenWorker) {
+          env.noteTabActionPending = true;
+          // Keep only the newest destination while preserving the current editor until it is safe to leave.
+          noteOpenWorker = Promise.resolve().then(drainNoteOpens);
         }
-        state.editor.editingCardNotebookId = cardNotebookId;
-        state.editor.pendingNewMarkdownNoteTitle = document ? '' : initialTitle.trim();
-        state.editor.editingMarkdownDocumentId = document?.id || 'new';
-        actions.showView('libraries');
-        actions.renderSidebarKnowledgeTree();
-        actions.updateNoteWindowTitle();
-        return true;
-      } finally { env.noteTabActionPending = false; env.application.views.tabs.renderNoteTabs(true); }
+      });
     }
 
     function syncInlineCards(document, parsedCards, data = state.persistence.data) {

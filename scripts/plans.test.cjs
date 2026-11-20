@@ -19,6 +19,12 @@ test('dates are local day keys and validated', () => {
   assert.equal(plans.isDay('2026-02-30'), false);
   assert.equal(plans.daysBetween('2026-11-02', '2026-12-08'), 36);
 });
+test('optional calendar ports affect instants while civil date arithmetic and history snapshots remain stable', () => {
+  const clear = plans.setCalendarProvider({ dayKey: () => '2026-11-16' });
+  try { assert.equal(plans.dayKey(Date.now()), '2026-11-16'); assert.equal(plans.isDay('2026-11-17'), true); assert.equal(plans.addDays('2026-11-17', 1), '2026-11-18'); assert.equal(plans.civilDayKey(plans.parseDay('2026-11-17')), '2026-11-17'); } finally { clear(); }
+  const plan = { fixed: [{ id: 'f', name: 'new' }], days: { '2026-11-16': { fixedIds: ['f'], fixedNames: { f: 'old snapshot' }, doneFixed: [] } } };
+  assert.equal(plans.dayItems(plan, '2026-11-16', '2026-11-17').fixed[0].name, 'old snapshot');
+});
 
 test('fixed and temporary tasks count toward the day; future days only accept new tasks', async () => {
   const { ops, plan } = setup();

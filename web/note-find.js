@@ -1,4 +1,5 @@
 (function expose(host) {
+  const mounted = new WeakMap();
   function mount({ root, quill, textarea, isCurrent }) {
     const document = root.ownerDocument, view = root.closest('.view');
     const controller = new AbortController(), { signal } = controller;
@@ -173,12 +174,24 @@
     else listen(textarea, 'input', schedule);
     listen(root, 'click', schedule);
     listen(view, 'scroll', position, { passive: true }); listen(host, 'resize', schedule);
+    mounted.set(root, (quote, passage) => {
+      if (!isCurrent() || !quote) return false;
+      input.value = quote; open(); input.value = quote; refresh();
+      if (passage) {
+        const start = text().indexOf(passage);
+        const index = matches.findIndex(match => start >= 0 && match.index >= start && match.index < start + passage.length);
+        if (index >= 0) active = index;
+      }
+      showMatch();
+      return Boolean(matches.length);
+    });
     return () => {
+      mounted.delete(root);
       close(false); controller.abort();
       if (quill) quill.off('text-change', schedule);
       if (frame !== null) host.cancelAnimationFrame(frame);
       button.remove(); bar.remove();
     };
   }
-  host.MemoKeepNoteFind = { mount };
+  host.MemoKeepNoteFind = { mount, reveal: (root, quote, passage) => mounted.get(root)?.(quote, passage) };
 })(globalThis);

@@ -98,10 +98,15 @@
   }
   // 全应用唯一的「连续学习」：那天有复习（未撤销）或在计划里打过卡就算一天。
   // 从今天往前数；今天还没学不算中断，从昨天开始数。
-  function learningStreak(data, at = Date.now()) {
-    const days = new Set(validReviews(data, at).map(record => dayKey(stamp(record.reviewedAt))));
+  function learningStreak(data, at = Date.now(), calendar = {}) {
+    const key = calendar.dayKey || dayKey;
+    const days = new Set(validReviews(data, at).map(record => key(stamp(record.reviewedAt))));
     for (const plan of data.plans || []) for (const [day, entry] of Object.entries(plan.days || {}))
       if ((entry?.doneFixed || []).length || (entry?.tasks || []).some(task => task?.done)) days.add(day);
+    if (calendar.previousDay) {
+      let day = key(at), count = 0; if (!days.has(day)) day = calendar.previousDay(day);
+      while (days.has(day)) { count++; day = calendar.previousDay(day); } return count;
+    }
     const date = new Date(at); date.setHours(12, 0, 0, 0);
     if (!days.has(dayKey(date.getTime()))) date.setDate(date.getDate() - 1);
     let count = 0;

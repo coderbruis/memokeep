@@ -215,6 +215,13 @@
       config.$('#memoTagsButton').textContent = tags.length ? tags.join(' · ') : '＋ 添加标签';
     }
 
+    function showMemoCustomTime(visible) {
+      config.$('#memoCustomTimeField').hidden = !visible;
+      config.$('#memoCustomTime').setAttribute('aria-expanded', String(visible));
+      // A closed date picker must not block form submission after clearing its segments in WebKit.
+      config.$('#memoRemindAt').disabled = !visible;
+    }
+
     async function openMemoDialog(memo = null) {
       void actions.cleanupMemoDraftImages();
       const session = memoSession = newMemoSession();
@@ -235,7 +242,7 @@
       config.$('#memoPriority').value = memo?.priority || 'normal';
       config.$('#memoTags').value = (memo?.tags || []).join(', ');
       config.$('#memoContentToolbar').hidden = true; config.$('#memoContentToolbar').dataset.explicit = 'false'; config.$('#memoFormatToggle').setAttribute('aria-expanded', 'false');
-      config.$('#memoCustomTimeField').hidden = true; config.$('#memoCustomTime').setAttribute('aria-expanded', 'false');
+      showMemoCustomTime(false);
       actions.updateMemoDialogControls();
       config.$('#memoDialog').showModal();
       env.requestAnimationFrame(() => config.$('#memoTitle').focus());
@@ -246,6 +253,7 @@
       if (preset === 'clear') {
         config.$('#memoRemindAt').value = '';
         config.$('#memoRepeat').value = 'none';
+        showMemoCustomTime(false);
         actions.updateMemoDialogControls();
         return;
       }
@@ -374,7 +382,9 @@
       while (state.memos.memoReminderQueue.length && !memo) {
         const memoId = state.memos.memoReminderQueue.shift();
         const candidate = state.persistence.data.memos.find(item => item.id === memoId);
-        if (candidate && !candidate.completed && candidate.remindAt && actions.memoTimestamp(candidate) <= config.now()) memo = candidate;
+        const due = config.desktop?.reminders ? delivery?.reminderOffer(candidate?.id)
+          : candidate?.remindAt && actions.memoTimestamp(candidate) <= config.now();
+        if (candidate && !candidate.completed && due) memo = candidate;
       }
       if (!memo) return;
 
@@ -383,7 +393,8 @@
       const content = actions.memoContentText(memo.notes);
       config.$('#memoReminderContent').textContent = content;
       config.$('#memoReminderContent').classList.toggle('hidden', !content);
-      config.$('#memoReminderTime').textContent = actions.memoDateLabel(memo);
+      const offer = delivery?.reminderOffer(memo.id);
+      config.$('#memoReminderTime').textContent = actions.memoDateLabel(offer ? { ...memo, remindAt: offer.at } : memo);
       dialog.showModal();
       config.$('#memoReminderComplete').focus();
     }
@@ -432,8 +443,7 @@
       env.window.addEventListener('resize', closeMemoPopovers);
       config.$('#memoClearTime').onclick = () => { actions.setMemoTimePreset('clear'); closeMemoPopovers(); };
       config.$('#memoCustomTime').onclick = () => {
-        config.$('#memoCustomTimeField').hidden = false;
-        config.$('#memoCustomTime').setAttribute('aria-expanded', 'true');
+        showMemoCustomTime(true);
         config.$('#memoRemindAt').focus();
         try { config.$('#memoRemindAt').showPicker?.(); } catch { /* The date input remains editable. */ }
       };
@@ -514,16 +524,27 @@
       config.$('#memoDialog').addEventListener('close', actions.cleanupMemoDraftImages);
       config.$('#memoReminderDismiss').onclick = actions.closeActiveMemoReminder;
       config.$('#memoReminderDismissIcon').onclick = actions.closeActiveMemoReminder;
+      const currentReminder = async () => {
+        const id = state.memos.activeMemoReminderId;
+        if (config.desktop?.reminders && !await delivery.isCurrentReminder()) {
+          if (state.memos.activeMemoReminderId === id) actions.closeActiveMemoReminder();
+          return null;
+        }
+        return state.memos.activeMemoReminderId === id ? state.persistence.data.memos.find(item => item.id === id && !item.completed) : null;
+      };
       config.$('#memoReminderSnooze').onclick = async () => {
-        const memo = state.persistence.data.memos.find(item => item.id === state.memos.activeMemoReminderId);
+        const memo = await currentReminder();
+        if (!memo) return;
         actions.closeActiveMemoReminder();
         if (memo) await actions.snoozeMemo(memo);
         actions.scheduleMemoReminders();
       };
       config.$('#memoReminderComplete').onclick = async () => {
-        const memo = state.persistence.data.memos.find(item => item.id === state.memos.activeMemoReminderId);
+        const memo = await currentReminder();
+        if (!memo) return;
         actions.closeActiveMemoReminder();
-        if (memo) await actions.toggleMemoCompletion(memo);
+        await env.application.operations.memos.complete(memo);
+        actions.renderMemos();
         actions.scheduleMemoReminders();
       };
       config.$('#memoReminderDialog').addEventListener('close', () => {
@@ -624,7 +645,8 @@
       task.finally(() => session.uploads.delete(task));
       return task;
     }
-    return { memoTimestamp, memoDateLabel, memoMatchesFilter, memoGroup, renderMemos, serializeMemoContent, loadMemoContentIntoEditor, cleanupMemoDraftImages, updateMemoDialogControls, openMemoDialog, setMemoTimePreset, handleSaveMemo, toggleMemoCompletion, snoozeMemo, deleteMemo, checkMemoReminders, enqueueMemoReminders, showNextMemoReminder, closeActiveMemoReminder, scheduleMemoReminders, bindMemoEvents, initializeMemoContentEditor, insertMemoImages };
+    const delivery = root.MemoKeepReminderDelivery?.create({ state, config, actions, legacyCheck: checkMemoReminders, legacyShow: showNextMemoReminder });
+    return { memoTimestamp, memoDateLabel, memoMatchesFilter, memoGroup, renderMemos, serializeMemoContent, loadMemoContentIntoEditor, cleanupMemoDraftImages, updateMemoDialogControls, openMemoDialog, setMemoTimePreset, handleSaveMemo, toggleMemoCompletion, snoozeMemo, deleteMemo, checkMemoReminders, enqueueMemoReminders, showNextMemoReminder, closeActiveMemoReminder, scheduleMemoReminders, bindMemoEvents, initializeMemoContentEditor, insertMemoImages, ...delivery };
   }
   Object.assign(root.MemoKeepShell ||= {}, { createMemos });
 })(globalThis);

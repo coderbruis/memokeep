@@ -1,0 +1,12 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "MemoKeep Community Preview",
+  "version": "0.1.0",
+  "identifier": "com.memokeep.community.tauri-preview",
+  "build": { "frontendDist": "../../../dist/tauri-community" },
+  "app": {
+    "windows": [{ "label": "main", "url": "web/index.html", "title": "MemoKeep Community Preview", "width": 1240, "height": 820, "dragDropEnabled": true, "decorations": true, "titleBarStyle": "Overlay", "hiddenTitle": true, "trafficLightPosition": { "x": 16, "y": 20 } }],
+    "security": { "capabilities": ["workspace-main"] }
+  },
+  "bundle": { "active": false, "icon": ["../../../web/assets/app-icon.png"] }
+}

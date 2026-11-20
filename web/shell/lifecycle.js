@@ -3,7 +3,7 @@
     function normalize(input = {}) {
       const migratedCards = Array.isArray(input.cards) ? input.cards.map(card => ({
         ...(Object.prototype.hasOwnProperty.call(card,'cardFolderId') ? {cardFolderId:card.cardFolderId || null} : {}),
-        ...Object.fromEntries(['cardType','imageOcclusion','reverseOf','splitFrom','source','favorite','pointKey','pointDocumentId','pointOrphan','pointOptIn','pointHeading','sourceAnchor','sourceAnchorDismissed','pointRecall','splitHintDismissed'].filter(key => Object.hasOwn(card, key)).map(key => [key, env.structuredClone(card[key])])),
+        ...Object.fromEntries(['cardType','imageOcclusion','reverseOf','splitFrom','source','favorite','pointKey','pointDocumentId','pointOrphan','pointOptIn','pointHeading','sourceAnchor','sourceAnchorDismissed','pointRecall','splitHintDismissed','extensions','keyPoints','criteria','formatExtensions','clozeText','blankIndex','clozeGroupId'].filter(key => Object.hasOwn(card, key)).map(key => [key, env.structuredClone(card[key])])),
         id: card.id || config.uid(), knowledgeBaseId: card.knowledgeBaseId || null, knowledgeItemId: card.knowledgeItemId || null, cardNotebookId: card.cardNotebookId || null,
         question: card.question || '', answer: card.answer || '', direction: card.direction || 'forward', tags: card.tags || [],
         status: card.status || 'active', dueAt: Number(card.dueAt || config.now()), lastReviewedAt: card.lastReviewedAt || null,
@@ -13,6 +13,7 @@
         createdAt: card.createdAt || new Date().toISOString(), updatedAt: card.updatedAt || new Date().toISOString()
       })) : [];
       const normalizedMemos = Array.isArray(input.memos) ? input.memos.map(memo => ({
+        ...Object.fromEntries(['reminder', 'extensions'].filter(key => Object.hasOwn(memo, key)).map(key => [key, env.structuredClone(memo[key])])),
         id: memo.id || config.uid(),
         title: String(memo.title || '').trim(),
         notes: String(memo.notes || ''),
@@ -48,7 +49,7 @@
             : []
           }
         })) : [], items: Array.isArray(input.items) ? input.items : [],
-        cards: migratedCards, reviewRecords: Array.isArray(input.reviewRecords) ? input.reviewRecords : [], memos: normalizedMemos, plans: Array.isArray(input.plans) ? input.plans.filter(plan => plan && typeof plan.id === 'string') : [], focusSessions: Array.isArray(input.focusSessions) ? input.focusSessions.filter(session => session && typeof session.id === 'string' && Number(session.minutes) > 0) : [],
+        cards: migratedCards, reviewRecords: Array.isArray(input.reviewRecords) ? input.reviewRecords : [], memos: normalizedMemos, plans: Array.isArray(input.plans) ? input.plans.filter(plan => plan && typeof plan.id === 'string') : [], focusSessions: Array.isArray(input.focusSessions) ? input.focusSessions.filter(session => session && typeof session.id === 'string' && (Number(session.minutes) > 0 || Number.isFinite(session.activeDurationMs) && session.activeDurationMs >= 0)) : [],
         freeReviews: Array.isArray(input.freeReviews) ? input.freeReviews : [],
         trash: Array.isArray(input.trash) ? input.trash : [],
         streak: { ...config.defaults.streak, ...(input.streak || {}) }, settings: { ...config.defaults.settings, ...(input.settings || {}), selectionCardPopupEnabled: input.settings?.selectionCardPopupEnabled !== false }
@@ -79,7 +80,9 @@
           await new Promise(resolve => env.requestAnimationFrame(() => env.setTimeout(resolve, 0)));
         }
         const storage = env.application.persistence.storage;
-        const raw = storage.isDesktop ? await storage.read('null') : storage.read('null');
+        const response = storage.supportsReadChanges ? await storage.readChanges() : null;
+        const raw = response ? response.data : await storage.read('null');
+        state.persistence.sharedDataToken = response?.token ?? null;
         state.persistence.persistedData = env.structuredClone(raw || {});
         state.persistence.data = actions.normalize(raw || {});
         actions.syncPluginState?.();
@@ -102,7 +105,19 @@
         await actions.initializeEdition?.();
         if (!config.isNoteWindow) await actions.restoreOpenNotes?.();
         // 启动前、运行中用「打开方式」送来的文件。
-        if (!config.isNoteWindow && config.desktop?.takeOpenedNoteFiles) { config.desktop.onNoteFilesOpened?.(() => void actions.openExternalNoteFiles()); void actions.openExternalNoteFiles(); }
+        if (!config.isNoteWindow && config.desktop?.takeOpenedNoteFiles) {
+          const openPendingFiles = () => { if (state.persistence.applicationDataReady) void actions.openExternalNoteFiles(); };
+          config.desktop.onNoteFilesOpened?.(openPendingFiles);
+          env.window.addEventListener('focus', openPendingFiles);
+          env.document.addEventListener('close', event => {
+            // Cancelling an unsaved-note prompt must not immediately ask again.
+            if (event.target?.id === 'appConfirmDialog') return;
+            // Cancelling first-library creation must also leave the queued file waiting.
+            if (event.target?.id === 'libraryDialog' && !state.persistence.data.knowledgeBases.length) return;
+            openPendingFiles();
+          }, true);
+          openPendingFiles();
+        }
         if (!config.isNoteWindow) { actions.scheduleReminder(); actions.scheduleMemoReminders(); }
         // Existing data needs no write/full document sync just to open the app.
         // Persist legacy migrations after the first frame.
@@ -139,11 +154,17 @@
       }
       if (!env.application.state.knowledge.libraryById(state.knowledge.selectedLibraryId)) state.knowledge.selectedLibraryId = state.persistence.data.knowledgeBases[0]?.id || null;
       actions.renderAll(Boolean(state.editor.editingMarkdownDocumentId) && previousDocument === JSON.stringify(document));
+      actions.refreshNoteReferences?.();
       actions.updateNoteWindowTitle();
     }
 
     function updateNoteWindowTitle() {
-      if (config.isNoteWindow) env.window.document.title = `${actions.documentById(state.editor.editingMarkdownDocumentId)?.title || '笔记'} · MemoKeep`;
+      if (!config.isNoteWindow) return;
+      const title = actions.documentById(state.editor.editingMarkdownDocumentId)?.title;
+      if (title) {
+        env.window.document.title = `${title} · MemoKeep`;
+        void config.desktop?.setNoteWindowTitle?.(env.window.document.title)?.catch(() => {});
+      }
     }
 
     function openNoteWindowTarget(kind, id) {

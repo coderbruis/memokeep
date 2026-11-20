@@ -1,6 +1,6 @@
 (function expose(root) {
   function createKnowledge({ state, config, actions, env }) {
-    let locateHighlightTimer = null;
+    let locateHighlightTimer = null, sidebarTreeOwner = null, sidebarTreeKey = null;
 
     function currentSidebarNote() {
       if (config.isNoteWindow || !state.persistence.applicationDataReady || state.editor.editingCardNotebookId
@@ -84,7 +84,12 @@
       // 应用打开后第一次画目录：先全部收起。
       if (!state.knowledge.startCollapsedApplied && state.persistence.applicationDataReady) { state.knowledge.startCollapsedApplied = true; collapseAllDirectories(); }
       env.updateSidebarDirectoryToggle();
-      if (state.knowledge.knowledgeTreeCollapsed) { tree.replaceChildren(); actions.syncSidebarSelection(); return; }
+      if (state.knowledge.knowledgeTreeCollapsed) { tree.replaceChildren(); sidebarTreeKey = null; actions.syncSidebarSelection(); return; }
+      // Body/history edits and selection changes do not change the directory's DOM.
+      const treeKey = JSON.stringify([state.persistence.data.knowledgeBases,
+        state.persistence.data.documents.map(doc => [doc.id, doc.knowledgeBaseId, doc.title, doc.sourceType, doc.sourceFileName, doc.metadata?.fileType, doc.metadata?.editorMode]),
+        [...state.knowledge.collapsedLibraryIds].sort(), state.knowledge.renamingTreeItem || null]);
+      if (sidebarTreeOwner === tree && sidebarTreeKey === treeKey) { actions.syncSidebarSelection(); return; }
       const documentsByLibrary = new Map();
       for (const doc of state.persistence.data.documents) {
         if (!documentsByLibrary.has(doc.knowledgeBaseId)) documentsByLibrary.set(doc.knowledgeBaseId, []);
@@ -136,6 +141,7 @@
         <div class="tree-document-list ${isCollapsed ? 'hidden' : ''}">${documentRows || (state.persistence.data.knowledgeBases.some(child => child.parentId === library.id) ? '' : '<p class="tree-document-empty">还没有笔记</p>')}</div>
       </div>`;
       }).join('') || '<p class="knowledge-tree-empty">还没有知识库</p>';
+      sidebarTreeOwner = tree; sidebarTreeKey = treeKey;
       actions.syncSidebarSelection();
 
       if (state.knowledge.renamingTreeItem) {
