@@ -1,5 +1,6 @@
 {
   "name": "memokeep-community-tauri-frontend",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "start": "npm run build && cargo run --locked --manifest-path src-tauri/Cargo.toml",
