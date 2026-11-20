@@ -18,6 +18,17 @@ async function until(check, label) {
   }
 }
 
+async function editableNote(documentId) {
+  let quill;
+  await until(() => {
+    const form = document.querySelector('#inlineMarkdownNoteForm');
+    quill = globalThis.Quill?.find(document.querySelector('#noteRichEditor'));
+    return form?.dataset.documentId === documentId && form.getAttribute('aria-busy') === 'false'
+      && quill?.isEnabled();
+  }, '目标笔记完成初始化并可编辑');
+  return quill;
+}
+
 function hasPlanCheckIn(plan) {
   return plan.name === planName && Object.values(plan.days || {}).some(day => day.doneFixed?.length === 1);
 }
@@ -89,8 +100,7 @@ async function check() {
   await bridge.write(initial, existing);
   await until(() => Boolean(applicationShell.actions.documentById(id)), '收到持久化变更提示');
   assert(await actions.openMarkdownNoteEditor(actions.documentById(id)), '需要成功打开笔记');
-  await until(() => Boolean(globalThis.Quill?.find(document.querySelector('#noteRichEditor'))), '富文本编辑器');
-  const quill = Quill.find(document.querySelector('#noteRichEditor'));
+  const quill = await editableNote(id);
   quill.setSelection(0, 0, 'silent');
   document.querySelector('[data-open-note-references]').click();
   const references = document.querySelector('.note-references-dialog');
@@ -104,13 +114,14 @@ async function check() {
   assert(saved.documents.some(row => row.id === id && row.metadata.noteContent.includes(changed)), '编辑器修改需持久保存');
   assert(!(await bridge.deleteNoteImage(image.id)), '笔记历史引用的图片应当保留');
   await actions.openWorkspaceNote(linkedId);
-  await until(() => document.querySelector('[data-open-note-references]'), '打开引用目标');
+  await editableNote(linkedId);
   document.querySelector('[data-open-note-references]').click();
   assert(document.querySelector('[data-note-incoming]').textContent.includes('测试笔记'), '目标笔记应显示反向引用');
   document.querySelector('.note-references-dialog').close();
   const beforeRename = await bridge.read();
   await bridge.write({ ...beforeRename, documents: beforeRename.documents.map(note => note.id === linkedId ? { ...note, title: '引用目标新标题' } : note) }, beforeRename);
   await until(() => actions.documentById(linkedId)?.title === '引用目标新标题', '收到目标笔记改名');
+  await editableNote(linkedId);
   document.querySelector('[data-open-note-references]').click();
   document.querySelector('[data-note-incoming] button').click();
   await until(() => document.querySelector('.ql-editor [data-memokeep-title="引用目标新标题"]')?.getAnimations().length, '反向引用定位到来源段落');

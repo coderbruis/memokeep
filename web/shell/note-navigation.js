@@ -136,26 +136,40 @@
       }
     }
 
-    function insertReference(target, noteId, quill, range, textarea) {
-      if (state.editor.editingMarkdownDocumentId !== noteId || !editor()?.isConnected) return;
+    function referenceEditorWritable(form, quill, textarea) {
+      if (form !== editor() || !form?.isConnected || form.getAttribute('aria-busy') === 'true'
+        || config.$('#librariesView')?.classList.contains('note-reading')) return false;
+      if (textarea) return textarea === visibleTextarea() && textarea.isConnected && !textarea.disabled && !textarea.readOnly;
+      return Boolean(quill && quill === rich() && quill.root.isConnected && quill.isEnabled());
+    }
+
+    function insertReference(target, noteId, form, quill, range, textarea) {
+      if (state.editor.editingMarkdownDocumentId !== noteId || !referenceEditorWritable(form, quill, textarea)) {
+        actions.showToast('当前笔记暂不可编辑，请在加载完成或切换编辑模式后重试');
+        return false;
+      }
       const title = target.title || '未命名笔记';
       const href = address(target.id);
-      if (quill && quill.root.isConnected) {
+      if (quill) {
         const index = range?.index ?? Math.max(0, quill.getLength() - 1);
         const Delta = env.window.Quill.import('delta');
-        quill.updateContents(new Delta().retain(index).delete(range?.length || 0).insert(title, { link: href }), 'user');
+        const change = quill.updateContents(new Delta().retain(index).delete(range?.length || 0).insert(title, { link: href }), 'user');
+        if (!change?.ops?.length) { actions.showToast('未能插入引用，请稍后重试'); return false; }
         quill.setSelection(index + title.length, 0, 'silent');
-      } else if (textarea?.isConnected) {
+      } else {
         const label = title.replace(/[\[\]\\\r\n]/g, ' ');
         textarea.setRangeText(`[${label}](${href})`, range.start, range.end, 'end');
         textarea.dispatchEvent(new env.Event('input', { bubbles: true }));
         textarea.focus();
       }
+      return true;
     }
 
     function openReferences() {
       const note = activeDocument();
       if (!note) { actions.showToast('请先保存笔记'); return; }
+      const form = editor();
+      if (form?.getAttribute('aria-busy') === 'true') { actions.showToast('笔记正在加载，请稍后再试'); return; }
       const textarea = visibleTextarea();
       const quill = textarea ? null : rich();
       const range = textarea ? { start: textarea.selectionStart, end: textarea.selectionEnd } : quill?.getSelection();
@@ -166,6 +180,7 @@
         <form><label>添加笔记引用<input type="search" aria-label="筛选笔记" placeholder="按名称或知识库筛选">
           <select aria-label="选择要引用的笔记" required></select></label><button class="primary">插入引用</button></form>
         <section data-note-outgoing></section><section data-note-incoming></section><section data-note-related-cards></section>`;
+      dialog.querySelector('form button').disabled = !referenceEditorWritable(form, quill, textarea);
       const notes = getDocuments().filter(item => item.id !== note.id);
       const byId = new Map(notes.map(item => [item.id, item]));
       const select = dialog.querySelector('select');
@@ -188,7 +203,7 @@
       dialog.querySelector('form').onsubmit = event => {
         event.preventDefault();
         const target = byId.get(select.value);
-        if (target) { dialog.close(); insertReference(target, note.id, quill, range, textarea); }
+        if (target && insertReference(target, note.id, form, quill, range, textarea)) dialog.close();
       };
       dialog.querySelector('header button').onclick = () => dialog.close();
       const live = quill ? { metadata: { editorMode: 'note', noteContent: quill.root.innerHTML } }
